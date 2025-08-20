@@ -60,17 +60,17 @@ namespace RPGCore.AI.HFSM
 		/// <summary>
 		/// 为当前操作的StateMachine添加一个state
 		/// </summary>
-		public StateMachineHandlerResult AddState(string stateId, bool isDefault = false)
+		public StateMachineHandlerResult AddState<T>(string stateId, bool isDefault = false) where T:State,new()
 		{
 			//Debug.Log($"add [{stateId}] state to [{parentStateMachine.id}].");
-			var state = parentStateMachine.AddState(stateId, isDefault);
+			var state = parentStateMachine.AddState<T>(stateId, isDefault);
 			return new StateMachineHandlerResult(IsBeginNewLevel ? this : previousHandleResult, parentStateMachine, state);
 		}
 
-		public StateMachineHandlerResult AddTemporaryState(string stateId)
+		public StateMachineHandlerResult AddTemporaryState<T>(string stateId) where T:State,new()
 		{
 			//Debug.Log($"add [{stateId}] state to [{parentStateMachine.id}].");
-			var state = parentStateMachine.AddState(stateId);
+			var state = parentStateMachine.AddState<T>(stateId);
 			state.SetIsTemporary(true);
 			return new StateMachineHandlerResult(IsBeginNewLevel ? this : previousHandleResult, parentStateMachine, state);
 		}
@@ -98,7 +98,7 @@ namespace RPGCore.AI.HFSM
 			}
 			else
 			{
-				var state = parentStateMachine.AddState(stateId);
+				var state = parentStateMachine.GetState(stateId);
 				state.SetIsTemporary(isTemporary);
 				//Debug.Log($"add transition from [{handledState.id}] to [{state.id}]");
 				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, state,
@@ -220,142 +220,19 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// 为state添加enter回调
-		/// </summary>
-		public StateMachineHandlerResult OnEnter(Action<State> enter)
-		{
-			if (handledState.stateType == StateType.State)
-			{
-				//Debug.Log($"set [{handledState.id}] state OnEnter action ");
-				(handledState as State).SetOnEnter(enter);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition);
-			}
-			throw new Exception("only state can set action");
-		}
-
-		/// <summary>
-		/// 为state添加logic回调
-		/// </summary>
-		public StateMachineHandlerResult OnLogic(Action<State> logic)
-		{
-			if (handledState.stateType == StateType.State)
-			{
-				//Debug.Log($"set [{handledState.id}] state OnLogic action ");
-				(handledState as State).SetOnLogic(logic);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition);
-			}
-			throw new Exception("only state can set action");
-		}
-
-		/// <summary>
-		/// 为state添加exit回调
-		/// </summary>
-		public StateMachineHandlerResult OnExit(Action<State> exit)
-		{
-			if (handledState.stateType == StateType.State)
-			{
-				//Debug.Log($"set [{handledState.id}] state OnExit action ");
-				(handledState as State).SetOnExit(exit);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition);
-			}
-			throw new Exception("only state can set action");
-		}
-
-		/// <summary>
-		/// 为state添加execute回调
-		/// </summary>
-		public StateMachineHandlerResult OnExecute(Action<State, StateExecuteType> execute)
-		{
-			if (handledState.stateType == StateType.State)
-			{
-				//Debug.Log($"set [{handledState.id}] state OnExecute action ");
-				(handledState as State).SetOnExecute(execute);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition);
-			}
-			throw new Exception("only state can set execute");
-		}
-
-		/// <summary>
-		/// 为state添加CanExit回调
-		/// </summary>
-		public StateMachineHandlerResult CanExit(Func<State, bool> canExit)
-		{
-			if (handledState.stateType == StateType.State)
-			{
-				(handledState as State).SetCanExit(canExit);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition);
-			}
-			throw new Exception("only state can set CanExit");
-		}
-
-		/// <summary>
 		/// 为StateMachine添加Service
 		/// </summary>
-		public StateMachineHandlerResult AddService(string serviceId, ServiceType serviceType = ServiceType.Update, float customInterval = 0f)
+		public StateMachineHandlerResult AddService<T>(string serviceId, ServiceType serviceType = ServiceType.Update, float customInterval = 0f) where T:Service,new()
 		{
 			if (handledState.stateType == StateType.StateMachine)
 			{
+				var service = (handledState as StateMachine).AddService<T>(serviceId: serviceId, type: serviceType,
+					customInterval: customInterval);
 				//Debug.Log($"add service [{serviceId}] to [{handledState.id}] state machine.");
 				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine,
-					handledState, createdTransition, (handledState as StateMachine).AddService(serviceId: serviceId, type: serviceType, customInterval: customInterval));
+					handledState, createdTransition,service);
 			}
 			throw new Exception("only state machine can add Service");
-		}
-
-		/// <summary>
-		/// 为StateMachine添加BeginService回调
-		/// </summary>
-		public StateMachineHandlerResult OnBeginService(Action<Service> beginService)
-		{
-			if (handledState.stateType == StateType.StateMachine)
-			{
-				//Debug.Log($"set [{handledState.id}] state machine [{createdService.id}] begin service action ");
-				m_createdService.SetBeginService(beginService);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition, createdService);
-			}
-			throw new Exception("only state machine can set beginService");
-		}
-
-		/// <summary>
-		/// 为StateMachine添加Service回调
-		/// </summary>
-		public StateMachineHandlerResult OnLogicService(Action<Service> service)
-		{
-			if (handledState.stateType == StateType.StateMachine)
-			{
-				//Debug.Log($"set [{handledState.id}] state machine [{createdService.id}] logic service action ");
-				m_createdService.SetSercive(service);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition, createdService);
-			}
-			throw new Exception("only state machine can set service");
-		}
-
-		/// <summary>
-		/// 为StateMachine添加EndService回调
-		/// </summary>
-		public StateMachineHandlerResult OnEndService(Action<Service> endService)
-		{
-			if (handledState.stateType == StateType.StateMachine)
-			{
-				//Debug.Log($"set [{handledState.id}] state machine [{createdService.id}] end service action ");
-				m_createdService.SetEndService(endService);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition, createdService);
-			}
-			throw new Exception("only state machine can set endService");
-		}
-
-		/// <summary>
-		/// 为StateMachine添加ExecuteService回调
-		/// </summary>
-		public StateMachineHandlerResult OnService(Action<Service, ServiceExecuteType> service)
-		{
-			if (handledState.stateType == StateType.StateMachine)
-			{
-				//Debug.Log($"set [{handledState.id}] state machine [{createdService.id}] service action ");
-				m_createdService.SetExecuteService(service);
-				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, handledState, createdTransition, createdService);
-			}
-			throw new Exception("only state machine can call OnExecute");
 		}
 
 		/// <summary>
@@ -377,6 +254,11 @@ namespace RPGCore.AI.HFSM
 		public void EndHandle()
 		{
 			//Debug.Log($"end handle [{parentStateMachine.id}] state machine");
+		}
+
+		public StateMachineHandlerResult OnExecute(Action<State, StateExecuteType> onIdleExecute)
+		{
+			return new StateMachineHandlerResult(IsBeginNewLevel ? this : previousHandleResult, parentStateMachine, null);
 		}
 	}
 }

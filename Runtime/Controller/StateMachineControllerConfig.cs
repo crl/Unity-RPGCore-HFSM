@@ -13,7 +13,5 @@ namespace RPGCore.AI.HFSM
         public string FilePath;
         public bool UseNamespace;
         public string Namespace;
-        public bool DisperseGenerate;
-        public bool DisperseAll;
     }
 }

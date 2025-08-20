@@ -17,14 +17,19 @@ namespace RPGCore.AI.HFSM
 		public static int stateWidth => 480;
 		public static int stateHeight => 90;
 #endif
-		public string id => m_id;
+		public string id
+		{
+			get => m_id;
+			internal set => m_id = value;
+		}
+
 		protected string m_id;
 
 		public StateType stateType => m_stateType;
 		protected StateType m_stateType;
 
-		public StateMachine parentStateMachine => m_parentStateMachine;
-		protected StateMachine m_parentStateMachine;
+		public StateMachine parentStateMachine => _parentStateMachine;
+		protected StateMachine _parentStateMachine;
 
 		public StateBundle[] executeStackSnapshot => m_executeStackSnapshot;
 		protected StateBundle[] m_executeStackSnapshot = null;
@@ -32,7 +37,7 @@ namespace RPGCore.AI.HFSM
 		public virtual void OnEnter()
 		{ }
 
-		public virtual void OnLogic()
+		public virtual void OnUpdate()
 		{ }
 
 		public virtual void OnExit()
@@ -42,15 +47,15 @@ namespace RPGCore.AI.HFSM
 		{ return true; }
 
 		/// <summary>
-		/// ÉèÖÃ¸¸×´Ì¬»ú
+		/// è®¾ç½®çˆ¶çŠ¶æ€æœº
 		/// </summary>
 		public void SetParentStateMachine(StateMachine parent)
 		{
-			m_parentStateMachine = parent;
+			_parentStateMachine = parent;
 		}
 
 		/// <summary>
-		/// ÔÚ¸¸StateMachineÖĞ»ñÈ¡µ½ÒÔµ±Ç°state»òStateMachineÎªÆğµãµÄTransition
+		/// åœ¨çˆ¶StateMachineä¸­è·å–åˆ°ä»¥å½“å‰stateæˆ–StateMachineä¸ºèµ·ç‚¹çš„Transition
 		/// </summary>
 		public List<Transition> GetParentTransitionsStartWith()
 		{
@@ -59,7 +64,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÉèÖÃµ±Ç°×´Ì¬Ö´ĞĞÊ±µÄÖ´ĞĞÕ»¿ìÕÕ£»±ãÓÚËæÊ±½«Ö´ĞĞÕ»»Ö¸´µ½µ±Ç°×´Ì¬Ö´ĞĞÊ±µÄÑù×Ó
+		/// è®¾ç½®å½“å‰çŠ¶æ€æ‰§è¡Œæ—¶çš„æ‰§è¡Œæ ˆå¿«ç…§ï¼›ä¾¿äºéšæ—¶å°†æ‰§è¡Œæ ˆæ¢å¤åˆ°å½“å‰çŠ¶æ€æ‰§è¡Œæ—¶çš„æ ·å­
 		/// </summary>
 		public void SetExecuteStackSnapshot(StateBundle[] stateBundles)
 		{
@@ -78,10 +83,7 @@ namespace RPGCore.AI.HFSM
 
 		[HideInInspector]
 		public bool isExecuting;
-
-		//ÊÇ·ñ¶ÀÁ¢Éú³É½Å±¾
-		[HideInInspector]
-		public bool independentGenerate;
+		
 #endif
 		public string id;
 		public StateType stateType;

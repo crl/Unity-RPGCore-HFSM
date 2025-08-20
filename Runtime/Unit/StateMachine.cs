@@ -11,17 +11,16 @@ namespace RPGCore.AI.HFSM
 		CustomInterval
 	}
 
-	public enum ServiceExecuteType
-	{
-		BeginService,
-		Service,
-		EndService
-	}
-
 	public class StateMachine : StateBase
 	{
 		public static string anyState => "Any";
 		public static string entryState => "Entry";
+
+		public StateMachineScriptController ctrl
+		{
+			get;
+			internal set;
+		}
 
 		public List<StateBase> states => m_states;
 		private List<StateBase> m_states;
@@ -51,7 +50,7 @@ namespace RPGCore.AI.HFSM
 			m_states.Add(Entry);
 		}
 
-		public State AddState(State state, bool defaultState = false)
+		private State AddState(State state, bool defaultState = false)
 		{
 			m_states.Add(state);
 			state.SetParentStateMachine(this);
@@ -59,14 +58,27 @@ namespace RPGCore.AI.HFSM
 			return state;
 		}
 
-		public State AddState(string stateid, bool defaultState = false)
+		public State GetState(string stateid)
 		{
-			State state = null;
-			state = m_states.Find(s => s.id.Equals(stateid)) as State;
+			State state =  m_states.Find(s => s.id.Equals(stateid)) as State;
 			if (state == null)
 			{
-				state = new State(stateid);
-				return AddState(state, defaultState);
+				Debug.LogWarning($"state {stateid} in {this.id} has not exist.");
+			}
+
+			return state;
+		}
+
+		public T AddState<T>(string stateid, bool defaultState = false) where T:State,new()
+		{
+			T state = null;
+			state = m_states.Find(s => s.id.Equals(stateid)) as T;
+			if (state == null)
+			{
+				state = new T();
+				state.id = stateid;
+				AddState(state, defaultState);
+				return state;
 			}
 			Debug.LogWarning($"state {stateid} in {this.id} has already exist.");
 			return state;
@@ -87,6 +99,7 @@ namespace RPGCore.AI.HFSM
 			if (stateMachine == null)
 			{
 				stateMachine = new StateMachine(stateMachineId);
+				stateMachine.ctrl = ctrl;
 				return AddStateMachine(stateMachine, defaultState);
 			}
 			Debug.LogWarning($"state machine {stateMachineId} in {this.id} has already exist.");
@@ -111,16 +124,13 @@ namespace RPGCore.AI.HFSM
 			return transition;
 		}
 
-		public Service AddService(string serviceId,
-			Action<Service> service = null,
-			Action<Service> beginService = null,
-			Action<Service> endService = null,
-			ServiceType type = ServiceType.Update, float customInterval = 0f)
+		public Service AddService<T>(string serviceId, ServiceType type = ServiceType.Update, float customInterval = 0f) where T:Service,new()
 		{
 			Service _service = m_services.Find(s => s.id.Equals(serviceId));
 			if (_service == null)
 			{
-				_service = new Service(serviceId, service, beginService, endService, type, customInterval);
+				_service = new T();
+				_service.Init(serviceId, type, customInterval);
 				m_services.Add(_service);
 			}
 			return _service;
@@ -135,10 +145,10 @@ namespace RPGCore.AI.HFSM
 	public class StateMachineData : StateBaseData
 	{
 		public bool isRoot;
-		public List<string> childStates = new List<string>();
+		public List<string> childStates = new();
 		public string defaultState;
-		public List<string> transitions = new List<string>();
-		public List<ServiceData> services = new List<ServiceData>();
+		public List<string> transitions = new();
+		public List<ServiceData> services = new();
 
 		[HideInInspector]
 		public StateData any;

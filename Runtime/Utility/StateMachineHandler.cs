@@ -19,7 +19,8 @@ namespace RPGCore.AI.HFSM
 		/// <returns></returns>
 		public static StateMachineHandlerResult BeginStateMachine(StateMachineScriptController controller, string stateId)
 		{
-			StateMachine stateMachine = new StateMachine(stateId);
+			var stateMachine = new StateMachine(stateId);
+			stateMachine.ctrl = controller;
 			stateMachine.SetRoot();
 			currentHandledStateMachine = stateMachine;
 			currentHandledController = controller;

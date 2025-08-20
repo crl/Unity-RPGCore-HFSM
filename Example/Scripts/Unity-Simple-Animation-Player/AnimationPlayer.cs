@@ -1,13 +1,11 @@
-using System.Collections.Generic;
 using RPGCore.AI.HFSM;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
 namespace RPGCore.Animation
 {
-	public class AnimationPlayerManager : MonoBehaviour
+	public class AnimationPlayer : MonoBehaviour
 	{
 		//构建图所用部分
 
@@ -355,7 +353,9 @@ namespace RPGCore.Animation
 		/// <summary>
 		/// 提交一个分层动画转换请求 等待处理
 		/// </summary>
+		/// <param name="animationName"></param>
 		/// <param name="layerName">AvatarMask</param>
+		/// <param name="layerWeight"></param>
 		public void RequestLayerTransition(string animationName, string layerName, float layerWeight = 1)
 		{
 			//在处理退出时如果有请求进来则优先处理请求
@@ -546,9 +546,7 @@ namespace RPGCore.Animation
 					//交换端口0和端口1的anim
 					subMixerPlayable.DisconnectInput(0);
 					subMixerPlayable.DisconnectInput(1);
-					AnimationClipPlayable temp = layerCurrentPlayingPlayable;
-					layerCurrentPlayingPlayable = layerTransitionTargetPlayable;
-					layerTransitionTargetPlayable = temp;
+					(layerCurrentPlayingPlayable, layerTransitionTargetPlayable) = (layerTransitionTargetPlayable, layerCurrentPlayingPlayable);
 					graph.Connect(layerCurrentPlayingPlayable, 0, subMixerPlayable, 0);
 					graph.Connect(layerTransitionTargetPlayable, 0, subMixerPlayable, 1);
 					subMixerPlayable.SetInputWeight(0, 1);
@@ -623,8 +621,6 @@ namespace RPGCore.Animation
 		/// <summary>
 		/// 通过名称寻找特定的动画数据
 		/// </summary>
-		/// <param name="animationName">动画数据的名称</param>
-		/// <returns></returns>
 		/// <summary>
 		private AnimationPlayerDataSO GetAnimationData(string animationName)
 		{

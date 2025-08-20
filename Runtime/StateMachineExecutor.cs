@@ -59,7 +59,7 @@ namespace RPGCore.AI.HFSM
 		{
 			ExecuteStateMachineService(ServiceType.Update);
 			ExecuteStateMachineService(ServiceType.CustomInterval);
-			m_currentExecuteState.OnLogic();
+			m_currentExecuteState.OnUpdate();
 		}
 
 		private void LateUpdate()
@@ -92,12 +92,12 @@ namespace RPGCore.AI.HFSM
 				{
 					foreach (Service service in bundle.services.Where(s => s.serviceType == type))
 					{
-						if (type != ServiceType.CustomInterval) service.OnSercive();
+						if (type != ServiceType.CustomInterval) service.OnUpdate();
 						else
 						{
 							if (service.timer.Elapsed >= service.customInterval)
 							{
-								service.OnSercive();
+								service.OnUpdate();
 								service.timer.Reset();
 							}
 						}
@@ -187,7 +187,7 @@ namespace RPGCore.AI.HFSM
 					{
 						StateBundle popState = m_executeStateStack.Pop();
 						if (popState.state.stateType != StateType.StateMachine) popState.state.OnExit();
-						else popState.services.ForEach(s => s.OnEndService());
+						else popState.services.ForEach(s => s.OnExit());
 						if (popState.state.id == transState.id)
 						{
 							if (passedTransition.transitionType == TransitionType.Global) m_executeStateStack.Push(popState);
@@ -215,7 +215,7 @@ namespace RPGCore.AI.HFSM
 				{
 					state.SetExecuteStackSnapshot(m_executeStateStack.ToArray());
 				}
-				(state as StateMachine).services.ForEach(service => { service.OnBeginService(); });
+				(state as StateMachine).services.ForEach(service => { service.OnEnter(); });
 				state = (state as StateMachine).defaultState;
 				if (state is null)
 				{

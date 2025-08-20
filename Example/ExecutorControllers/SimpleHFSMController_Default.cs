@@ -1,19 +1,16 @@
-using RPGCore.AI.HFSM;
+﻿using RPGCore.AI.HFSM;
 using RPGCore.Animation;
 using UnityEngine;
 public partial class SimpleHFSMController : StateMachineScriptController
 {
-	private AnimationPlayerManager animationPlayer;
+	private AnimationPlayer animationPlayer;
 	public override void Init()
 	{
-		animationPlayer = gameObject.GetComponent<AnimationPlayerManager>();
+		animationPlayer = gameObject.GetComponent<AnimationPlayer>();
 	}
-//Don't delete or modify the #region & #endregion
-#region Method
-	//Service Methods
-	//State Methods
-#endregion Method
 }
+
+
 
 
 

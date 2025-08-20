@@ -68,14 +68,6 @@ namespace RPGCore.AI.HFSM
 			}
 			EditorGUILayout.EndHorizontal();
 
-			EditorGUILayout.Space();
-			EditorGUILayout.BeginHorizontal();
-			EditorGUI.BeginDisabledGroup(!helper.HFSMController.controllerConfig.DisperseGenerate || helper.HFSMController.controllerConfig.DisperseAll);
-			EditorGUILayout.LabelField(new GUIContent("independent", "Generate script files independently"), GUILayout.Width(80));
-			helper.stateMachineData.independentGenerate = GUILayout.Toggle(helper.stateMachineData.independentGenerate, "", GUILayout.Width(20));
-			EditorGUI.EndDisabledGroup();
-			EditorGUILayout.EndHorizontal();
-
 			EditorGUILayout.EndVertical();
 			EditorGUI.EndDisabledGroup();
 		}

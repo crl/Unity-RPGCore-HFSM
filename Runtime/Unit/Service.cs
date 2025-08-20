@@ -3,99 +3,70 @@ using UnityEngine;
 
 namespace RPGCore.AI.HFSM
 {
-	public class Service
-	{
-		public string id => m_id;
-		private string m_id;
-		public ServiceType serviceType => m_serviceType;
-		private ServiceType m_serviceType;
-		public bool pauseService => m_pauseService;
-		private bool m_pauseService = false;
-		public StateMachine serviceOwner => m_serviceOwner;
-		private StateMachine m_serviceOwner;
+    public class Service
+    {
+        public string id { get; private set; }
 
-		private Action<Service> m_beginService;
-		private Action<Service> m_serviceAction;
-		private Action<Service> m_endService;
-		private Action<Service, ServiceExecuteType> m_executeService;
-		public float customInterval => m_customInterval;
-		private float m_customInterval;
-		public Timer timer;
+        public ServiceType serviceType => m_serviceType;
+        private ServiceType m_serviceType;
+        public bool pauseService => m_pauseService;
+        private bool m_pauseService = false;
+        public StateMachine serviceOwner => _serviceOwner;
+        private StateMachine _serviceOwner;
 
-		public Service(string serviceId,
-			Action<Service> service = null,
-			Action<Service> beginService = null,
-			Action<Service> endService = null,
-			ServiceType type = ServiceType.Update, float customInterval = 0f)
-		{
-			m_id = serviceId;
-			m_serviceType = type;
-			m_beginService = beginService;
-			m_serviceAction = service;
-			m_endService = endService;
-			m_customInterval = customInterval;
-			timer = new Timer();
-		}
+        public float customInterval => m_customInterval;
+        private float m_customInterval;
+        public Timer timer;
 
-		public void OnBeginService()
-		{
-			timer.Reset();
-			m_pauseService = false;
-			if (m_beginService != null)
-			{
-				m_beginService.Invoke(this);
-				return;
-			}
-			OnExecuteService(ServiceExecuteType.BeginService);
-		}
+        public Service()
+        {
+            timer = new Timer();
+        }
 
-		public void SetBeginService(Action<Service> action) => m_beginService = action;
+        internal void Init(string serviceId,
+            ServiceType type = ServiceType.Update, float customInterval = 0f)
+        {
+            id = serviceId;
+            m_serviceType = type;
+            m_customInterval = customInterval;
+        }
 
-		public void OnSercive()
-		{
-			if (m_pauseService) return;
-			if (m_serviceAction != null)
-			{
-				m_serviceAction.Invoke(this);
-				return;
-			}
-			OnExecuteService(ServiceExecuteType.Service);
-		}
+        public virtual void OnEnter()
+        {
+            timer.Reset();
+            m_pauseService = false;
+        }
 
-		public void SetSercive(Action<Service> action) => m_serviceAction = action;
 
-		public void OnEndService()
-		{
-			m_pauseService = false;
-			if (m_endService != null)
-			{
-				m_endService.Invoke(this);
-				return;
-			}
-			OnExecuteService(ServiceExecuteType.EndService);
-		}
+        internal void OnUpdate()
+        {
+            if (m_pauseService) return;
+            doUpdate();
+        }
 
-		public void SetEndService(Action<Service> action) => m_endService = action;
+        protected virtual void doUpdate()
+        {
+        }
 
-		public void OnExecuteService(ServiceExecuteType type) => m_executeService?.Invoke(this, type);
+        public virtual void OnExit()
+        {
+            m_pauseService = false;
+        }
 
-		public void SetExecuteService(Action<Service, ServiceExecuteType> service) => m_executeService = service;
+        public void Pause() => m_pauseService = true;
 
-		public void Pause() => m_pauseService = true;
+        public void Continue() => m_pauseService = false;
+    }
 
-		public void Continue() => m_pauseService = false;
-	}
+    [Serializable]
+    public class ServiceData
+    {
+        public string id;
 
-	[Serializable]
-	public class ServiceData
-	{
-		public string id;
+        public ServiceType serviceType = ServiceType.Update;
 
-		public ServiceType serviceType = ServiceType.Update;
+        public float customInterval = 0;
 
-		public float customInterval = 0;
-
-		[Multiline]
-		public string description;
-	}
+        [Multiline] public string description;
+    }
 }
