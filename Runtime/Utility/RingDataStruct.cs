@@ -1,4 +1,4 @@
-namespace DogFramework
+namespace RPGCore.AI.HFSM
 {
 	/// <summary>
 	/// 环形数组栈

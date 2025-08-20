@@ -1,36 +1,39 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace RPGCore.AI.HFSM
 {
-	public enum ParameterType
-	{
-		Int,
-		Float,
-		Bool,
-		Trigger
-	}
+    public enum ParameterType
+    {
+        Int,
+        Float,
+        Bool,
+        Trigger
+    }
 
-	[System.Serializable]
-	public class Parameter
-	{
-		[SerializeField]
-		protected string m_name;
+    [System.Serializable]
+    public class Parameter
+    {
+        [FormerlySerializedAs("m_name")] [SerializeField]
+        protected string _name;
 
-		public string name
-		{ get { return m_name; } set { m_name = value; } }
+        public string name
+        {
+            get => _name;
+            set => _name = value;
+        }
 
-		[SerializeField]
-		protected ParameterType m_type;
+        [FormerlySerializedAs("m_type")] [SerializeField] protected ParameterType _type;
 
-		public ParameterType type => m_type;
+        public ParameterType type => _type;
 
-		public float baseValue;
+        public float baseValue;
 
-		public Parameter(string name, ParameterType type, float value)
-		{
-			m_name = name;
-			m_type = type;
-			baseValue = value;
-		}
-	}
+        public Parameter(string name, ParameterType type, float value)
+        {
+            _name = name;
+            _type = type;
+            baseValue = value;
+        }
+    }
 }

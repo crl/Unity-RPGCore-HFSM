@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RPGCore.AI.HFSM;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -38,14 +39,14 @@ namespace RPGCore.Animation
 		//记录栈 记录播放过的动画信息
 
 		private static readonly int runtimeStackLogMaxLength = 8;
-		private RingStack<AnimationRuntimeInfo> animationRuntimeStackLog = new RingStack<AnimationRuntimeInfo>(runtimeStackLogMaxLength);
-		private RingStack<AnimationRuntimeInfo> animationLayerRuntimeStackLog = new RingStack<AnimationRuntimeInfo>(runtimeStackLogMaxLength);
+		private RingStack<AnimationRuntimeInfo> animationRuntimeStackLog = new(runtimeStackLogMaxLength);
+		private RingStack<AnimationRuntimeInfo> animationLayerRuntimeStackLog = new(runtimeStackLogMaxLength);
 
 		//转换请求队列
 
 		private static readonly int transitionQueueMaxLength = 8;
-		private RingQueueEx<AnimationPlayerDataSO> animationTransitionQueue = new RingQueueEx<AnimationPlayerDataSO>(transitionQueueMaxLength);
-		private RingQueueEx<AnimationPlayerDataSO> animationLayerTransitionQueue = new RingQueueEx<AnimationPlayerDataSO>(transitionQueueMaxLength);
+		private RingQueueEx<AnimationPlayerDataSO> animationTransitionQueue = new(transitionQueueMaxLength);
+		private RingQueueEx<AnimationPlayerDataSO> animationLayerTransitionQueue = new(transitionQueueMaxLength);
 
 		//当前正在播放的项
 

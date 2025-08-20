@@ -390,7 +390,7 @@ MonoBehaviour:
       Execute.\");\r\n\t\t}\r\n\t\telse if (type == StateExecuteType.OnLogic)\r\n\t\t{\r\n\t\t\tif
       (animationPlayer.CurrentFinishPlaying)\r\n\t\t\t{\r\n\t\t\t\tSetBool(\"IsIdle\",
       false);\r\n\t\t\t\tSetBool(\"IsRun\", false);\r\n\t\t\t\tSetBool(\"IsWalk\",
-      true);\r\n\t\t\t}\r\n\t\t}\n"
+      true);\r\n\t\t\t}\r\n\t\t}\r\n"
     linePosition: 22
     independentGenerate: 1
     isDeleted: 0
@@ -404,7 +404,7 @@ MonoBehaviour:
       Execute.\");\r\n\t\t}\r\n\t\telse if (type == StateExecuteType.OnLogic)\r\n\t\t{\r\n\t\t\tif
       (animationPlayer.CurrentFinishPlaying)\r\n\t\t\t{\r\n\t\t\t\tSetBool(\"IsIdle\",
       false);\r\n\t\t\t\tSetBool(\"IsWalk\", false);\r\n\t\t\t\tSetBool(\"IsRun\",
-      true);\r\n\t\t\t}\r\n\t\t}\n"
+      true);\r\n\t\t\t}\r\n\t\t}\r\n"
     linePosition: 41
     independentGenerate: 1
     isDeleted: 0
@@ -418,7 +418,7 @@ MonoBehaviour:
       Execute.\");\r\n\t\t}\r\n\t\telse if (type == StateExecuteType.OnLogic)\r\n\t\t{\r\n\t\t\tif
       (animationPlayer.CurrentFinishPlaying)\r\n\t\t\t{\r\n\t\t\t\tSetBool(\"IsRun\",
       false);\r\n\t\t\t\tSetBool(\"IsWalk\", false);\r\n\t\t\t\tSetBool(\"IsIdle\",
-      true);\r\n\t\t\t}\r\n\t\t}\n"
+      true);\r\n\t\t\t}\r\n\t\t}\r\n"
     linePosition: 60
     independentGenerate: 1
     isDeleted: 0
@@ -428,7 +428,7 @@ MonoBehaviour:
     methodAttributeLine: "\t[State(\"GetHit\")]\n"
     methodHeadLine: "\tprivate void on_GetHit_execute(State state, StateExecuteType
       type)\n"
-    methodBodyLines: "\t\tif (type == StateExecuteType.OnEnter) animationPlayer.RequestTransition(\"GetHit\");\n"
+    methodBodyLines: "\t\tif (type == StateExecuteType.OnEnter) animationPlayer.RequestTransition(\"GetHit\");\r\n"
     linePosition: 79
     independentGenerate: 1
     isDeleted: 0
@@ -442,7 +442,7 @@ MonoBehaviour:
       Execute.\");\r\n\t\t}\r\n\t\telse if (type == StateExecuteType.OnLogic)\r\n\t\t{\r\n\t\t\tif
       (animationPlayer.CurrentFinishPlaying)\r\n\t\t\t{\r\n\t\t\t\tSetBool(\"IsAttack\",
       false);\r\n\t\t\t\tSetBool(\"IsRoll\", true);\r\n\t\t\t\tSetBool(\"IsSkill\",
-      false);\r\n\t\t\t}\r\n\t\t}\n"
+      false);\r\n\t\t\t}\r\n\t\t}\r\n"
     linePosition: 90
     independentGenerate: 1
     isDeleted: 0
@@ -456,7 +456,7 @@ MonoBehaviour:
       Execute.\");\r\n\t\t}\r\n\t\telse if (type == StateExecuteType.OnLogic)\r\n\t\t{\r\n\t\t\tif
       (animationPlayer.CurrentFinishPlaying)\r\n\t\t\t{\r\n\t\t\t\tSetBool(\"IsAttack\",
       false);\r\n\t\t\t\tSetBool(\"IsRoll\", false);\r\n\t\t\t\tSetBool(\"IsSkill\",
-      true);\r\n\t\t\t}\r\n\t\t}\n"
+      true);\r\n\t\t\t}\r\n\t\t}\r\n"
     linePosition: 109
     independentGenerate: 1
     isDeleted: 0
@@ -470,7 +470,7 @@ MonoBehaviour:
       Execute.\");\r\n\t\t}\r\n\t\telse if (type == StateExecuteType.OnLogic)\r\n\t\t{\r\n\t\t\tif
       (animationPlayer.CurrentFinishPlaying)\r\n\t\t\t{\r\n\t\t\t\tSetBool(\"IsAttack\",
       true);\r\n\t\t\t\tSetBool(\"IsRoll\", false);\r\n\t\t\t\tSetBool(\"IsSkill\",
-      false);\r\n\t\t\t}\r\n\t\t}\n"
+      false);\r\n\t\t\t}\r\n\t\t}\r\n"
     linePosition: 128
     independentGenerate: 1
     isDeleted: 0
@@ -481,7 +481,7 @@ MonoBehaviour:
     methodHeadLine: "\tprivate void on_Pause_execute(State state, StateExecuteType
       type)\n"
     methodBodyLines: "\t\tif (type == StateExecuteType.OnEnter)\r\n\t\t{\r\n\t\t\tDebug.Log(\"Pause\");\r\n\t\t\tanimationPlayer.Stop();\r\n\t\t}\r\n\t\telse
-      if (type == StateExecuteType.OnExit)\r\n\t\t{\r\n\t\t\tanimationPlayer.Play();\r\n\t\t}\n"
+      if (type == StateExecuteType.OnExit)\r\n\t\t{\r\n\t\t\tanimationPlayer.Play();\r\n\t\t}\r\n"
     linePosition: 147
     independentGenerate: 1
     isDeleted: 0
@@ -490,7 +490,7 @@ MonoBehaviour:
     targetDescription: 
     methodAttributeLine: "\t[CanExit(\"GetHit\")]\n"
     methodHeadLine: "\tprivate bool can_GetHit_exit(State state)\n"
-    methodBodyLines: "\t\treturn animationPlayer.CurrentFinishPlaying;\n"
+    methodBodyLines: "\t\treturn animationPlayer.CurrentFinishPlaying;\r\n"
     linePosition: 0
     independentGenerate: 0
     isDeleted: 0
@@ -499,20 +499,24 @@ MonoBehaviour:
     targetDescription: 
     methodAttributeLine: "\t[CanExit(\"Pause\")]\n"
     methodHeadLine: "\tprivate bool can_Pause_exit(State state)\n"
-    methodBodyLines: "\t\treturn !GetBool(\"Pause\");\n"
+    methodBodyLines: "\t\treturn !GetBool(\"Pause\");\r\n"
     linePosition: 0
     independentGenerate: 0
     isDeleted: 0
-  beforeMethod: "using RPGCore.AI.HFSM;\nusing RPGCore.Animation;\nusing UnityEngine;\npublic
-    partial class SimpleHFSMController : StateMachineScriptController\n{\n\tprivate
-    AnimationPlayerManager animationPlayer;\n\tpublic override void Init()\n\t{\n\t\tanimationPlayer
-    = gameObject.GetComponent<AnimationPlayerManager>();\n\t}\n//Don't delete or
-    modify the #region & #endregion\n#region Method\n"
+  beforeMethod: "using RPGCore.AI.HFSM;\r\nusing RPGCore.Animation;\r\nusing UnityEngine;\r\npublic
+    partial class SimpleHFSMController : StateMachineScriptController\r\n{\r\n\tprivate
+    AnimationPlayerManager animationPlayer;\r\n\tpublic override void Init()\r\n\t{\r\n\t\tanimationPlayer
+    = gameObject.GetComponent<AnimationPlayerManager>();\r\n\t}\r\n//Don't delete
+    or modify the #region & #endregion\r\n#region Method\r\n"
   afterMethod: '#endregion Method
 
     }
 
+    
 
+    
+
+    
 
 
 '
@@ -524,4 +528,4 @@ MonoBehaviour:
     Namespace: 
     DisperseGenerate: 1
     DisperseAll: 1
-  generateFilePath: D:/UnityProject/LearnProject_U6/Assets/Plugins/Unity-RPGCore-HFSM/Example/ExecutorControllers/
+  generateFilePath: E:/works/Cinema/Assets/Unity-RPGCore-HFSM/Example/ExecutorControllers/

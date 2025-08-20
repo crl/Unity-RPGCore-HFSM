@@ -21,7 +21,7 @@ namespace RPGCore.AI.HFSM
 		/// <summary>
 		/// 此运行时Controller所拥有的Parameters
 		/// </summary>
-		public Dictionary<string,Parameter> parameters = new Dictionary<string, Parameter>();
+		public Dictionary<string, Parameter> parameters { get; } = new();
 
 		/// <summary>
 		///调用此方法构造运行时的状态机
@@ -43,12 +43,12 @@ namespace RPGCore.AI.HFSM
 		/// <summary>
 		///将Controller中的Parameters复制一份用以Runtime
 		/// </summary>
-		public List<Parameter> PrepareParameters(List<Parameter> parameters)
+		internal List<Parameter> PrepareParameters(List<Parameter> parameters)
 		{
 			if (this.parameters.Count != 0) return null;
-			foreach (Parameter parameter in parameters)
+			foreach (var parameter in parameters)
 			{
-				Parameter param = new Parameter(parameter.name, parameter.type, parameter.baseValue);
+				var param = new Parameter(parameter.name, parameter.type, parameter.baseValue);
 				this.parameters[parameter.name] = param;
 			}
 			return parameters;
@@ -65,7 +65,7 @@ namespace RPGCore.AI.HFSM
 
 		public void SetFloat(string id, float value)
 		{
-			Parameter data = parameters[id];
+			var data = parameters[id];
 			if (data != null)
 			{
 				data.baseValue = value;
@@ -74,7 +74,7 @@ namespace RPGCore.AI.HFSM
 
 		public void SetBool(string id, bool value)
 		{
-			Parameter data = parameters[id];
+			var data = parameters[id];
 			if (data != null)
 			{
 				data.baseValue = value ? 1.0f : 0.0f;
@@ -83,7 +83,7 @@ namespace RPGCore.AI.HFSM
 
 		public void SetTrigger(string id)
 		{
-			Parameter data = parameters[id];
+			var data = parameters[id];
 			if (data != null)
 			{
 				data.baseValue = 1.0f;
