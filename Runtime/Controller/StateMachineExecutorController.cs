@@ -176,10 +176,12 @@ public partial class {0} : StateMachineScriptController
 	{
 	}
 }";
-            var rootData = stateMachines.Find(sm => sm.isRoot);
-            var sb = new StringBuilder();
-            GenerateConstructCode(rootData, sb, 3);
-            var code = sb.ToString();
+            var dir = Path.GetDirectoryName(filePath);
+            if (Directory.Exists(dir) == false)
+            {
+                Directory.CreateDirectory(dir);
+            }
+
             var str = tpm.Replace("{0}", realScriptControllerName);
             var path = filePath + realScriptControllerName + ".cs";
             if (File.Exists(path) == false)
@@ -207,9 +209,14 @@ public partial class {0} : StateMachineScriptController
 	}
 }";
             var rootData = stateMachines.Find(sm => sm.isRoot);
-            var sb = new StringBuilder();
-            GenerateConstructCode(rootData, sb, 3);
-            var code = sb.ToString();
+            var sb = new List<string>();
+            GenerateConstructCode(rootData, sb);
+            var code = "";
+            foreach (var item in sb)
+            {
+                code += $"\t\t\t{item}\n";
+            }
+            code= code.TrimStart('\t').TrimEnd('\n');
             var str = tpm.Replace("{0}", realScriptControllerName);
             str = str.Replace("{1}", rootData.id);
             str = str.Replace("{2}", code);
@@ -253,24 +260,18 @@ public partial class {0} : StateMachineScriptController
         /// <summary>
         /// 自顶向下生成构造状态机代码；
         /// </summary>
-        private void GenerateConstructCode(StateMachineData stateMachineData, StringBuilder sb, int level)
+        private void GenerateConstructCode(StateMachineData stateMachineData, List<string> sb)
         {
             var allStates = new List<StateBaseData>();
             allStates.AddRange(states);
             allStates.AddRange(stateMachines);
-            var interval = "";
-            for (int i = 0; i < level; i++)
-            {
-                interval += "\t";
-            }
 
             //先生成service
             for (int i = 0, len = stateMachineData.services.Count; i < len; i++)
             {
                 var service = stateMachineData.services[i];
                 var cls = GetClassNameBy(service.id, "Service");
-                sb.AppendLine(
-                    interval +
+                sb.Add(
                     $".AddService<{cls}>(\"{service.id}\",ServiceType.{service.serviceType.ToString()},{service.customInterval})");
             }
 
@@ -280,21 +281,21 @@ public partial class {0} : StateMachineScriptController
                 StateBaseData state = allStates.Find(s => s.id == stateMachineData.childStates[i]);
                 if (state.stateType == StateType.StateMachine)
                 {
-                    sb.AppendLine(interval +
-                                  $".AddStateMachine(\"{state.id}\", {(state.id == stateMachineData.defaultState).ToString().ToLower()})");
-                    GenerateConstructCode(state as StateMachineData, sb, level + 1);
+                    sb.Add(
+                        $".AddStateMachine(\"{state.id}\", {(state.id == stateMachineData.defaultState).ToString().ToLower()})");
+                    GenerateConstructCode(state as StateMachineData, sb);
                 }
                 else
                 {
                     var cls = GetClassNameBy(state.id, "State");
                     if ((state as StateData).isTemporary)
                     {
-                        sb.AppendLine(interval + $".AddTemporaryState<{cls}>(\"{state.id}\")");
+                        sb.Add($".AddTemporaryState<{cls}>(\"{state.id}\")");
                     }
                     else
                     {
-                        sb.AppendLine(interval +
-                                      $".AddState<{cls}>(\"{state.id}\", {(state.id == stateMachineData.defaultState).ToString().ToLower()})");
+                        sb.Add(
+                            $".AddState<{cls}>(\"{state.id}\", {(state.id == stateMachineData.defaultState).ToString().ToLower()})");
                     }
 
                     if ((state as StateData).canExitHandle)
@@ -312,19 +313,19 @@ public partial class {0} : StateMachineScriptController
                 if (state.stateType == StateType.State)
                 {
                     bool isTemporary = states.Find(s => s.id == transition.to).isTemporary;
-                    sb.AppendLine(interval + $".SwitchHandle(\"{transition.from}\")" +
-                                  $".ToState(\"{transition.to}\",{isTemporary.ToString().ToLower()})");
+                    sb.Add($".SwitchHandle(\"{transition.from}\")" +
+                           $".ToState(\"{transition.to}\",{isTemporary.ToString().ToLower()})");
                 }
                 else
                 {
-                    sb.AppendLine(interval + $".SwitchHandle(\"{transition.from}\")" +
-                                  $".ToStateMachine(\"{transition.to}\")");
+                    sb.Add($".SwitchHandle(\"{transition.from}\")" +
+                           $".ToStateMachine(\"{transition.to}\")");
                 }
 
                 //conditions
                 foreach (var conditionName in transition.baseConditionsName)
                 {
-                    sb.AppendLine(interval + $".Condition(()=>{conditionName})");
+                    sb.Add($".Condition(()=>{conditionName})");
                 }
 
                 foreach (var parameterCondition in transition.parameterConditionDatas)
@@ -333,26 +334,26 @@ public partial class {0} : StateMachineScriptController
                     if (param.type == ParameterType.Bool)
                     {
                         string value = parameterCondition.compareValue >= 1.0f ? "true" : "false";
-                        sb.AppendLine("\t" + interval + $".BoolCondition(\"{param.name}\",{value})");
+                        sb.Add($".BoolCondition(\"{param.name}\",{value})");
                     }
                     else if (param.type == ParameterType.Trigger)
                     {
-                        sb.AppendLine("\t" + interval + $".TriggerCondition(\"{param.name}\")");
+                        sb.Add($".TriggerCondition(\"{param.name}\")");
                     }
                     else if (param.type == ParameterType.Int)
                     {
-                        sb.AppendLine("\t" + interval +
-                                      $".IntCondition(\"{param.name}\",CompareType.{parameterCondition.compareType},{parameterCondition.compareValue})");
+                        sb.Add(
+                            $".IntCondition(\"{param.name}\",CompareType.{parameterCondition.compareType},{parameterCondition.compareValue})");
                     }
                     else if (param.type == ParameterType.Float)
                     {
-                        sb.AppendLine("\t" + interval +
-                                      $".FloatCondition(\"{param.name}\",CompareType.{parameterCondition.compareType},{parameterCondition.compareValue})");
+                        sb.Add(
+                            $".FloatCondition(\"{param.name}\",CompareType.{parameterCondition.compareType},{parameterCondition.compareValue})");
                     }
                 }
             }
 
-            sb.AppendLine(interval + ".FinishHandle()");
+            sb.Add(".FinishHandle()");
         }
 
         private string GetClassNameBy(string str, string postfix)

@@ -55,6 +55,11 @@ namespace HFSM
 				generateButton = Root.Q<ToolbarButton>("GenerateButton");
 				generateButton.RegisterCallback<ClickEvent>(callback => 
 				{
+					if (context.HFSMController == null)
+					{
+						ShowNotification(new  GUIContent("Can't find HFSMController"));
+						return;
+					}
 					context.HFSMController.GenerateScriptController();
 				});
 				stateMachinePathContaner.onGUIHandler += StateMachinePathOnGUI;
