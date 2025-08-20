@@ -20,7 +20,6 @@ namespace HFSM
 		private GraphLayer paramterLayer = null;
 		private GraphLayer stateMachinePathLayer = null;
 
-		[MenuItem("Tools/HFSM Editor Window")]
 		public static void ShowEditorWindow()
 		{
 			HFSMEditorWindow window = GetWindow<HFSMEditorWindow>();

@@ -242,8 +242,9 @@ namespace HFSM
 			for (int i = 0; i < level; i++) { sj += "\t"; }
 			Debug.Log(sj + "【" + stateMachine.id + "】" + $"t:{stateMachine.transitions.Count} "
 				+ $"global t:{stateMachine.transitions.FindAll(t => t.transitionType == TransitionType.Global).Count}");
-			foreach (var state in stateMachine.states)
+			foreach (var key in stateMachine.states.Keys)
 			{
+				var state = stateMachine.states[key];
 				if (state.stateType == StateType.StateMachine)
 				{
 					ShowStateMachineTree(level + 1, state as StateMachine);

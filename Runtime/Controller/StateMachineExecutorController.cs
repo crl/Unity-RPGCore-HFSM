@@ -216,7 +216,9 @@ public partial class {0} : StateMachineScriptController
             {
                 code += $"\t\t\t{item}\n";
             }
-            code= code.TrimStart('\t').TrimEnd('\n');
+
+            code.TrimStart('\t');
+            code.TrimEnd('\n');
             var str = tpm.Replace("{0}", realScriptControllerName);
             str = str.Replace("{1}", rootData.id);
             str = str.Replace("{2}", code);
@@ -272,7 +274,7 @@ public partial class {0} : StateMachineScriptController
                 var service = stateMachineData.services[i];
                 var cls = GetClassNameBy(service.id, "Service");
                 sb.Add(
-                    $".AddService<{cls}>(\"{service.id}\",ServiceType.{service.serviceType.ToString()},{service.customInterval})");
+                    $".AddService<{cls}>(ServiceType.{service.serviceType.ToString()},{service.customInterval})");
             }
 
             //再添加所有的state与StateMachine

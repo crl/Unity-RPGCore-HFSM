@@ -60,17 +60,17 @@ namespace HFSM
 		/// <summary>
 		/// 为当前操作的StateMachine添加一个state
 		/// </summary>
-		public StateMachineHandlerResult AddState<T>(string stateId, bool isDefault = false) where T:State,new()
+		public StateMachineHandlerResult AddState<T>(string stateID,bool isDefault = false) where T:State,new()
 		{
 			//Debug.Log($"add [{stateId}] state to [{parentStateMachine.id}].");
-			var state = parentStateMachine.AddState<T>(stateId, isDefault);
+			var state = parentStateMachine.AddState<T>(stateID,isDefault);
 			return new StateMachineHandlerResult(IsBeginNewLevel ? this : previousHandleResult, parentStateMachine, state);
 		}
 
-		public StateMachineHandlerResult AddTemporaryState<T>(string stateId) where T:State,new()
+		public StateMachineHandlerResult AddTemporaryState<T>(string stateID) where T:State,new()
 		{
 			//Debug.Log($"add [{stateId}] state to [{parentStateMachine.id}].");
-			var state = parentStateMachine.AddState<T>(stateId);
+			var state = parentStateMachine.AddState<T>(stateID);
 			state.SetIsTemporary(true);
 			return new StateMachineHandlerResult(IsBeginNewLevel ? this : previousHandleResult, parentStateMachine, state);
 		}
@@ -81,7 +81,7 @@ namespace HFSM
 		public StateMachineHandlerResult AddStateMachine(string stateMachineId, bool isDefault = false)
 		{
 			//Debug.Log($"add [{stateMachineId}] state machine to [{parentStateMachine.id}].");
-			var stateMachine = parentStateMachine.AddStateMachine(stateMachineId, isDefault);
+			var stateMachine = parentStateMachine.GetStateMachine(stateMachineId, isDefault);
 			return new StateMachineHandlerResult(IsBeginNewLevel ? this : previousHandleResult, stateMachine, stateMachine);
 		}
 
@@ -89,7 +89,7 @@ namespace HFSM
 		/// 为当前操作的state或StateMachine添加一条到目标state的Transition
 		/// 如果目标state不存在，则创建一个state
 		/// </summary>
-		public StateMachineHandlerResult ToState(string stateId, bool isTemporary = false)
+		public StateMachineHandlerResult ToState(string stateID,bool isTemporary = false) 
 		{
 			if (IsBeginNewLevel)
 			{
@@ -98,7 +98,7 @@ namespace HFSM
 			}
 			else
 			{
-				var state = parentStateMachine.GetState(stateId);
+				var state = parentStateMachine.GetState(stateID);
 				state.SetIsTemporary(isTemporary);
 				//Debug.Log($"add transition from [{handledState.id}] to [{state.id}]");
 				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, state,
@@ -120,7 +120,7 @@ namespace HFSM
 			else
 			{
 				bool smIsExist = parentStateMachine.Contains(stateMachineId);
-				var stateMachine = parentStateMachine.AddStateMachine(stateMachineId);
+				var stateMachine = parentStateMachine.GetStateMachine(stateMachineId);
 				m_createdTransition = parentStateMachine.AddTransition(handledState, stateMachine);
 				//Debug.Log($"add transition from [{handledState.id}] to [{stateMachine.id}]");
 				return new StateMachineHandlerResult(previousHandleResult, smIsExist ? parentStateMachine : stateMachine, smIsExist ? handledState : stateMachine,
@@ -198,23 +198,20 @@ namespace HFSM
 				$"you should call this after 'ToState','ToStateMachine' or 'Condition'.");
 		}
 
+		public StateMachineHandlerResult SwitchHandle<T>() where T:State
+		{
+			var stateId = typeof(T).Name;
+			return SwitchHandle(stateId);
+		}
+
 		/// <summary>
 		/// 改变当前操作的State或StateMachine
 		/// </summary>
 		public StateMachineHandlerResult SwitchHandle(string stateId)
 		{
-			StateBase state = parentStateMachine.states.Find(s => s.id.Equals(stateId));
-			if (state != null)
+			if (parentStateMachine.states.TryGetValue(stateId,out var state))
 			{
-				//Debug.Log($"switch handle state to [{state.id}]");
-				//if (state.stateType == StateType.State)
-				//{
 				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine, state);
-				//}
-				//else
-				//{
-				//	return new StateMachineHandlerResult(previousHandleResult, state as StateMachine, state);
-				//}
 			}
 			throw new Exception($"[{stateId}] in state machine [{parentStateMachine.id}] is not exist.");
 		}
@@ -222,11 +219,11 @@ namespace HFSM
 		/// <summary>
 		/// 为StateMachine添加Service
 		/// </summary>
-		public StateMachineHandlerResult AddService<T>(string serviceId, ServiceType serviceType = ServiceType.Update, float customInterval = 0f) where T:Service,new()
+		public StateMachineHandlerResult AddService<T>(ServiceType serviceType = ServiceType.Update, float customInterval = 0f) where T:Service,new()
 		{
 			if (handledState.stateType == StateType.StateMachine)
 			{
-				var service = (handledState as StateMachine).AddService<T>(serviceId: serviceId, type: serviceType,
+				var service = (handledState as StateMachine).AddService<T>(type: serviceType,
 					customInterval: customInterval);
 				//Debug.Log($"add service [{serviceId}] to [{handledState.id}] state machine.");
 				return new StateMachineHandlerResult(previousHandleResult, parentStateMachine,
