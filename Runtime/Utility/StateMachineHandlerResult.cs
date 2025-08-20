@@ -1,6 +1,6 @@
 using System;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public class StateMachineHandlerResult
 	{

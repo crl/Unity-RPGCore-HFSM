@@ -1,8 +1,8 @@
-using DogFramework.EditorExtension;
+using HFSM.EditorExtension;
 using UnityEditor;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public class GraphBackgroundLayer : GraphLayer
 	{
@@ -32,28 +32,28 @@ namespace RPGCore.AI.HFSM
 		public override void ProcessEvent()
 		{
 			base.ProcessEvent();
-			//ÍÏ×§
+			//ï¿½ï¿½×§
 			if (Event.current.type == EventType.MouseDrag && Event.current.button == 2 && posotion.Contains(Event.current.mousePosition))
 			{
 				this.context.dragOffset += Event.current.delta;
 				Event.current.Use();
 			}
 
-			//Ëõ·Å
+			//ï¿½ï¿½ï¿½ï¿½
 			if (Event.current.type == EventType.ScrollWheel && posotion.Contains(Event.current.mousePosition))
 			{
-				//µ± f = Event.current.delta.y ÎªÕýÊý»òÁãÊ±£¬·µ»ØÖµÎª 1£¬µ± f Îª¸ºÊýÊ±£¬·µ»ØÖµÎª -1¡£
+				//ï¿½ï¿½ f = Event.current.delta.y Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÎª 1ï¿½ï¿½ï¿½ï¿½ f Îªï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÎª -1ï¿½ï¿½
 				this.context.zoomFactor -= Mathf.Sign(Event.current.delta.y) / 20f;
 				this.context.zoomFactor = Mathf.Clamp(this.context.zoomFactor, 0.2f, 1f);
 				Event.current.Use();
 			}
-			//È¡ÏûÑ¡ÖÐ
+			//È¡ï¿½ï¿½Ñ¡ï¿½ï¿½
 			if (posotion.MouseOn() && !IsMouseOverAnyState(context.currentChildStatesData) && EventExtension.IsMouseDown(0))
 			{
 				this.context.ClearAllSelectNode();
 				this.context.StopPriviewTransition();
 			}
-			//ÓÒ¼ü²Ëµ¥
+			//ï¿½Ò¼ï¿½ï¿½Ëµï¿½
 			if (posotion.MouseOn() && !IsMouseOverAnyState(context.currentChildStatesData) && EventExtension.IsMouseUp(1) && this.context.HFSMController != null)
 			{
 				mousePosition = Event.current.mousePosition;

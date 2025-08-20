@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
     public enum ParameterType
     {

@@ -4,7 +4,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public class HFSMEditorWindow : EditorWindow
 	{
@@ -26,7 +26,7 @@ namespace RPGCore.AI.HFSM
 			HFSMEditorWindow window = GetWindow<HFSMEditorWindow>();
 			window.minSize = new Vector2(640, 460);
 			GUIContent content = EditorGUIUtility.IconContent("AnimatorStateMachine Icon");
-			content.text = "HFSM Editor Window";
+			content.text = "HFSM";
 			window.titleContent = content;
 			window.Show();
 		}

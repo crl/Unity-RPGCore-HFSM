@@ -1,4 +1,4 @@
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
     public static class StringUtil
     {

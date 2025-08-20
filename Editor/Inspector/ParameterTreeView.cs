@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public class ParameterTreeView : TreeView
 	{

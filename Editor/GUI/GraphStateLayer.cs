@@ -1,11 +1,11 @@
-using DogFramework.EditorExtension;
+using HFSM.EditorExtension;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public class GraphStateLayer : GraphLayer
 	{
@@ -48,7 +48,7 @@ namespace RPGCore.AI.HFSM
 			if (this.context.HFSMController == null)
 				return;
 
-			#region Ñ¡ÖÐ
+			#region Ñ¡ï¿½ï¿½
 
 			List<StateBaseData> states = context.currentChildStatesData;
 			foreach (StateBaseData item in states)
@@ -67,9 +67,9 @@ namespace RPGCore.AI.HFSM
 				return;
 			}
 
-			#endregion Ñ¡ÖÐ
+			#endregion Ñ¡ï¿½ï¿½
 
-			#region ¿òÑ¡
+			#region ï¿½ï¿½Ñ¡
 
 			if (EventExtension.IsMouseDown(0) && !IsMouseOverAnyState(states))
 			{
@@ -87,14 +87,14 @@ namespace RPGCore.AI.HFSM
 				}
 			}
 
-			//ÒÆ³ý´°¿Ú
+			//ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½
 			if (Event.current.type == EventType.MouseLeaveWindow) { isSelecting = false; }
 
 			DrawSelectBox();
 
-			#endregion ¿òÑ¡
+			#endregion ï¿½ï¿½Ñ¡
 
-			#region ÍÏ×§Node
+			#region ï¿½ï¿½×§Node
 
 			if (Event.current.type == EventType.MouseDrag && Event.current.button == 0)
 			{
@@ -109,9 +109,9 @@ namespace RPGCore.AI.HFSM
 				Event.current.Use();
 			}
 
-			#endregion ÍÏ×§Node
+			#endregion ï¿½ï¿½×§Node
 
-			#region ÓÒ¼ü²Ëµ¥
+			#region ï¿½Ò¼ï¿½ï¿½Ëµï¿½
 
 			if (EventExtension.IsMouseUp(1))
 			{
@@ -125,9 +125,9 @@ namespace RPGCore.AI.HFSM
 				}
 			}
 
-			#endregion ÓÒ¼ü²Ëµ¥
+			#endregion ï¿½Ò¼ï¿½ï¿½Ëµï¿½
 
-			#region É¾³ý
+			#region É¾ï¿½ï¿½
 
 			if (Event.current.keyCode == KeyCode.Delete && this.context.selectedStates != null && this.context.selectedStates.Count > 0)
 			{
@@ -135,7 +135,7 @@ namespace RPGCore.AI.HFSM
 				this.editorWindow.Repaint();
 			}
 
-			#endregion É¾³ý
+			#endregion É¾ï¿½ï¿½
 		}
 
 		public override void Update()
@@ -174,7 +174,7 @@ namespace RPGCore.AI.HFSM
 				});
 				genericMenu.AddItem(new GUIContent("Delete"), false, () =>
 				{
-					//TOOD:É¾³ý×´Ì¬
+					//TOOD:É¾ï¿½ï¿½×´Ì¬
 					DeleteNode();
 				});
 				genericMenu.AddItem(new GUIContent("Set DefaltState"), false, () =>
@@ -184,7 +184,7 @@ namespace RPGCore.AI.HFSM
 				genericMenu.AddSeparator(string.Empty);
 				genericMenu.AddItem(new GUIContent("Edit Script"), false, () =>
 				{
-					//TODO:´ò¿ªÎÄ¼þ²¢Ìø×ªµ½¶ÔÓ¦ÐÐ
+					//TODO:ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½
 					context.HFSMController.JumpToScript(item);
 				});
 			}
@@ -246,10 +246,10 @@ namespace RPGCore.AI.HFSM
 						StateInspectorHelper.instance.Inspector(context.HFSMController, data as StateData);
 					else
 						StateMachineInspectorHelper.instance.Inspector(context.HFSMController, data as StateMachineData);
-					//ÊÇ·ñÔÚÔ¤ÀÀÌí¼Ó¹ý¶É
+					//ï¿½Ç·ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½Ó¹ï¿½ï¿½ï¿½
 					if (this.context.isPreviewTransition)
 					{
-						//Ìí¼Ó¹ý¶É
+						//ï¿½ï¿½ï¿½Ó¹ï¿½ï¿½ï¿½
 						this.context.HFSMController.CreateTransition(context.currentStateMachine, context.preFrom, data);
 						this.context.StopPriviewTransition();
 						this.context.UpdateCurrentTransitionData();
@@ -277,10 +277,19 @@ namespace RPGCore.AI.HFSM
 				}
 				if (Application.isPlaying && this.context.executor != null && isExecute)
 				{
+					if (data.stateType == StateType.StateMachine)
+					{
+						var pad = 15;
+						rect.x += pad;
+						rect.width -= 2*pad;
+					}
+					
 					runStateProcessRect.Set(rect.x, rect.y + rect.height * 3 / 4, rect.width, rect.height / 4);
 					GUI.Box(runStateProcessRect, string.Empty, runStateProcessBkStyle);
 					runStateProcessRect.Set(rect.x, rect.y + rect.height * 3 / 4, rect.width, rect.height / 4);
+					
 					runStateProcessRect.width *= runStateProcess;
+					
 					GUI.Box(runStateProcessRect, string.Empty, runStateProcessStyle);
 					this.editorWindow.Repaint();
 				}

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace DogFramework.EditorExtension
+namespace HFSM.EditorExtension
 {
 	public static class EventExtension
 	{

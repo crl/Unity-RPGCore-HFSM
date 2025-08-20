@@ -1,5 +1,5 @@
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public interface ITimer
 	{

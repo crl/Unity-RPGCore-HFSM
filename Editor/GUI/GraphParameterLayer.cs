@@ -1,11 +1,11 @@
-using DogFramework.EditorExtension;
+using HFSM.EditorExtension;
 using System;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public class GraphParameterLayer : GraphLayer
 	{
@@ -63,7 +63,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// »æÖÆµ¥Ìõ²ÎÊý
+		/// ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		/// </summary>
 		/// <param name="rect"></param>
 		/// <param name="index"></param>
@@ -91,7 +91,7 @@ namespace RPGCore.AI.HFSM
 				isRenaming = true;
 			}
 
-			//²ÎÊýÃû
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if (!Application.isPlaying && isRenaming && reorderableList.index == index)
 			{
 				EditorGUI.BeginChangeCheck();
@@ -140,7 +140,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Ìí¼Ó²ÎÊý
+		/// ï¿½ï¿½Ó²ï¿½ï¿½ï¿½
 		/// </summary>
 		/// <param name="list"></param>
 		private void AddParamter(ReorderableList list)

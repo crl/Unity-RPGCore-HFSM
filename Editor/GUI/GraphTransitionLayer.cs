@@ -1,9 +1,9 @@
-using DogFramework.EditorExtension;
+using HFSM.EditorExtension;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public class GraphTransitionLayer : GraphLayer
 	{

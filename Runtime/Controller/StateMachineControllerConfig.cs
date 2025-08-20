@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
     /// <summary>
     /// 状态机Controller配置数据
@@ -11,7 +11,5 @@ namespace RPGCore.AI.HFSM
     {
         public bool CustomFilePath;
         public string FilePath;
-        public bool UseNamespace;
-        public string Namespace;
     }
 }

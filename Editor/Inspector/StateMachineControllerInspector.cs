@@ -1,11 +1,11 @@
-using DogFramework.EditorExtension;
+using HFSM.EditorExtension;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	[CustomEditor(typeof(StateMachineExecutorController))]
 	public class StateMachineControllerInspector : Editor

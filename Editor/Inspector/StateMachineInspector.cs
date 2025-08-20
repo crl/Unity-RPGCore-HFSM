@@ -1,11 +1,11 @@
 using DogFramework;
-using DogFramework.EditorExtension;
+using HFSM.EditorExtension;
 using System;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	[CustomEditor(typeof(StateMachineInspectorHelper))]
 	public class StateMachineInspector : Editor
@@ -98,11 +98,11 @@ namespace RPGCore.AI.HFSM
 
 		private void DrawElement(Rect rect, int index, bool isActive, bool isFocused)
 		{
-			StateMachineInspectorHelper helper = target as StateMachineInspectorHelper;
+			var helper = target as StateMachineInspectorHelper;
 			if (helper == null) return;
 			left_container = rect.SplitVertical(1, 2)[0];
 			right_container = rect.SplitVertical(1, 2)[1];
-			ServiceData service = helper.stateMachineData.services[index];
+			var service = helper.stateMachineData.services[index];
 			if (isFocused && EventExtension.IsMouseDown(0))
 			{
 				isRenaming = true;
@@ -127,13 +127,13 @@ namespace RPGCore.AI.HFSM
 			}
 			if (service.serviceType != ServiceType.CustomInterval)
 			{
-				GUI.Box(right_container.Resize(2), "");
+				//GUI.Box(right_container.Resize(2), "");
 				EditorGUI.LabelField(right_container, service.serviceType.ToString());
 			}
 			else
 			{
 				Rect[] rects = right_container.SplitVertical(3, 1);
-				GUI.Box(rects[0].Resize(2), "");
+				//GUI.Box(rects[0].Resize(2), "");
 				EditorGUI.LabelField(rects[0], service.serviceType.ToString());
 				service.customInterval = EditorGUI.FloatField(rects[1], service.customInterval);
 			}

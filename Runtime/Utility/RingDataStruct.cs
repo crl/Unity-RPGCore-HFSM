@@ -1,4 +1,4 @@
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	/// <summary>
 	/// 环形数组栈

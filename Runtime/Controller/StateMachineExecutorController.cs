@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
     /// <summary>
     /// 状态机Controller;不用做运行时
@@ -118,12 +118,12 @@ namespace RPGCore.AI.HFSM
             }
 
             realScriptControllerName = name.Replace(" ", "");
+            GenerateInitScript(generateFilePath);
             GenerateConstructScript(generateFilePath);
             GenerateAbsStateScript(generateFilePath);
 
             var tpl = @"
-using UnityEngine;
-using RPGCore.AI.HFSM;
+using HFSM;
 public partial class {0} : StateMachineScriptController
 {
     internal class {1} : AbsState
@@ -141,8 +141,10 @@ public partial class {0} : StateMachineScriptController
                 var str = tpl.Replace("{0}", realScriptControllerName);
                 str = str.Replace("{1}", cls);
                 var path = generateFilePath + realScriptControllerName + $"/{cls}.cs";
-
-                File.WriteAllText(path, str, Encoding.UTF8);
+                if (File.Exists(path) == false)
+                {
+                    File.WriteAllText(path, str, Encoding.UTF8);
+                }
             }
 
             foreach (var stateMachine in stateMachines)
@@ -155,12 +157,35 @@ public partial class {0} : StateMachineScriptController
                     str = str.Replace("{1}", cls);
                     str = str.Replace("AbsState", "Service");
                     var path = generateFilePath + realScriptControllerName + $"/{cls}.cs";
-
-                    File.WriteAllText(path, str, Encoding.UTF8);
+                    if (File.Exists(path) == false)
+                    {
+                        File.WriteAllText(path, str, Encoding.UTF8);
+                    }
                 }
             }
 
             AssetDatabase.Refresh();
+        }
+
+        private void GenerateInitScript(string filePath)
+        {
+            var tpm = @"using HFSM;
+public partial class {0} : StateMachineScriptController
+{
+	public override void Init()
+	{
+	}
+}";
+            var rootData = stateMachines.Find(sm => sm.isRoot);
+            var sb = new StringBuilder();
+            GenerateConstructCode(rootData, sb, 3);
+            var code = sb.ToString();
+            var str = tpm.Replace("{0}", realScriptControllerName);
+            var path = filePath + realScriptControllerName + ".cs";
+            if (File.Exists(path) == false)
+            {
+                File.WriteAllText(path, str, Encoding.UTF8);
+            }
         }
 
         /// <summary>
@@ -169,7 +194,7 @@ public partial class {0} : StateMachineScriptController
         private void GenerateConstructScript(string filePath)
         {
             var tpm = @"//Automatically generated code
-using RPGCore.AI.HFSM;
+using HFSM;
 [StateMachineController(ControllerName = ""{0}"")]
 public partial class {0} : StateMachineScriptController
 {
@@ -197,7 +222,7 @@ public partial class {0} : StateMachineScriptController
         {
             //状态基类
             var tpm = @"//Automatically generated code
-using RPGCore.AI.HFSM;
+using HFSM;
 public partial class {0} : StateMachineScriptController
 {
     public class AbsState:State
@@ -219,7 +244,10 @@ public partial class {0} : StateMachineScriptController
             }
 
             var path = dir + "/AbsState.cs";
-            File.WriteAllText(path, str, Encoding.UTF8);
+            if (File.Exists(path) == false)
+            {
+                File.WriteAllText(path, str, Encoding.UTF8);
+            }
         }
 
         /// <summary>

@@ -1,10 +1,10 @@
-using DogFramework.EditorExtension;
 using System.Collections.Generic;
 using System.Linq;
+using HFSM.EditorExtension;
 using UnityEditor;
 using UnityEngine;
 
-namespace RPGCore.AI.HFSM
+namespace HFSM
 {
 	public class GraphStateMachinePathLayer : GraphLayer
 	{

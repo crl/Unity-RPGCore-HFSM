@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace DogFramework.EditorExtension
+namespace HFSM.EditorExtension
 {
 	/// <summary>
 	/// 对Rect进行功能扩展

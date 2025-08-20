@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace DogFramework.EditorExtension
+namespace HFSM.EditorExtension
 {
 	public static class GUIExtension
 	{

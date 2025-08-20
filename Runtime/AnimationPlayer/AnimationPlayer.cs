@@ -1,9 +1,9 @@
-using RPGCore.AI.HFSM;
+using HFSM;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-namespace RPGCore.Animation
+namespace HFSM
 {
 	public class AnimationPlayer : MonoBehaviour
 	{
