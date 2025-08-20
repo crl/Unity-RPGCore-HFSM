@@ -3,17 +3,17 @@ namespace RPGCore.AI.HFSM
 	public class StateMachineHandler
 	{
 		/// <summary>
-		/// µ±Ç°²Ù×÷µÄStateMachine
+		/// å½“å‰æ“ä½œçš„StateMachine
 		/// </summary>
 		public static StateMachine currentHandledStateMachine;
 
 		/// <summary>
-		/// µ±Ç°²Ù×÷µÄController
+		/// å½“å‰æ“ä½œçš„Controller
 		/// </summary>
 		public static StateMachineScriptController currentHandledController;
 
 		/// <summary>
-		/// ¿ªÊ¼Ò»¸öStateMachineµÄ²Ù×÷
+		/// å¼€å§‹ä¸€ä¸ªStateMachineçš„æ“ä½œ
 		/// </summary>
 		/// <param name="stateId"></param>
 		/// <returns></returns>

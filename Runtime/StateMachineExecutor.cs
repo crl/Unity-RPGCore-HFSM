@@ -8,7 +8,7 @@ namespace RPGCore.AI.HFSM
 	public class StateMachineExecutor : MonoBehaviour
 	{
 		/// <summary>
-		/// µ±Ç°Ö´ĞĞµÄController
+		/// å½“å‰æ‰§è¡Œçš„Controller
 		/// </summary>
 		public StateMachineExecutorController executorController;
 
@@ -16,23 +16,23 @@ namespace RPGCore.AI.HFSM
 		public StateMachineScriptController scriptController => m_scriptController;
 
 		/// <summary>
-		/// µ±Ç°Ö´ĞĞµÄControllerµÄ¸ù×´Ì¬»ú
+		/// å½“å‰æ‰§è¡Œçš„Controllerçš„æ ¹çŠ¶æ€æœº
 		/// </summary>
 		public StateMachine rootStateMachine => m_rootStateMachine;
 
 		private StateMachine m_rootStateMachine;
 
-		//ÔËĞĞÊ±×´Ì¬»úÖ´ĞĞÕ»
+		//è¿è¡Œæ—¶çŠ¶æ€æœºæ‰§è¡Œæ ˆ
 		private Stack<StateBundle> m_executeStateStack = new Stack<StateBundle>();
 
 		public Stack<StateBundle> executeStateStack => m_executeStateStack;
 
-		//¼ÇÂ¼µ±Ç°Ö´ĞĞµÄ×´Ì¬
+		//è®°å½•å½“å‰æ‰§è¡Œçš„çŠ¶æ€
 		public State currentExecuteState => m_currentExecuteState;
 
 		private State m_currentExecuteState = null;
 
-		//¼ÇÂ¼StateÖ´ĞĞÀúÊ· ×î´ó¼ÇÂ¼8¸ö
+		//è®°å½•Stateæ‰§è¡Œå†å² æœ€å¤§è®°å½•8ä¸ª
 		private RingStack<StateBundle> m_executeStateHistory = new RingStack<StateBundle>(8);
 
 		private void Awake()
@@ -68,7 +68,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ×´Ì¬»úÖ´ĞĞ³õÊ¼»¯
+		/// çŠ¶æ€æœºæ‰§è¡Œåˆå§‹åŒ–
 		/// </summary>
 		public void InitStateMachineExecute()
 		{
@@ -81,7 +81,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Ö´ĞĞ×´Ì¬»ú·şÎñ
+		/// æ‰§è¡ŒçŠ¶æ€æœºæœåŠ¡
 		/// </summary>
 		public void ExecuteStateMachineService(ServiceType type)
 		{
@@ -107,17 +107,17 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ³¢ÊÔÖ´ĞĞ×ª»» ÓÉÖ´ĞĞÕ»µ×µ½Õ»¶¥ ÏÈGlobalÔÙNormal
+		/// å°è¯•æ‰§è¡Œè½¬æ¢ ç”±æ‰§è¡Œæ ˆåº•åˆ°æ ˆé¡¶ å…ˆGlobalå†Normal
 		/// </summary>
 		public Transition TryTransition()
 		{
 			List<StateBundle> stateBundles = m_executeStateStack.Reverse().ToList();
-			//µ±Ç°Í¨¹ıµÄ×ª»»
+			//å½“å‰é€šè¿‡çš„è½¬æ¢
 			Transition passedTransition = null;
 			for (int i = 0; i < stateBundles.Count(); i++)
 			{
 				StateBundle bundle = stateBundles[i];
-				//³¢ÊÔÒÔµ±Ç°×´Ì¬ÎªÆğµãµÄTransition
+				//å°è¯•ä»¥å½“å‰çŠ¶æ€ä¸ºèµ·ç‚¹çš„Transition
 				if (bundle.transitions is not null)
 				{
 					foreach (Transition transition in bundle.transitions)
@@ -129,7 +129,7 @@ namespace RPGCore.AI.HFSM
 						}
 					}
 				}
-				//³¢ÊÔµ±Ç°×´Ì¬ÖĞµÄGlobalTransition
+				//å°è¯•å½“å‰çŠ¶æ€ä¸­çš„GlobalTransition
 				var gTrans = bundle.GetGlobalTransitions();
 				if (gTrans is not null)
 				{
@@ -142,7 +142,7 @@ namespace RPGCore.AI.HFSM
 						}
 					}
 				}
-				//³¢ÊÔÁÙÊ±×´Ì¬ÊÇ·ñÖ´ĞĞ×ª»»
+				//å°è¯•ä¸´æ—¶çŠ¶æ€æ˜¯å¦æ‰§è¡Œè½¬æ¢
 				if (bundle.state.stateType == StateType.State && (bundle.state as State).isTemporary)
 				{
 					State state = bundle.state as State;
@@ -157,7 +157,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ¸üĞÂ×´Ì¬»úÖ´ĞĞ
+		/// æ›´æ–°çŠ¶æ€æœºæ‰§è¡Œ
 		/// </summary>
 		public void UpdateStackMachine()
 		{
@@ -167,7 +167,7 @@ namespace RPGCore.AI.HFSM
 				StateBase transState = passedTransition.transitionType ==
 					TransitionType.Global ? passedTransition.parentStateMachine : passedTransition.from;
 				StateBase toState = passedTransition.to;
-				//µ±Ç°×ª»»µÄ×´Ì¬ÊÇ²»ÊÇÒ»¸öÁÙÊ±×´Ì¬
+				//å½“å‰è½¬æ¢çš„çŠ¶æ€æ˜¯ä¸æ˜¯ä¸€ä¸ªä¸´æ—¶çŠ¶æ€
 				if (transState.stateType == StateType.State && (transState as State).isTemporary)
 				{
 					m_executeStateStack.Clear();
@@ -182,7 +182,7 @@ namespace RPGCore.AI.HFSM
 				}
 				else
 				{
-					//ÏÈ°Ñ×ª»»Ç°µÄ×´Ì¬³öÕ»
+					//å…ˆæŠŠè½¬æ¢å‰çš„çŠ¶æ€å‡ºæ ˆ
 					while (true)
 					{
 						StateBundle popState = m_executeStateStack.Pop();
@@ -196,15 +196,15 @@ namespace RPGCore.AI.HFSM
 					}
 				}
 				//Debug.Log("toState : " + toState.id);
-				//ÔÙ½«×ª»»ºóµÄ×´Ì¬ÈëÕ»
+				//å†å°†è½¬æ¢åçš„çŠ¶æ€å…¥æ ˆ
 				FillExecuteStateStack(toState);
-				//ÖØÖÃµ±Ç°Ö´ĞĞ³É¹¦µÄTransitionÖĞµÄËùÊ¹ÓÃµÄTrigger
+				//é‡ç½®å½“å‰æ‰§è¡ŒæˆåŠŸçš„Transitionä¸­çš„æ‰€ä½¿ç”¨çš„Trigger
 				passedTransition.ResetTriggers();
 			}
 		}
 
 		/// <summary>
-		/// ¸ù¾İ´«ÈëµÄStateÌî³äÖ´ĞĞ×´Ì¬Õ»
+		/// æ ¹æ®ä¼ å…¥çš„Stateå¡«å……æ‰§è¡ŒçŠ¶æ€æ ˆ
 		/// </summary>
 		private void FillExecuteStateStack(StateBase state)
 		{
@@ -230,17 +230,17 @@ namespace RPGCore.AI.HFSM
 				state.SetExecuteStackSnapshot(m_executeStateStack.ToArray());
 			}
 			m_currentExecuteState = state as State;
-			//½öµ±µ±Ç°×´Ì¬²»ÊÇÁÙÊ±×´Ì¬²Å¼ÇÂ¼½øÖ´ĞĞÀúÊ·ÖĞ
+			//ä»…å½“å½“å‰çŠ¶æ€ä¸æ˜¯ä¸´æ—¶çŠ¶æ€æ‰è®°å½•è¿›æ‰§è¡Œå†å²ä¸­
 			if (!(state as State).isTemporary) m_executeStateHistory.Push(m_executeStateStack.Peek());
 			//Debug.Log("current:"+m_executeStateHistory.Peek().state.id+" count:"+m_executeStateHistory.Length);
 		}
 
-		//²âÊÔÓÃ£¬´òÓ¡×´Ì¬»úµÄÊ÷×´½á¹¹
+		//æµ‹è¯•ç”¨ï¼Œæ‰“å°çŠ¶æ€æœºçš„æ ‘çŠ¶ç»“æ„
 		private void ShowStateMachineTree(int level, StateMachine stateMachine)
 		{
 			string sj = "";
 			for (int i = 0; i < level; i++) { sj += "\t"; }
-			Debug.Log(sj + "¡¾" + stateMachine.id + "¡¿" + $"t:{stateMachine.transitions.Count} "
+			Debug.Log(sj + "ã€" + stateMachine.id + "ã€‘" + $"t:{stateMachine.transitions.Count} "
 				+ $"global t:{stateMachine.transitions.FindAll(t => t.transitionType == TransitionType.Global).Count}");
 			foreach (var state in stateMachine.states)
 			{
@@ -273,7 +273,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// »ñÈ¡µ½µ±Ç°StateMachine£¨Èç¹ûÊÇµÄ»°£©ÏÂµÄGlobalTransition
+		/// è·å–åˆ°å½“å‰StateMachineï¼ˆå¦‚æœæ˜¯çš„è¯ï¼‰ä¸‹çš„GlobalTransition
 		/// </summary>
 		public List<Transition> GetGlobalTransitions()
 		{

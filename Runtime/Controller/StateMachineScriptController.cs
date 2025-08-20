@@ -4,44 +4,44 @@ using UnityEngine;
 namespace RPGCore.AI.HFSM
 {
 	/// <summary>
-	/// ÔËĞĞÊ±Controller
+	/// è¿è¡Œæ—¶Controller
 	/// </summary>
 	public abstract class StateMachineScriptController
 	{
 		/// <summary>
-		/// µ±Ç°ControllerËùÊôµÄGameObject
+		/// å½“å‰Controlleræ‰€å±çš„GameObject
 		/// </summary>
 		public GameObject gameObject;
 
 		/// <summary>
-		/// µ±Ç°ControllerËùÊôµÄStateMachine Executor
+		/// å½“å‰Controlleræ‰€å±çš„StateMachine Executor
 		/// </summary>
 		public StateMachineExecutor executor;
 
 		/// <summary>
-		/// ´ËÔËĞĞÊ±ControllerËùÓµÓĞµÄParameters
+		/// æ­¤è¿è¡Œæ—¶Controlleræ‰€æ‹¥æœ‰çš„Parameters
 		/// </summary>
 		public Dictionary<string, Parameter> parameters { get; } = new();
 
 		/// <summary>
-		///µ÷ÓÃ´Ë·½·¨¹¹ÔìÔËĞĞÊ±µÄ×´Ì¬»ú
+		///è°ƒç”¨æ­¤æ–¹æ³•æ„é€ è¿è¡Œæ—¶çš„çŠ¶æ€æœº
 		/// </summary>
 		public abstract StateMachine ConstructStateMachine();
 
 		/// <summary>
-		/// »ñÈ¡µ½µ±Ç°ÕıÔÚÖ´ĞĞµÄ×´Ì¬
+		/// è·å–åˆ°å½“å‰æ­£åœ¨æ‰§è¡Œçš„çŠ¶æ€
 		/// </summary>
 		public string executeState => executor.executeStateStack.Peek().state.id;
 
 		/// <summary>
-		/// µ±ÔËĞĞÊ±×´Ì¬»ú±»¹¹ÔìÊ±£¨On Game Awake£©µ÷ÓÃ
+		/// å½“è¿è¡Œæ—¶çŠ¶æ€æœºè¢«æ„é€ æ—¶ï¼ˆOn Game Awakeï¼‰è°ƒç”¨
 		/// </summary>
 		public virtual void Init()
 		{
 		}
 
 		/// <summary>
-		///½«ControllerÖĞµÄParameters¸´ÖÆÒ»·İÓÃÒÔRuntime
+		///å°†Controllerä¸­çš„Parameterså¤åˆ¶ä¸€ä»½ç”¨ä»¥Runtime
 		/// </summary>
 		internal List<Parameter> PrepareParameters(List<Parameter> parameters)
 		{

@@ -14,35 +14,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   realScriptControllerName: SimpleHFSMController
   parameters:
-  - m_name: IsIdle
-    m_type: 2
+  - _name: IsIdle
+    _type: 2
     baseValue: 0
-  - m_name: IsWalk
-    m_type: 2
+  - _name: IsWalk
+    _type: 2
     baseValue: 0
-  - m_name: IsRun
-    m_type: 2
+  - _name: IsRun
+    _type: 2
     baseValue: 0
-  - m_name: IsGetHit
-    m_type: 3
+  - _name: IsGetHit
+    _type: 3
     baseValue: 0
-  - m_name: ToSM
-    m_type: 3
+  - _name: ToSM
+    _type: 3
     baseValue: 0
-  - m_name: ExitSM
-    m_type: 3
+  - _name: ExitSM
+    _type: 3
     baseValue: 0
-  - m_name: IsAttack
-    m_type: 2
+  - _name: IsAttack
+    _type: 2
     baseValue: 0
-  - m_name: IsRoll
-    m_type: 2
+  - _name: IsRoll
+    _type: 2
     baseValue: 0
-  - m_name: IsSkill
-    m_type: 2
+  - _name: IsSkill
+    _type: 2
     baseValue: 0
-  - m_name: Pause
-    m_type: 2
+  - _name: Pause
+    _type: 2
     baseValue: 0
   states:
   - position:
@@ -274,7 +274,7 @@ MonoBehaviour:
     entry:
       position:
         serializedVersion: 2
-        x: -483.33386
+        x: -480.00052
         y: 229.99973
         width: 480
         height: 90
@@ -517,6 +517,7 @@ MonoBehaviour:
     
 
     
+
 
 
 '

@@ -77,22 +77,22 @@ namespace RPGCore.AI.HFSM
 
 			left_container.Set(rect.x, rect.y, rect.width * 0.5f, rect.height);
 			right_container.Set(left_container.x + left_container.width, left_container.y, rect.width * 0.5f, rect.height);
-			//×ó°ë±ß Ìõ¼şµÄ²ÎÊı
+			//å·¦åŠè¾¹ æ¡ä»¶çš„å‚æ•°
 			if (helper.transitionData.parameterConditionDatas.Count > 0)
 			{
 				if (EditorGUI.DropdownButton(left_container, new GUIContent(conditionData.parameterName), FocusType.Keyboard))
 				{
-					//TODO µ¯³öÏÂÀ­²Ëµ¥
+					//TODO å¼¹å‡ºä¸‹æ‹‰èœå•
 					popRect.Set(rect.x, rect.y + 2, rect.width / 2, rect.height);
 					PopupWindow.Show(popRect, new ParametersPopWindow(rect.width / 2, conditionData, helper.HFSMController));
 				}
 			}
 
-			//ÓÒ°ë±ß Ìõ¼şµÄÄ¿±êÖµ(ÀàĞÍ)
+			//å³åŠè¾¹ æ¡ä»¶çš„ç›®æ ‡å€¼(ç±»å‹)
 			Parameter parameterData = helper.HFSMController.parameters.Where(x => x.name == conditionData.parameterName).FirstOrDefault();
 			if (parameterData != null)
 			{
-				//²ÎÊıÀàĞÍ»æÖÆType
+				//å‚æ•°ç±»å‹ç»˜åˆ¶Type
 				if (conditionInspectors.Keys.Contains(parameterData.type))
 				{
 					conditionInspectors[parameterData.type].OnGUI(right_container, helper.HFSMController, conditionData);

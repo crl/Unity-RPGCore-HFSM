@@ -48,7 +48,7 @@ namespace RPGCore.AI.HFSM
 					context.stateMachinePath.AddRange(temp);
 					editorWindow.Repaint();
 				}
-				//点击Root时打开Root状态机的Inspector
+				//鐐瑰嚮Root鏃舵墦寮�Root鐘舵�佹満鐨処nspector
 				if (context.stateMachinePath[selectedIndex].id == "Root")
 				{
 					StateMachineInspectorHelper.instance.Inspector(context.HFSMController, context.stateMachinePath[selectedIndex]);

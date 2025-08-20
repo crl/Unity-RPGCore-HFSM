@@ -14,8 +14,8 @@ namespace RPGCore.AI.HFSM
 			this.controller = controller;
 			this.conditionData = conditionData;
 
-			showBorder = true;//±ß¿ò
-			showAlternatingRowBackgrounds = true;//½»ÌæÏÔÊ¾
+			showBorder = true;//è¾¹æ¡†
+			showAlternatingRowBackgrounds = true;//äº¤æ›¿æ˜¾ç¤º
 		}
 
 		protected override TreeViewItem BuildRoot()
@@ -38,7 +38,7 @@ namespace RPGCore.AI.HFSM
 			base.RowGUI(args);
 			if (args.label == conditionData.parameterName)
 			{
-				GUI.Label(args.rowRect, "¡Ì");
+				GUI.Label(args.rowRect, "âˆš");
 			}
 		}
 

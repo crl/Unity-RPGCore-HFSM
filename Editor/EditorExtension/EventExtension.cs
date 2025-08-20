@@ -5,7 +5,7 @@ namespace DogFramework.EditorExtension
 	public static class EventExtension
 	{
 		/// <summary>
-		/// 鼠标按下
+		/// 榧犳爣鎸変笅
 		/// </summary>
 		public static bool IsMouseDown(int button = -1)
 		{
@@ -21,7 +21,7 @@ namespace DogFramework.EditorExtension
 		}
 
 		/// <summary>
-		/// 鼠标抬起
+		/// 榧犳爣鎶捣
 		/// </summary>
 		public static bool IsMouseUp(int button = -1)
 		{

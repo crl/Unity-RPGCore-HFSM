@@ -5,11 +5,11 @@ using UnityEngine;
 namespace DogFramework.EditorExtension
 {
 	/// <summary>
-	/// ¶ÔRect½øĞĞ¹¦ÄÜÀ©Õ¹
+	/// å¯¹Rectè¿›è¡ŒåŠŸèƒ½æ‰©å±•
 	/// </summary>
 	public static class RectExtension
 	{
-		#region µ÷ÕûRect´óĞ¡
+		#region è°ƒæ•´Rectå¤§å°
 
 		public static Rect Resize(this Rect rect, float left, float top, float right, float bottom)
 		{
@@ -30,9 +30,9 @@ namespace DogFramework.EditorExtension
 			return rect.Resize(value, value, value, value);
 		}
 
-		#endregion µ÷ÕûRect´óĞ¡
+		#endregion è°ƒæ•´Rectå¤§å°
 
-		#region ´¹Ö±»òË®Æ½·Ö¸îRect
+		#region å‚ç›´æˆ–æ°´å¹³åˆ†å‰²Rect
 
 		public static Rect[] SplitHorizontal(this Rect rect, float topRatio, float bottomRatio)
 		{
@@ -66,9 +66,9 @@ namespace DogFramework.EditorExtension
 			return result;
 		}
 
-		#endregion ´¹Ö±»òË®Æ½·Ö¸îRect
+		#endregion å‚ç›´æˆ–æ°´å¹³åˆ†å‰²Rect
 
-		#region ÒÆ¶¯Rect
+		#region ç§»åŠ¨Rect
 
 		public static Rect Move(this Rect rect, float mx, float my)
 		{
@@ -96,9 +96,9 @@ namespace DogFramework.EditorExtension
 			return rect.MoveTo(mv.x, mv.y);
 		}
 
-		#endregion ÒÆ¶¯Rect
+		#endregion ç§»åŠ¨Rect
 
-		#region »ñÈ¡ÖÜÎ§µÄÏàÁÚµÄRect
+		#region è·å–å‘¨å›´çš„ç›¸é‚»çš„Rect
 
 		public static Rect BelowBlock(this Rect rect, float height)
 		{
@@ -128,18 +128,18 @@ namespace DogFramework.EditorExtension
 			return rect;
 		}
 
-		#endregion »ñÈ¡ÖÜÎ§µÄÏàÁÚµÄRect
+		#endregion è·å–å‘¨å›´çš„ç›¸é‚»çš„Rect
 
-		#region Êó±êÊÇ·ñÔÚRectÄÚ
+		#region é¼ æ ‡æ˜¯å¦åœ¨Rectå†…
 
 		public static bool MouseOn(this Rect rect)
 		{
 			return rect.Contains(Event.current.mousePosition);
 		}
 
-		#endregion Êó±êÊÇ·ñÔÚRectÄÚ
+		#endregion é¼ æ ‡æ˜¯å¦åœ¨Rectå†…
 
-		#region »ñÈ¡Ò»×éRectµÄ°üÎ§ºĞ
+		#region è·å–ä¸€ç»„Rectçš„åŒ…å›´ç›’
 
 		public static Rect GetBoundingBox(this Rect[] rects)
 		{
@@ -156,9 +156,9 @@ namespace DogFramework.EditorExtension
 			return result;
 		}
 
-		#endregion »ñÈ¡Ò»×éRectµÄ°üÎ§ºĞ
+		#endregion è·å–ä¸€ç»„Rectçš„åŒ…å›´ç›’
 
-		#region ½«Ò»×éRectÒÔÖ¸¶¨µÄRect½øĞĞ¹éÒ»»¯
+		#region å°†ä¸€ç»„Rectä»¥æŒ‡å®šçš„Rectè¿›è¡Œå½’ä¸€åŒ–
 
 		public static Rect[] NormalizationWith(this Rect[] rects, Rect rangeRect, bool useScale = true)
 		{
@@ -183,9 +183,9 @@ namespace DogFramework.EditorExtension
 			return result;
 		}
 
-		#endregion ½«Ò»×éRectÒÔÖ¸¶¨µÄRect½øĞĞ¹éÒ»»¯
+		#endregion å°†ä¸€ç»„Rectä»¥æŒ‡å®šçš„Rectè¿›è¡Œå½’ä¸€åŒ–
 
-		#region Ñ¡ÔñÒ»×éRectµÄÒ»²¿·Ö
+		#region é€‰æ‹©ä¸€ç»„Rectçš„ä¸€éƒ¨åˆ†
 
 		public static Rect[] SelectPart(this Rect[] rects, Rect rangeRect, bool cullInvisible = false)
 		{
@@ -217,9 +217,9 @@ namespace DogFramework.EditorExtension
 			return result.ToArray();
 		}
 
-		#endregion Ñ¡ÔñÒ»×éRectµÄÒ»²¿·Ö
+		#endregion é€‰æ‹©ä¸€ç»„Rectçš„ä¸€éƒ¨åˆ†
 
-		#region ÒÆ¶¯Ò»×éRect
+		#region ç§»åŠ¨ä¸€ç»„Rect
 
 		public static Rect[] Move(this Rect[] rects, float mx, float my)
 		{
@@ -251,6 +251,6 @@ namespace DogFramework.EditorExtension
 			return rects;
 		}
 
-		#endregion ÒÆ¶¯Ò»×éRect
+		#endregion ç§»åŠ¨ä¸€ç»„Rect
 	}
 }

@@ -20,16 +20,16 @@ namespace RPGCore.AI.HFSM
 			StateBaseData defualtState = this.context.currentChildStatesData.Where(x => x.isDefault).FirstOrDefault();
 			StateBaseData enterState = this.context.currentChildStatesData.Where(x => x.id == StateMachine.entryState).FirstOrDefault();
 
-			//Ä¬ÈÏ×´Ì¬
+			//é»˜è®¤çŠ¶æ€
 			DrawTransition(enterState, defualtState, Color.yellow);
 
-			//ÆäËû×´Ì¬
+			//å…¶ä»–çŠ¶æ€
 			foreach (TransitionData item in this.context.currentTransitionData)
 			{
 				DrawTransition(item.from, item.to, item == this.context.selectedTransition ? Select_Color : Color.white);
 			}
 
-			//»æÖÆÔ¤ÀÀ
+			//ç»˜åˆ¶é¢„è§ˆ
 			if (this.context.isPreviewTransition)
 			{
 				GUIExtension.Begin();
@@ -154,12 +154,12 @@ namespace RPGCore.AI.HFSM
 
 			if (Mathf.Abs(direction.y) > Mathf.Abs(direction.x))
 			{
-				//ÉÏÏÂ
+				//ä¸Šä¸‹
 				offset.x += direction.y < 0 ? 10 : -10;
 			}
 			else
 			{
-				//×óÓÒ
+				//å·¦å³
 				offset.y += direction.x < 0 ? 10 : -10;
 			}
 

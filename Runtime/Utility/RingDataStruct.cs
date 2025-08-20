@@ -1,12 +1,12 @@
 namespace RPGCore.AI.HFSM
 {
 	/// <summary>
-	/// »·ĞÎÊı×éÕ»
+	/// ç¯å½¢æ•°ç»„æ ˆ
 	/// </summary>
 	/// <typeparam name="TValue"></typeparam>
 	public class RingStack<TValue> : RingArray<TValue>
 	{
-		//Õ»¶¥Î»ÖÃ
+		//æ ˆé¡¶ä½ç½®
 		private int topIndex;
 
 		public RingStack(int stackLength) : base(stackLength)
@@ -15,7 +15,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ·µ»ØÕ»¶¥Ïî
+		/// è¿”å›æ ˆé¡¶é¡¹
 		/// </summary>
 		/// <returns></returns>
 		public TValue Peek()
@@ -25,7 +25,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// µ¯³öÕ»¶¥Ïî
+		/// å¼¹å‡ºæ ˆé¡¶é¡¹
 		/// </summary>
 		/// <returns></returns>
 		public TValue Pop()
@@ -43,7 +43,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÔÚÕ»¶¥Ñ¹ÈëÒ»Ïî
+		/// åœ¨æ ˆé¡¶å‹å…¥ä¸€é¡¹
 		/// </summary>
 		/// <param name="value"></param>
 		public void Push(TValue value)
@@ -64,15 +64,15 @@ namespace RPGCore.AI.HFSM
 	}
 
 	/// <summary>
-	/// »·ĞÎÊı×é¶ÓÁĞ
+	/// ç¯å½¢æ•°ç»„é˜Ÿåˆ—
 	/// </summary>
 	/// <typeparam name="TValue"></typeparam>
 	public class RingQueue<TValue> : RingArray<TValue>
 	{
-		//¶ÓÍ·Î»ÖÃ
+		//é˜Ÿå¤´ä½ç½®
 		protected int headIndex = 0;
 
-		//¶ÓÎ²Î»ÖÃ
+		//é˜Ÿå°¾ä½ç½®
 		protected int tailIndex = 0;
 
 		public RingQueue(int length) : base(length)
@@ -82,7 +82,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ·µ»Ø¶ÓÍ·ÔªËØ
+		/// è¿”å›é˜Ÿå¤´å…ƒç´ 
 		/// </summary>
 		/// <returns></returns>
 		public TValue Peek()
@@ -92,7 +92,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ³ö¶Ó ·µ»Ø¶ÓÍ·²¢É¾³ı
+		/// å‡ºé˜Ÿ è¿”å›é˜Ÿå¤´å¹¶åˆ é™¤
 		/// </summary>
 		/// <returns></returns>
 		public TValue Dequeue()
@@ -113,7 +113,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Èë¶Ó Ìí¼Óµ½¶ÓÎ²
+		/// å…¥é˜Ÿ æ·»åŠ åˆ°é˜Ÿå°¾
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
@@ -140,7 +140,7 @@ namespace RPGCore.AI.HFSM
 	}
 
 	/// <summary>
-	/// »·ĞÎ¶ÓÁĞÔöÇ¿°æ ¿ÉÒÔ¶Ô¶ÓÎ²ÔªËØ½øĞĞ²Ù×÷
+	/// ç¯å½¢é˜Ÿåˆ—å¢å¼ºç‰ˆ å¯ä»¥å¯¹é˜Ÿå°¾å…ƒç´ è¿›è¡Œæ“ä½œ
 	/// </summary>
 	/// <typeparam name="TValue"></typeparam>
 	public class RingQueueEx<TValue> : RingQueue<TValue>
@@ -150,7 +150,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ·µ»Ø¶ÓÎ²ÔªËØµ«²»É¾³ı
+		/// è¿”å›é˜Ÿå°¾å…ƒç´ ä½†ä¸åˆ é™¤
 		/// </summary>
 		/// <returns></returns>
 		public TValue PeekTail()
@@ -165,7 +165,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ·µ»Ø¶ÓÎ²ÔªËØ²¢É¾³ı
+		/// è¿”å›é˜Ÿå°¾å…ƒç´ å¹¶åˆ é™¤
 		/// </summary>
 		/// <returns></returns>
 		public TValue PopTail()
@@ -183,15 +183,15 @@ namespace RPGCore.AI.HFSM
 	}
 
 	/// <summary>
-	/// »·ĞÎÊı×é
+	/// ç¯å½¢æ•°ç»„
 	/// </summary>
 	/// <typeparam name="TValue"></typeparam>
 	public abstract class RingArray<TValue>
 	{
-		//Êı¾İ
+		//æ•°æ®
 		protected TValue[] datas;
 
-		//Êı×é³¤¶È
+		//æ•°ç»„é•¿åº¦
 		protected int length;
 
 		public int Size => length;

@@ -9,7 +9,7 @@ namespace RPGCore.Animation
 {
 	public class AnimationPlayerManager : MonoBehaviour
 	{
-		//¹¹½¨Í¼ËùÓÃ²¿·Ö
+		//æ„å»ºå›¾æ‰€ç”¨éƒ¨åˆ†
 
 		private PlayableGraph graph;
 		private AnimationPlayableOutput output;
@@ -21,12 +21,12 @@ namespace RPGCore.Animation
 		private AnimationClipPlayable layerCurrentPlayingPlayable;
 		private AnimationClipPlayable layerTransitionTargetPlayable;
 
-		//ÆÕÍ¨×ª»»
+		//æ™®é€šè½¬æ¢
 
 		private bool hasTransition;
 		private float transitionStartTime;
 
-		//²ã×ª»»
+		//å±‚è½¬æ¢
 
 		private bool hasLayerTransition;
 		private float layerTransitionStartTime;
@@ -36,25 +36,25 @@ namespace RPGCore.Animation
 		private bool exitLayerAnimation;
 		private float layerAnimationWeight;
 
-		//¼ÇÂ¼Õ» ¼ÇÂ¼²¥·Å¹ıµÄ¶¯»­ĞÅÏ¢
+		//è®°å½•æ ˆ è®°å½•æ’­æ”¾è¿‡çš„åŠ¨ç”»ä¿¡æ¯
 
 		private static readonly int runtimeStackLogMaxLength = 8;
 		private RingStack<AnimationRuntimeInfo> animationRuntimeStackLog = new(runtimeStackLogMaxLength);
 		private RingStack<AnimationRuntimeInfo> animationLayerRuntimeStackLog = new(runtimeStackLogMaxLength);
 
-		//×ª»»ÇëÇó¶ÓÁĞ
+		//è½¬æ¢è¯·æ±‚é˜Ÿåˆ—
 
 		private static readonly int transitionQueueMaxLength = 8;
 		private RingQueueEx<AnimationPlayerDataSO> animationTransitionQueue = new(transitionQueueMaxLength);
 		private RingQueueEx<AnimationPlayerDataSO> animationLayerTransitionQueue = new(transitionQueueMaxLength);
 
-		//µ±Ç°ÕıÔÚ²¥·ÅµÄÏî
+		//å½“å‰æ­£åœ¨æ’­æ”¾çš„é¡¹
 
 		private AnimationRuntimeInfo currentPlayingAnimation;
 		private AnimationRuntimeInfo currentLayerPlayingAnimation;
 
 		/// <summary>
-		/// ·µ»Øµ±Ç°ÕıÔÚ²¥·ÅµÄ¶¯»­ÊÇ·ñÍê³É²¥·Å
+		/// è¿”å›å½“å‰æ­£åœ¨æ’­æ”¾çš„åŠ¨ç”»æ˜¯å¦å®Œæˆæ’­æ”¾
 		/// </summary>
 		public bool CurrentFinishPlaying
 		{
@@ -69,7 +69,7 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// ·µ»Øµ±Ç°ÕıÔÚ²¥·ÅµÄ²ã¼¶¶¯»­ÊÇ·ñÍê³É²¥·Å 0Î´Íê³É 1Íê³É -1²ã¼¶¶¯»­Î´¿ªÆô
+		/// è¿”å›å½“å‰æ­£åœ¨æ’­æ”¾çš„å±‚çº§åŠ¨ç”»æ˜¯å¦å®Œæˆæ’­æ”¾ 0æœªå®Œæˆ 1å®Œæˆ -1å±‚çº§åŠ¨ç”»æœªå¼€å¯
 		/// </summary>
 		public int CurrentLayerFinishPlaying
 		{
@@ -87,21 +87,21 @@ namespace RPGCore.Animation
 			}
 		}
 
-		//µ±Ç°Òª×ª»»µ½µÄÏî
+		//å½“å‰è¦è½¬æ¢åˆ°çš„é¡¹
 
 		private AnimationRuntimeInfo currentTransitionToAnimation;
 		private AnimationRuntimeInfo currentLayerTransitionToAnimation;
 
-		//Ëæ»úÊı ÓÃÀ´ÅĞ¶ÏÊÇ·ñÎªÍ¬Ò»Ê±¼äµÄÇëÇó
+		//éšæœºæ•° ç”¨æ¥åˆ¤æ–­æ˜¯å¦ä¸ºåŒä¸€æ—¶é—´çš„è¯·æ±‚
 
 		private int randomChecker;
 		private int currentChecker = -1;
 		private int currentLayerChecker = -1;
 
-		//ÒªÓÃµ½µÄËùÓĞ¶¯»­Êı¾İ
+		//è¦ç”¨åˆ°çš„æ‰€æœ‰åŠ¨ç”»æ•°æ®
 		public AnimationPlayerDataContainerSO animationDataContainer;
 
-		//×ª»»Ê±¼ä
+		//è½¬æ¢æ—¶é—´
 		[Range(0.1f, 2f)]
 		public float transitionTime = 0.1f;
 
@@ -112,18 +112,18 @@ namespace RPGCore.Animation
 
 		private void Update()
 		{
-			//¸üĞÂËæ»ú¼ì²éÆ÷ ÓÃÒÔÅĞ¶ÏÍ¬Ò»Ê±¿ÌµÄ×ª»»ÇëÇó
+			//æ›´æ–°éšæœºæ£€æŸ¥å™¨ ç”¨ä»¥åˆ¤æ–­åŒä¸€æ—¶åˆ»çš„è½¬æ¢è¯·æ±‚
 			randomChecker = Random.Range(1, 100000);
-			//¸üĞÂµ±Ç°²¥·Å¶¯»­µÄĞÅÏ¢
+			//æ›´æ–°å½“å‰æ’­æ”¾åŠ¨ç”»çš„ä¿¡æ¯
 			currentPlayingAnimation.CheckFinished();
-			//¸üĞÂµ±Ç°²¥·ÅµÄ²ã¼¶¶¯»­µÄĞÅÏ¢
+			//æ›´æ–°å½“å‰æ’­æ”¾çš„å±‚çº§åŠ¨ç”»çš„ä¿¡æ¯
 			if (hasLayerAnimation && currentLayerPlayingAnimation != null)
 			{
 				currentLayerPlayingAnimation.CheckFinished();
 			}
-			//´¦Àí×ª»»
+			//å¤„ç†è½¬æ¢
 			ProcessTransitionRequest();
-			//´¦Àí²ã¼¶×ª»»
+			//å¤„ç†å±‚çº§è½¬æ¢
 			if (hasLayerAnimation)
 			{
 				ProcessLayerTransitionRequest();
@@ -132,11 +132,11 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// ³õÊ¼»¯
+		/// åˆå§‹åŒ–
 		/// </summary>
 		private void InitializePlayableGraph()
 		{
-			//´´½¨
+			//åˆ›å»º
 			graph = PlayableGraph.Create(name + " Animation Player");
 			output = AnimationPlayableOutput.Create(graph, "Output", GetComponent<Animator>());
 			layerMixerPlayable = AnimationLayerMixerPlayable.Create(graph, 2);
@@ -146,14 +146,14 @@ namespace RPGCore.Animation
 			transitionTargetPlayable = AnimationClipPlayable.Create(graph, null);
 			layerCurrentPlayingPlayable = AnimationClipPlayable.Create(graph, null);
 			layerTransitionTargetPlayable = AnimationClipPlayable.Create(graph, null);
-			//Á´½Ó
+			//é“¾æ¥
 			graph.Connect(currentPlayingPlayable, 0, mainMixerPlayable, 0);
 			graph.Connect(transitionTargetPlayable, 0, mainMixerPlayable, 1);
 			graph.Connect(layerCurrentPlayingPlayable, 0, subMixerPlayable, 0);
 			graph.Connect(layerTransitionTargetPlayable, 0, subMixerPlayable, 1);
 			graph.Connect(mainMixerPlayable, 0, layerMixerPlayable, 0);
 			graph.Connect(subMixerPlayable, 0, layerMixerPlayable, 1);
-			//³õÊ¼»¯
+			//åˆå§‹åŒ–
 			mainMixerPlayable.SetInputWeight(0, 1);
 			mainMixerPlayable.SetInputWeight(1, 0);
 			subMixerPlayable.SetInputWeight(0, 0);
@@ -164,12 +164,12 @@ namespace RPGCore.Animation
 			output.SetSourcePlayable(layerMixerPlayable);
 			graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
 			currentPlayingAnimation = new AnimationRuntimeInfo(animationDataContainer.defaultAnimation, 0);
-			//ÔËĞĞ
+			//è¿è¡Œ
 			graph.Play();
 		}
 
 		/// <summary>
-		/// Ìá½»Ò»¸ö¶¯»­×ª»»ÇëÇó µÈ´ı´¦Àí
+		/// æäº¤ä¸€ä¸ªåŠ¨ç”»è½¬æ¢è¯·æ±‚ ç­‰å¾…å¤„ç†
 		/// </summary>
 		/// <param name="animationName"></param>
 		public void RequestTransition(string animationName)
@@ -181,17 +181,17 @@ namespace RPGCore.Animation
 				return;
 			}
 
-			//Èç¹ûÊÇÔÚÍ¬Ò»Ê±¼äÇëÇó ÄÇÃ´currentCheckerÓ¦¸ÃÓërandomCheckerÏàµÈ
-			//ÒòÎªÔÚÍ¬Ò»Ê±¼äÄÚrandomChecker²»»á¸Ä±ä
+			//å¦‚æœæ˜¯åœ¨åŒä¸€æ—¶é—´è¯·æ±‚ é‚£ä¹ˆcurrentCheckeråº”è¯¥ä¸randomCheckerç›¸ç­‰
+			//å› ä¸ºåœ¨åŒä¸€æ—¶é—´å†…randomCheckerä¸ä¼šæ”¹å˜
 			bool isSameTime = (currentChecker == randomChecker);
 			currentChecker = randomChecker;
-			//ÅĞ¶Ï´ËÇëÇóÊÇ·ñ¿ÉÒÔÈë×ª»»¶ÓÁĞ
-			//Ê×ÏÈÅĞ¶Ï¶ÓÁĞÊÇ·ñÎª¿Õ
-			//Èç¹ûÎª¿ÕÔòÖ±½Ó½«ÇëÇóÈë¶Ó
+			//åˆ¤æ–­æ­¤è¯·æ±‚æ˜¯å¦å¯ä»¥å…¥è½¬æ¢é˜Ÿåˆ—
+			//é¦–å…ˆåˆ¤æ–­é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º
+			//å¦‚æœä¸ºç©ºåˆ™ç›´æ¥å°†è¯·æ±‚å…¥é˜Ÿ
 			if (animationTransitionQueue.isEmpty())
 			{
-				//Èç¹ûµ±Ç°ÓĞ×ª»» ÄÇÃ´ÅĞ¶ÏµÄ¶ÔÏóÓ¦¸ÃÊÇµ±Ç°×ª»»Ïî
-				//Èç¹ûÓëµ±Ç°×ª»»ÏîÏàÍ¬ÄÇÃ´Õâ¸öÇëÇó¾ÍºöÂÔ ²»ÓÃÖØ¸´×ª»»ÁË
+				//å¦‚æœå½“å‰æœ‰è½¬æ¢ é‚£ä¹ˆåˆ¤æ–­çš„å¯¹è±¡åº”è¯¥æ˜¯å½“å‰è½¬æ¢é¡¹
+				//å¦‚æœä¸å½“å‰è½¬æ¢é¡¹ç›¸åŒé‚£ä¹ˆè¿™ä¸ªè¯·æ±‚å°±å¿½ç•¥ ä¸ç”¨é‡å¤è½¬æ¢äº†
 				if (hasTransition)
 				{
 					if (requestItem.animName != currentTransitionToAnimation.data.animName)
@@ -199,7 +199,7 @@ namespace RPGCore.Animation
 						animationTransitionQueue.Enqueue(requestItem);
 					}
 				}
-				//Èç¹ûÃ»ÓĞ ÅĞ¶ÏµÄ¶ÔÏó²ÅÊÇµ±Ç°²¥·ÅÏî
+				//å¦‚æœæ²¡æœ‰ åˆ¤æ–­çš„å¯¹è±¡æ‰æ˜¯å½“å‰æ’­æ”¾é¡¹
 				else
 				{
 					if (requestItem.animName != currentPlayingAnimation.data.animName)
@@ -208,12 +208,12 @@ namespace RPGCore.Animation
 					}
 				}
 			}
-			//Èç¹û¶ÓÁĞ²»Îª¿Õ
+			//å¦‚æœé˜Ÿåˆ—ä¸ä¸ºç©º
 			else
 			{
-				//²é¿´¶ÓÎ²ÔªËØ
+				//æŸ¥çœ‹é˜Ÿå°¾å…ƒç´ 
 				var qtail = animationTransitionQueue.PeekTail();
-				//Ê×ÏÈÒªÈ·¶¨ÊÇ²»ÊÇÔÚÍ¬Ò»Ê±¼äÇëÇóµÄ Èç¹ûÊÇ¾ÍÖ±½Ó¶¼Èë¶Ó ²»¿¼ÂÇÓÅÏÈ¼¶µ«Òª¿¼ÂÇÖØ¸´ÎÊÌâ
+				//é¦–å…ˆè¦ç¡®å®šæ˜¯ä¸æ˜¯åœ¨åŒä¸€æ—¶é—´è¯·æ±‚çš„ å¦‚æœæ˜¯å°±ç›´æ¥éƒ½å…¥é˜Ÿ ä¸è€ƒè™‘ä¼˜å…ˆçº§ä½†è¦è€ƒè™‘é‡å¤é—®é¢˜
 				if (isSameTime)
 				{
 					if (requestItem.animName != qtail.animName)
@@ -221,24 +221,24 @@ namespace RPGCore.Animation
 						animationTransitionQueue.Enqueue(requestItem);
 					}
 				}
-				//Èç¹û²»ÊÇÍ¬Ò»Ê±¼äÇëÇóµÄ¾Í¼ÌĞø½øĞĞÅĞ¶Ï
+				//å¦‚æœä¸æ˜¯åŒä¸€æ—¶é—´è¯·æ±‚çš„å°±ç»§ç»­è¿›è¡Œåˆ¤æ–­
 				else
 				{
-					//Óë¶ÓÎ²ÇëÇó±È½Ï
-					//Èç¹ûÁ½¸öÇëÇóÏàµÈÔòºöÂÔµ±Ç°ÇëÇó
+					//ä¸é˜Ÿå°¾è¯·æ±‚æ¯”è¾ƒ
+					//å¦‚æœä¸¤ä¸ªè¯·æ±‚ç›¸ç­‰åˆ™å¿½ç•¥å½“å‰è¯·æ±‚
 					if (qtail.animName == requestItem.animName)
 					{
 						return;
 					}
-					//Èç¹ûÁ½¸öÇëÇó²»ÏàµÈÇÒµ±Ç°ÇëÇóµÄÓÅÏÈ¼¶´óÓÚ¶ÓÎ²ÇëÇóµÄÓÅÏÈ¼¶
-					//°Ñ¶ÓÎ²ÓÅÏÈ¼¶Ğ¡ÓÚ»òµÈÓÚµ±Ç°ÇëÇóµÄÏîÒÆ³ı
-					//Ö±µ½¶ÓÎ²ÏîµÄÓÅÏÈ¼¶´óÓÚµ±Ç°ÇëÇó»ò¶ÓÁĞÎª¿Õ
+					//å¦‚æœä¸¤ä¸ªè¯·æ±‚ä¸ç›¸ç­‰ä¸”å½“å‰è¯·æ±‚çš„ä¼˜å…ˆçº§å¤§äºé˜Ÿå°¾è¯·æ±‚çš„ä¼˜å…ˆçº§
+					//æŠŠé˜Ÿå°¾ä¼˜å…ˆçº§å°äºæˆ–ç­‰äºå½“å‰è¯·æ±‚çš„é¡¹ç§»é™¤
+					//ç›´åˆ°é˜Ÿå°¾é¡¹çš„ä¼˜å…ˆçº§å¤§äºå½“å‰è¯·æ±‚æˆ–é˜Ÿåˆ—ä¸ºç©º
 					while (requestItem.animPriority >= qtail.animPriority)
 					{
-						//Èç¹ûÁ½¸öÓÅÏÈ¼¶ÏàµÈ
+						//å¦‚æœä¸¤ä¸ªä¼˜å…ˆçº§ç›¸ç­‰
 						if (requestItem.animPriority == qtail.animPriority && qtail.canAbort)
 						{
-							//ÇÒ¶ÓÎ²ÏîÖ»ÄÜ±»¸ü¸ßÓÅÏÈ¼¶µÄÇëÇó´ò¶ÏÔòÌø¹ı
+							//ä¸”é˜Ÿå°¾é¡¹åªèƒ½è¢«æ›´é«˜ä¼˜å…ˆçº§çš„è¯·æ±‚æ‰“æ–­åˆ™è·³è¿‡
 							if (qtail.abortType == AnimationAbortType.OnlyHigherPriority)
 							{
 								break;
@@ -248,27 +248,27 @@ namespace RPGCore.Animation
 						if (animationTransitionQueue.isEmpty()) break;
 						qtail = animationTransitionQueue.PeekTail();
 					}
-					//Ò»ÇĞË³Àû ½«µ±Ç°ÇëÇóÈë¶Ó
+					//ä¸€åˆ‡é¡ºåˆ© å°†å½“å‰è¯·æ±‚å…¥é˜Ÿ
 					animationTransitionQueue.Enqueue(requestItem);
 				}
 			}
 		}
 
 		/// <summary>
-		/// ´¦Àí×ª»»ÇëÇó
+		/// å¤„ç†è½¬æ¢è¯·æ±‚
 		/// </summary>
 		private void ProcessTransitionRequest()
 		{
-			//ÅĞ¶Ïµ±Ç°ÊÇ·ñÕıÔÚÖ´ĞĞ×ª»»
-			//Èç¹ûµ±Ç°Ã»ÓĞÖ´ĞĞ×ª»»
+			//åˆ¤æ–­å½“å‰æ˜¯å¦æ­£åœ¨æ‰§è¡Œè½¬æ¢
+			//å¦‚æœå½“å‰æ²¡æœ‰æ‰§è¡Œè½¬æ¢
 			if (!hasTransition)
 			{
-				//ÅĞ¶Ï×ª»»ÇëÇó¶ÓÁĞÊÇ·ñÎª¿Õ
-				//Èç¹û²»Îª¿Õ ËµÃ÷µ±Ç°ÓĞ×ª»»ÇëÇó
+				//åˆ¤æ–­è½¬æ¢è¯·æ±‚é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º
+				//å¦‚æœä¸ä¸ºç©º è¯´æ˜å½“å‰æœ‰è½¬æ¢è¯·æ±‚
 				if (!animationTransitionQueue.isEmpty())
 				{
-					//ÅĞ¶Ïµ±Ç°²¥·ÅÏîÄÜ·ñ±»´ò¶ÏÖ´ĞĞ×ª»»
-					//Èç¹ûÔÊĞí±»´ò¶Ï»ò²¥·ÅÍê³ÉÍ¬Ñù¿ÉÒÔÖ´ĞĞ×ª»»
+					//åˆ¤æ–­å½“å‰æ’­æ”¾é¡¹èƒ½å¦è¢«æ‰“æ–­æ‰§è¡Œè½¬æ¢
+					//å¦‚æœå…è®¸è¢«æ‰“æ–­æˆ–æ’­æ”¾å®ŒæˆåŒæ ·å¯ä»¥æ‰§è¡Œè½¬æ¢
 					bool canAbort = false;
 					if (currentPlayingAnimation.data.canAbort)
 					{
@@ -296,11 +296,11 @@ namespace RPGCore.Animation
 					}
 					if (canAbort || currentPlayingAnimation.finishPlaying)
 					{
-						//ÔÚÏÂÒ»Ö¡Ö´ĞĞ×ª»» ²¢»ñÈ¡µ½µ±Ç°×ª»»Ïî
+						//åœ¨ä¸‹ä¸€å¸§æ‰§è¡Œè½¬æ¢ å¹¶è·å–åˆ°å½“å‰è½¬æ¢é¡¹
 						hasTransition = true;
 						currentTransitionToAnimation = new AnimationRuntimeInfo(animationTransitionQueue.Dequeue(), Time.time);
 
-						//½«Ä¿±êanimÓë¶Ë¿Ú1°ó¶¨ Îª¿ªÊ¼´Ó¶Ë¿Ú0µ½¶Ë¿Ú1×ª»»×ö×¼±¸
+						//å°†ç›®æ ‡animä¸ç«¯å£1ç»‘å®š ä¸ºå¼€å§‹ä»ç«¯å£0åˆ°ç«¯å£1è½¬æ¢åšå‡†å¤‡
 						mainMixerPlayable.DisconnectInput(1);
 						transitionTargetPlayable.Destroy();
 						transitionTargetPlayable = AnimationClipPlayable.Create(graph, currentTransitionToAnimation.data.animClip);
@@ -314,10 +314,10 @@ namespace RPGCore.Animation
 					}
 				}
 			}
-			//µ±Ç°ÓĞÖ´ĞĞµÄ×ª»»
+			//å½“å‰æœ‰æ‰§è¡Œçš„è½¬æ¢
 			else
 			{
-				//×ª»»¸Õ¿ªÊ¼Ê±¼ÇÂ¼Ò»ÏÂµ±Ç°¿ªÊ¼×ª»»µÄÊ±¼ä
+				//è½¬æ¢åˆšå¼€å§‹æ—¶è®°å½•ä¸€ä¸‹å½“å‰å¼€å§‹è½¬æ¢çš„æ—¶é—´
 				if (transitionStartTime == 0)
 				{
 					transitionStartTime = Time.time;
@@ -325,10 +325,10 @@ namespace RPGCore.Animation
 				float weight = Mathf.Clamp01((Time.time - transitionStartTime) / transitionTime);
 				mainMixerPlayable.SetInputWeight(0, 1 - weight);
 				mainMixerPlayable.SetInputWeight(1, weight);
-				//×ª»»Íê³É
+				//è½¬æ¢å®Œæˆ
 				if (weight == 1)
 				{
-					//½»»»¶Ë¿Ú0ºÍ¶Ë¿Ú1µÄanim
+					//äº¤æ¢ç«¯å£0å’Œç«¯å£1çš„anim
 					mainMixerPlayable.DisconnectInput(0);
 					mainMixerPlayable.DisconnectInput(1);
 					AnimationClipPlayable temp = currentPlayingPlayable;
@@ -341,10 +341,10 @@ namespace RPGCore.Animation
 					transitionTargetPlayable.SetTime(0);
 					transitionTargetPlayable.Pause();
 
-					//×ª»»Íê³Éºó¼ÇÂ¼
+					//è½¬æ¢å®Œæˆåè®°å½•
 					hasTransition = false;
 					transitionStartTime = 0;
-					//½«µ±Ç°×ª»»ÏîÉèÖÃÎªµ±Ç°²¥·ÅÏî
+					//å°†å½“å‰è½¬æ¢é¡¹è®¾ç½®ä¸ºå½“å‰æ’­æ”¾é¡¹
 					animationRuntimeStackLog.Push(currentPlayingAnimation);
 					currentPlayingAnimation = currentTransitionToAnimation;
 					currentTransitionToAnimation = null;
@@ -353,12 +353,12 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// Ìá½»Ò»¸ö·Ö²ã¶¯»­×ª»»ÇëÇó µÈ´ı´¦Àí
+		/// æäº¤ä¸€ä¸ªåˆ†å±‚åŠ¨ç”»è½¬æ¢è¯·æ±‚ ç­‰å¾…å¤„ç†
 		/// </summary>
 		/// <param name="layerName">AvatarMask</param>
 		public void RequestLayerTransition(string animationName, string layerName, float layerWeight = 1)
 		{
-			//ÔÚ´¦ÀíÍË³öÊ±Èç¹ûÓĞÇëÇó½øÀ´ÔòÓÅÏÈ´¦ÀíÇëÇó
+			//åœ¨å¤„ç†é€€å‡ºæ—¶å¦‚æœæœ‰è¯·æ±‚è¿›æ¥åˆ™ä¼˜å…ˆå¤„ç†è¯·æ±‚
 			if (exitLayerAnimation)
 			{
 				exitLayerAnimation = false;
@@ -380,18 +380,18 @@ namespace RPGCore.Animation
 				return;
 			}
 
-			//Éè¶¨¶¯»­µÄ²ã¼¶ºÍÈ¨ÖØ
+			//è®¾å®šåŠ¨ç”»çš„å±‚çº§å’Œæƒé‡
 			layerMixerPlayable.SetLayerMaskFromAvatarMask(1, requestMask.mask);
 			SetCurrentLayerAnimationWeight(layerAnimationWeight);
 
-			//Èç¹ûÊÇÔÚÍ¬Ò»Ê±¼äÇëÇó ÄÇÃ´currentLayerCheckerÓ¦¸ÃÓërandomCheckerÏàµÈ ÒòÎªÔÚÍ¬Ò»Ê±¼äÄÚrandomChecker²»»á¸Ä±ä
+			//å¦‚æœæ˜¯åœ¨åŒä¸€æ—¶é—´è¯·æ±‚ é‚£ä¹ˆcurrentLayerCheckeråº”è¯¥ä¸randomCheckerç›¸ç­‰ å› ä¸ºåœ¨åŒä¸€æ—¶é—´å†…randomCheckerä¸ä¼šæ”¹å˜
 			bool isSameTime = (currentLayerChecker == randomChecker);
 			currentLayerChecker = randomChecker;
 
-			//ÅĞ¶Ï´ËÇëÇóÊÇ·ñ¿ÉÒÔÈë×ª»»¶ÓÁĞ Ê×ÏÈÅĞ¶Ï¶ÓÁĞÊÇ·ñÎª¿Õ Èç¹ûÎª¿ÕÔòÖ±½Ó½«ÇëÇóÈë¶Ó
+			//åˆ¤æ–­æ­¤è¯·æ±‚æ˜¯å¦å¯ä»¥å…¥è½¬æ¢é˜Ÿåˆ— é¦–å…ˆåˆ¤æ–­é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º å¦‚æœä¸ºç©ºåˆ™ç›´æ¥å°†è¯·æ±‚å…¥é˜Ÿ
 			if (animationLayerTransitionQueue.isEmpty())
 			{
-				//Ê×´ÎÇëÇó Ö±½ÓÈë¶Ó
+				//é¦–æ¬¡è¯·æ±‚ ç›´æ¥å…¥é˜Ÿ
 				if (!hasLayerAnimation)
 				{
 					animationLayerTransitionQueue.Enqueue(requestItem);
@@ -400,7 +400,7 @@ namespace RPGCore.Animation
 				}
 				else
 				{
-					//Èç¹ûµ±Ç°ÓĞ×ª»» ÄÇÃ´ÅĞ¶ÏµÄ¶ÔÏóÓ¦¸ÃÊÇµ±Ç°×ª»»Ïî Èç¹ûÓëµ±Ç°×ª»»ÏîÏàÍ¬ÄÇÃ´Õâ¸öÇëÇó¾ÍºöÂÔ ²»ÓÃÖØ¸´×ª»»ÁË
+					//å¦‚æœå½“å‰æœ‰è½¬æ¢ é‚£ä¹ˆåˆ¤æ–­çš„å¯¹è±¡åº”è¯¥æ˜¯å½“å‰è½¬æ¢é¡¹ å¦‚æœä¸å½“å‰è½¬æ¢é¡¹ç›¸åŒé‚£ä¹ˆè¿™ä¸ªè¯·æ±‚å°±å¿½ç•¥ ä¸ç”¨é‡å¤è½¬æ¢äº†
 					if (hasLayerTransition)
 					{
 						if (requestItem.animName != currentLayerTransitionToAnimation.data.animName)
@@ -408,7 +408,7 @@ namespace RPGCore.Animation
 							animationLayerTransitionQueue.Enqueue(requestItem);
 						}
 					}
-					//Èç¹ûÃ»ÓĞ ÅĞ¶ÏµÄ¶ÔÏó²ÅÊÇµ±Ç°²¥·ÅÏî
+					//å¦‚æœæ²¡æœ‰ åˆ¤æ–­çš„å¯¹è±¡æ‰æ˜¯å½“å‰æ’­æ”¾é¡¹
 					else
 					{
 						if (currentLayerPlayingAnimation != null && requestItem.animName != currentLayerPlayingAnimation.data.animName)
@@ -418,12 +418,12 @@ namespace RPGCore.Animation
 					}
 				}
 			}
-			//Èç¹û¶ÓÁĞ²»Îª¿Õ
+			//å¦‚æœé˜Ÿåˆ—ä¸ä¸ºç©º
 			else
 			{
-				//²é¿´¶ÓÎ²ÔªËØ
+				//æŸ¥çœ‹é˜Ÿå°¾å…ƒç´ 
 				var qtail = animationLayerTransitionQueue.PeekTail();
-				//Ê×ÏÈÒªÈ·¶¨ÊÇ²»ÊÇÔÚÍ¬Ò»Ê±¼äÇëÇóµÄ Èç¹ûÊÇ¾ÍÖ±½Ó¶¼Èë¶Ó ²»¿¼ÂÇÓÅÏÈ¼¶µ«Òª¿¼ÂÇÖØ¸´ÎÊÌâ
+				//é¦–å…ˆè¦ç¡®å®šæ˜¯ä¸æ˜¯åœ¨åŒä¸€æ—¶é—´è¯·æ±‚çš„ å¦‚æœæ˜¯å°±ç›´æ¥éƒ½å…¥é˜Ÿ ä¸è€ƒè™‘ä¼˜å…ˆçº§ä½†è¦è€ƒè™‘é‡å¤é—®é¢˜
 				if (isSameTime)
 				{
 					if (requestItem.animName != qtail.animName)
@@ -431,33 +431,33 @@ namespace RPGCore.Animation
 						animationLayerTransitionQueue.Enqueue(requestItem);
 					}
 				}
-				//Èç¹û²»ÊÇÍ¬Ò»Ê±¼äÇëÇóµÄ¾Í¼ÌĞø½øĞĞÅĞ¶Ï
+				//å¦‚æœä¸æ˜¯åŒä¸€æ—¶é—´è¯·æ±‚çš„å°±ç»§ç»­è¿›è¡Œåˆ¤æ–­
 				else
 				{
-					//Óë¶ÓÎ²ÇëÇó±È½Ï Èç¹ûÁ½¸öÇëÇóÏàµÈÔòºöÂÔµ±Ç°ÇëÇó
+					//ä¸é˜Ÿå°¾è¯·æ±‚æ¯”è¾ƒ å¦‚æœä¸¤ä¸ªè¯·æ±‚ç›¸ç­‰åˆ™å¿½ç•¥å½“å‰è¯·æ±‚
 					if (qtail.animName == requestItem.animName)
 					{
 						return;
 					}
-					//Èç¹ûÁ½¸öÇëÇó²»ÏàµÈÇÒµ±Ç°ÇëÇóµÄÓÅÏÈ¼¶´óÓÚ¶ÓÎ²ÇëÇóµÄÓÅÏÈ¼¶ °Ñ¶ÓÎ²ÓÅÏÈ¼¶Ğ¡ÓÚ»òµÈÓÚµ±Ç°ÇëÇóµÄÏîÒÆ³ı Ö±µ½¶ÓÎ²ÏîµÄÓÅÏÈ¼¶´óÓÚµ±Ç°ÇëÇó»ò¶ÓÁĞÎª¿Õ
+					//å¦‚æœä¸¤ä¸ªè¯·æ±‚ä¸ç›¸ç­‰ä¸”å½“å‰è¯·æ±‚çš„ä¼˜å…ˆçº§å¤§äºé˜Ÿå°¾è¯·æ±‚çš„ä¼˜å…ˆçº§ æŠŠé˜Ÿå°¾ä¼˜å…ˆçº§å°äºæˆ–ç­‰äºå½“å‰è¯·æ±‚çš„é¡¹ç§»é™¤ ç›´åˆ°é˜Ÿå°¾é¡¹çš„ä¼˜å…ˆçº§å¤§äºå½“å‰è¯·æ±‚æˆ–é˜Ÿåˆ—ä¸ºç©º
 					while (requestItem.animPriority >= qtail.animPriority)
 					{
 						animationLayerTransitionQueue.PopTail();
 						if (animationLayerTransitionQueue.isEmpty()) break;
 						qtail = animationLayerTransitionQueue.PeekTail();
 					}
-					//Ò»ÇĞË³Àû ½«µ±Ç°ÇëÇóÈë¶Ó
+					//ä¸€åˆ‡é¡ºåˆ© å°†å½“å‰è¯·æ±‚å…¥é˜Ÿ
 					animationLayerTransitionQueue.Enqueue(requestItem);
 				}
 			}
 		}
 
 		/// <summary>
-		/// ´¦Àí·Ö²ã×ª»»ÇëÇó
+		/// å¤„ç†åˆ†å±‚è½¬æ¢è¯·æ±‚
 		/// </summary>
 		public void ProcessLayerTransitionRequest()
 		{
-			//µ¥¶À´¦ÀíÊ×´ÎÇëÇó
+			//å•ç‹¬å¤„ç†é¦–æ¬¡è¯·æ±‚
 			if (enterLayerAnimation)
 			{
 				currentLayerTransitionToAnimation = new AnimationRuntimeInfo(animationLayerTransitionQueue.Dequeue(), Time.time);
@@ -471,7 +471,7 @@ namespace RPGCore.Animation
 				enterLayerAnimation = false;
 				hasLayerTransition = true;
 			}
-			//´¦ÀíÍË³ö²ã¼¶¶¯»­
+			//å¤„ç†é€€å‡ºå±‚çº§åŠ¨ç”»
 			if (exitLayerAnimation)
 			{
 				if (layerExitTransitionStartTime == 0)
@@ -493,19 +493,19 @@ namespace RPGCore.Animation
 					exitLayerAnimation = false;
 				}
 			}
-			//Èç¹ûµ±Ç°Ã»ÓĞÕıÔÚÖ´ĞĞ²ã¼¶Ö®¼äµÄ×ª»»
+			//å¦‚æœå½“å‰æ²¡æœ‰æ­£åœ¨æ‰§è¡Œå±‚çº§ä¹‹é—´çš„è½¬æ¢
 			if (!hasLayerTransition)
 			{
-				//ÇëÇó¶ÓÁĞ²»Îª¿Õ
+				//è¯·æ±‚é˜Ÿåˆ—ä¸ä¸ºç©º
 				if (!animationLayerTransitionQueue.isEmpty())
 				{
 					if (currentLayerPlayingAnimation.data.canAbort || currentLayerPlayingAnimation.finishPlaying)
 					{
-						//ÔÚÏÂÒ»Ö¡Ö´ĞĞ×ª»» ²¢»ñÈ¡µ½µ±Ç°×ª»»Ïî
+						//åœ¨ä¸‹ä¸€å¸§æ‰§è¡Œè½¬æ¢ å¹¶è·å–åˆ°å½“å‰è½¬æ¢é¡¹
 						hasLayerTransition = true;
 						currentLayerTransitionToAnimation = new AnimationRuntimeInfo(animationLayerTransitionQueue.Dequeue(), Time.time);
 
-						//½«Ä¿±êanimÓë¶Ë¿Ú1°ó¶¨ Îª¿ªÊ¼´Ó¶Ë¿Ú0µ½¶Ë¿Ú1×ª»»×ö×¼±¸
+						//å°†ç›®æ ‡animä¸ç«¯å£1ç»‘å®š ä¸ºå¼€å§‹ä»ç«¯å£0åˆ°ç«¯å£1è½¬æ¢åšå‡†å¤‡
 						subMixerPlayable.DisconnectInput(1);
 						layerTransitionTargetPlayable.Destroy();
 						layerTransitionTargetPlayable = AnimationClipPlayable.Create(graph, currentLayerTransitionToAnimation.data.animClip);
@@ -517,10 +517,10 @@ namespace RPGCore.Animation
 						//Debug.Log($"{currentPlayingAnimation.data.animName} => {currentTransitionToAnimation.data.animName}");
 					}
 				}
-				//Èç¹ûÇëÇóÎª¿Õ
+				//å¦‚æœè¯·æ±‚ä¸ºç©º
 				else
 				{
-					//µ±Ç°²¥·Å¶¯»­Íê³ÉÇÒ²»ÊÇÑ­»·¶¯»­
+					//å½“å‰æ’­æ”¾åŠ¨ç”»å®Œæˆä¸”ä¸æ˜¯å¾ªç¯åŠ¨ç”»
 					if (currentLayerPlayingAnimation != null)
 					{
 						if (currentLayerPlayingAnimation.data.animPlayType != AnimationPlayType.Loop && currentLayerPlayingAnimation.finishPlaying)
@@ -532,7 +532,7 @@ namespace RPGCore.Animation
 			}
 			else
 			{
-				//×ª»»¸Õ¿ªÊ¼Ê±¼ÇÂ¼Ò»ÏÂµ±Ç°¿ªÊ¼×ª»»µÄÊ±¼ä
+				//è½¬æ¢åˆšå¼€å§‹æ—¶è®°å½•ä¸€ä¸‹å½“å‰å¼€å§‹è½¬æ¢çš„æ—¶é—´
 				if (layerTransitionStartTime == 0)
 				{
 					layerTransitionStartTime = Time.time;
@@ -540,10 +540,10 @@ namespace RPGCore.Animation
 				float weight = Mathf.Clamp01((Time.time - layerTransitionStartTime) / transitionTime) * layerAnimationWeight;
 				subMixerPlayable.SetInputWeight(0, layerAnimationWeight - weight);
 				subMixerPlayable.SetInputWeight(1, weight);
-				//×ª»»Íê³É
+				//è½¬æ¢å®Œæˆ
 				if (weight == layerAnimationWeight)
 				{
-					//½»»»¶Ë¿Ú0ºÍ¶Ë¿Ú1µÄanim
+					//äº¤æ¢ç«¯å£0å’Œç«¯å£1çš„anim
 					subMixerPlayable.DisconnectInput(0);
 					subMixerPlayable.DisconnectInput(1);
 					AnimationClipPlayable temp = layerCurrentPlayingPlayable;
@@ -556,10 +556,10 @@ namespace RPGCore.Animation
 					layerTransitionTargetPlayable.SetTime(0);
 					layerTransitionTargetPlayable.Pause();
 
-					//×ª»»Íê³Éºó¼ÇÂ¼
+					//è½¬æ¢å®Œæˆåè®°å½•
 					hasLayerTransition = false;
 					layerTransitionStartTime = 0;
-					//½«µ±Ç°×ª»»ÏîÉèÖÃÎªµ±Ç°²¥·ÅÏî
+					//å°†å½“å‰è½¬æ¢é¡¹è®¾ç½®ä¸ºå½“å‰æ’­æ”¾é¡¹
 					if (currentLayerPlayingAnimation != null)
 					{
 						animationLayerRuntimeStackLog.Push(currentLayerPlayingAnimation);
@@ -581,7 +581,7 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// ÍË³öµ±Ç°Í¼²ã¶¯»­
+		/// é€€å‡ºå½“å‰å›¾å±‚åŠ¨ç”»
 		/// </summary>
 		public void ExitLayerAnimation()
 		{
@@ -589,7 +589,7 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// ·µ»Øµ±Ç°ÕıÔÚ²¥·ÅµÄ¶¯»­µÄÃû³Æ
+		/// è¿”å›å½“å‰æ­£åœ¨æ’­æ”¾çš„åŠ¨ç”»çš„åç§°
 		/// </summary>
 		/// <returns></returns>
 		public string GetCurrentPlayingAnimationName()
@@ -598,7 +598,7 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// ·µ»Øµ±Ç°ÕıÔÚ²¥·ÅµÄ¶¯»­µÄÃû³Æ
+		/// è¿”å›å½“å‰æ­£åœ¨æ’­æ”¾çš„åŠ¨ç”»çš„åç§°
 		/// </summary>
 		/// <returns></returns>
 		public string GetCurrentPlayingLayerAnimationName()
@@ -612,7 +612,7 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// ÉèÖÃ²ã¶¯»­µÄÈ¨ÖØ
+		/// è®¾ç½®å±‚åŠ¨ç”»çš„æƒé‡
 		/// </summary>
 		/// <param name="weight"></param>
 		public void SetCurrentLayerAnimationWeight(float weight)
@@ -621,9 +621,9 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// Í¨¹ıÃû³ÆÑ°ÕÒÌØ¶¨µÄ¶¯»­Êı¾İ
+		/// é€šè¿‡åç§°å¯»æ‰¾ç‰¹å®šçš„åŠ¨ç”»æ•°æ®
 		/// </summary>
-		/// <param name="animationName">¶¯»­Êı¾İµÄÃû³Æ</param>
+		/// <param name="animationName">åŠ¨ç”»æ•°æ®çš„åç§°</param>
 		/// <returns></returns>
 		/// <summary>
 		private AnimationPlayerDataSO GetAnimationData(string animationName)
@@ -640,7 +640,7 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// Í¨¹ıÃû³ÆÑ°ÕÒÌØ¶¨µÄ¶¯»­²ãÕÚÕÖÊı¾İ
+		/// é€šè¿‡åç§°å¯»æ‰¾ç‰¹å®šçš„åŠ¨ç”»å±‚é®ç½©æ•°æ®
 		/// </summary>
 		/// <param name="maskName"></param>
 		/// <returns></returns>
@@ -658,13 +658,13 @@ namespace RPGCore.Animation
 		}
 
 		/// <summary>
-		/// ¶¯»­ÔËĞĞÊ±ĞÅÏ¢Àà
+		/// åŠ¨ç”»è¿è¡Œæ—¶ä¿¡æ¯ç±»
 		/// </summary>
 		public class AnimationRuntimeInfo
 		{
 			public AnimationPlayerDataSO data;
-			public bool finishPlaying = false;//µÚÒ»´Î²¥·ÅÍê¾ÍÎªTRUE
-			public double beginTime;//¿ªÊ¼Ê±¼ä
+			public bool finishPlaying = false;//ç¬¬ä¸€æ¬¡æ’­æ”¾å®Œå°±ä¸ºTRUE
+			public double beginTime;//å¼€å§‹æ—¶é—´
 
 			public AnimationRuntimeInfo(AnimationPlayerDataSO data, double beginTime)
 			{

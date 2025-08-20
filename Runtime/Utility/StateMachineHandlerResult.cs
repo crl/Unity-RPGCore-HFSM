@@ -5,42 +5,42 @@ namespace RPGCore.AI.HFSM
 	public class StateMachineHandlerResult
 	{
 		/// <summary>
-		/// ÉÏÒ»´Î²Ù×÷µÄ½á¹û£»
+		/// ä¸Šä¸€æ¬¡æ“ä½œçš„ç»“æœï¼›
 		/// </summary>
 		public StateMachineHandlerResult previousHandleResult => m_previousHandleResult;
 
 		protected StateMachineHandlerResult m_previousHandleResult;
 
 		/// <summary>
-		/// µ±Ç°²Ù×÷µÄState»òStateMachineµÄ¸¸StateMachine
+		/// å½“å‰æ“ä½œçš„Stateæˆ–StateMachineçš„çˆ¶StateMachine
 		/// </summary>
 		public StateMachine parentStateMachine => m_parentStateMachine;
 
 		protected StateMachine m_parentStateMachine;
 
 		/// <summary>
-		/// µ±Ç°²Ù×÷¹ıµÄState»òStateMachine
+		/// å½“å‰æ“ä½œè¿‡çš„Stateæˆ–StateMachine
 		/// </summary>
 		public StateBase handledState => m_handledState;
 
 		protected StateBase m_handledState;
 
 		/// <summary>
-		/// ÓÉÉÏÒ»´Î²Ù×÷´´½¨µÄÒ»ÌõTransition
+		/// ç”±ä¸Šä¸€æ¬¡æ“ä½œåˆ›å»ºçš„ä¸€æ¡Transition
 		/// </summary>
 		public Transition createdTransition => m_createdTransition;
 
 		protected Transition m_createdTransition;
 
 		/// <summary>
-		/// ÓÉÉÏÒ»´Î²Ù×÷´´½¨µÄÒ»¸öService
+		/// ç”±ä¸Šä¸€æ¬¡æ“ä½œåˆ›å»ºçš„ä¸€ä¸ªService
 		/// </summary>
 		public Service createdService => m_createdService;
 
 		private Service m_createdService;
 
 		/// <summary>
-		/// ·µ»Øµ±Ç°ÊÇ·ñ¿ªÆôÁËĞÂµÄÒ»²ã²Ù×÷£»´´½¨StateMachineºóµÚÒ»´Î²Ù×÷´Ë×Ö¶ÎÎªÕæ
+		/// è¿”å›å½“å‰æ˜¯å¦å¼€å¯äº†æ–°çš„ä¸€å±‚æ“ä½œï¼›åˆ›å»ºStateMachineåç¬¬ä¸€æ¬¡æ“ä½œæ­¤å­—æ®µä¸ºçœŸ
 		/// </summary>
 		private bool IsBeginNewLevel => parentStateMachine.id.Equals(handledState.id);
 
@@ -58,7 +58,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Îªµ±Ç°²Ù×÷µÄStateMachineÌí¼ÓÒ»¸östate
+		/// ä¸ºå½“å‰æ“ä½œçš„StateMachineæ·»åŠ ä¸€ä¸ªstate
 		/// </summary>
 		public StateMachineHandlerResult AddState(string stateId, bool isDefault = false)
 		{
@@ -76,7 +76,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Îªµ±Ç°²Ù×÷µÄStateMachineÌí¼ÓÒ»¸öStateMachine
+		/// ä¸ºå½“å‰æ“ä½œçš„StateMachineæ·»åŠ ä¸€ä¸ªStateMachine
 		/// </summary>
 		public StateMachineHandlerResult AddStateMachine(string stateMachineId, bool isDefault = false)
 		{
@@ -86,8 +86,8 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Îªµ±Ç°²Ù×÷µÄstate»òStateMachineÌí¼ÓÒ»Ìõµ½Ä¿±êstateµÄTransition
-		/// Èç¹ûÄ¿±êstate²»´æÔÚ£¬Ôò´´½¨Ò»¸östate
+		/// ä¸ºå½“å‰æ“ä½œçš„stateæˆ–StateMachineæ·»åŠ ä¸€æ¡åˆ°ç›®æ ‡stateçš„Transition
+		/// å¦‚æœç›®æ ‡stateä¸å­˜åœ¨ï¼Œåˆ™åˆ›å»ºä¸€ä¸ªstate
 		/// </summary>
 		public StateMachineHandlerResult ToState(string stateId, bool isTemporary = false)
 		{
@@ -107,8 +107,8 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Îªµ±Ç°²Ù×÷µÄstate»òStateMachineÌí¼ÓÒ»Ìõµ½Ä¿±êStateMachineµÄTransition
-		/// Èç¹ûÄ¿±êStateMachine²»´æÔÚ£¬Ôò´´½¨Ò»¸öÈç¹ûÄ¿±êStateMachine²»´æÔÚ
+		/// ä¸ºå½“å‰æ“ä½œçš„stateæˆ–StateMachineæ·»åŠ ä¸€æ¡åˆ°ç›®æ ‡StateMachineçš„Transition
+		/// å¦‚æœç›®æ ‡StateMachineä¸å­˜åœ¨ï¼Œåˆ™åˆ›å»ºä¸€ä¸ªå¦‚æœç›®æ ‡StateMachineä¸å­˜åœ¨
 		/// </summary>
 		public StateMachineHandlerResult ToStateMachine(string stateMachineId)
 		{
@@ -129,7 +129,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Îªµ±Ç°²Ù×÷ºó´´½¨µÄTransitionÌí¼Ó baseCondition
+		/// ä¸ºå½“å‰æ“ä½œååˆ›å»ºçš„Transitionæ·»åŠ  baseCondition
 		/// </summary>
 		public StateMachineHandlerResult Condition(Func<Transition, bool> condition)
 		{
@@ -144,7 +144,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// Îªµ±Ç°²Ù×÷ºó´´½¨µÄTransitionÌí¼Ó paramterCondition
+		/// ä¸ºå½“å‰æ“ä½œååˆ›å»ºçš„Transitionæ·»åŠ  paramterCondition
 		/// </summary>
 		public StateMachineHandlerResult Condition(string paramterName, ParameterType parameterType, CompareType compareType, object value)
 		{
@@ -184,7 +184,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ´´½¨Ò»ÌõÓëµ±Ç°²Ù×÷ºó´´½¨µÄTransition·½ÏòÏà·´µÄTransition
+		/// åˆ›å»ºä¸€æ¡ä¸å½“å‰æ“ä½œååˆ›å»ºçš„Transitionæ–¹å‘ç›¸åçš„Transition
 		/// </summary>
 		public StateMachineHandlerResult Reverse(bool reverseCondition = false)
 		{
@@ -199,7 +199,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ¸Ä±äµ±Ç°²Ù×÷µÄState»òStateMachine
+		/// æ”¹å˜å½“å‰æ“ä½œçš„Stateæˆ–StateMachine
 		/// </summary>
 		public StateMachineHandlerResult SwitchHandle(string stateId)
 		{
@@ -220,7 +220,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªstateÌí¼Óenter»Øµ÷
+		/// ä¸ºstateæ·»åŠ enterå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult OnEnter(Action<State> enter)
 		{
@@ -234,7 +234,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªstateÌí¼Ólogic»Øµ÷
+		/// ä¸ºstateæ·»åŠ logicå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult OnLogic(Action<State> logic)
 		{
@@ -248,7 +248,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªstateÌí¼Óexit»Øµ÷
+		/// ä¸ºstateæ·»åŠ exitå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult OnExit(Action<State> exit)
 		{
@@ -262,7 +262,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªstateÌí¼Óexecute»Øµ÷
+		/// ä¸ºstateæ·»åŠ executeå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult OnExecute(Action<State, StateExecuteType> execute)
 		{
@@ -276,7 +276,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªstateÌí¼ÓCanExit»Øµ÷
+		/// ä¸ºstateæ·»åŠ CanExitå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult CanExit(Func<State, bool> canExit)
 		{
@@ -289,7 +289,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªStateMachineÌí¼ÓService
+		/// ä¸ºStateMachineæ·»åŠ Service
 		/// </summary>
 		public StateMachineHandlerResult AddService(string serviceId, ServiceType serviceType = ServiceType.Update, float customInterval = 0f)
 		{
@@ -303,7 +303,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªStateMachineÌí¼ÓBeginService»Øµ÷
+		/// ä¸ºStateMachineæ·»åŠ BeginServiceå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult OnBeginService(Action<Service> beginService)
 		{
@@ -317,7 +317,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªStateMachineÌí¼ÓService»Øµ÷
+		/// ä¸ºStateMachineæ·»åŠ Serviceå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult OnLogicService(Action<Service> service)
 		{
@@ -331,7 +331,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªStateMachineÌí¼ÓEndService»Øµ÷
+		/// ä¸ºStateMachineæ·»åŠ EndServiceå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult OnEndService(Action<Service> endService)
 		{
@@ -345,7 +345,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ÎªStateMachineÌí¼ÓExecuteService»Øµ÷
+		/// ä¸ºStateMachineæ·»åŠ ExecuteServiceå›è°ƒ
 		/// </summary>
 		public StateMachineHandlerResult OnService(Action<Service, ServiceExecuteType> service)
 		{
@@ -359,7 +359,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ½áÊøµ±Ç°²Ù×÷µÄStateMachine£¬¼´·µ»ØÉÏÒ»²ãStateMachine¼ÌĞø²Ù×÷
+		/// ç»“æŸå½“å‰æ“ä½œçš„StateMachineï¼Œå³è¿”å›ä¸Šä¸€å±‚StateMachineç»§ç»­æ“ä½œ
 		/// </summary>
 		public StateMachineHandlerResult FinishHandle()
 		{
@@ -372,7 +372,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// ½áÊø²Ù×÷
+		/// ç»“æŸæ“ä½œ
 		/// </summary>
 		public void EndHandle()
 		{

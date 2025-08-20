@@ -40,7 +40,7 @@ namespace RPGCore.AI.HFSM
 				paramterTree.Reload();
 			}
 
-			//ËÑË÷¿ò
+			//æœç´¢æ¡†
 			if (searchField == null)
 			{
 				searchField = new SearchField();
@@ -48,11 +48,11 @@ namespace RPGCore.AI.HFSM
 			searchRect.Set(rect.x + 5, rect.y + 5, this.width - 10, searchHeight);
 			paramterTree.searchString = searchField.OnGUI(searchRect, paramterTree.searchString);
 
-			//±êÇ©
+			//æ ‡ç­¾
 			labelRect.Set(rect.x, rect.y, rect.width, labelHeight);
 			EditorGUI.LabelField(labelRect, conditionData.parameterName, GUI.skin.GetStyle("AC BoldHeader"));
 
-			//²ÎÊıÁĞ±í
+			//å‚æ•°åˆ—è¡¨
 			paramterRect.Set(rect.x, rect.y + searchHeight + labelHeight, rect.width, rect.height - searchHeight - labelHeight);
 			paramterTree.OnGUI(paramterRect);
 		}

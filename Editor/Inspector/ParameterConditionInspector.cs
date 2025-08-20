@@ -19,7 +19,7 @@ namespace RPGCore.AI.HFSM
 			left_rect.Set(rect.x, rect.y, rect.width * 0.5f, rect.height);
 			right_rect.Set(left_rect.x + left_rect.width, rect.y, rect.width * 0.5f, rect.height);
 
-			//Ìõ¼ş
+			//æ¡ä»¶
 			if (EditorGUI.DropdownButton(left_rect, new GUIContent(conditionData.compareType.ToString()), FocusType.Passive))
 			{
 				GenericMenu genericMenu = new GenericMenu();
@@ -40,7 +40,7 @@ namespace RPGCore.AI.HFSM
 				genericMenu.ShowAsContext();
 			}
 
-			//Ä¿±êÖµ
+			//ç›®æ ‡å€¼
 			conditionData.compareValue = EditorGUI.FloatField(right_rect, conditionData.compareValue);
 			UnityEditor.EditorUtility.SetDirty(contorller);
 		}
@@ -56,7 +56,7 @@ namespace RPGCore.AI.HFSM
 			left_rect.Set(rect.x, rect.y, rect.width / 2, rect.height);
 			right_rect.Set(rect.x + rect.width / 2, rect.y, rect.width / 2, rect.height);
 
-			//Ìõ¼ş
+			//æ¡ä»¶
 			if (EditorGUI.DropdownButton(left_rect, new GUIContent(conditionData.compareType.ToString()), FocusType.Keyboard))
 			{
 				GenericMenu genericMenu = new GenericMenu();
@@ -74,7 +74,7 @@ namespace RPGCore.AI.HFSM
 				genericMenu.ShowAsContext();
 			}
 
-			//Ä¿±êÖµ
+			//ç›®æ ‡å€¼
 			conditionData.compareValue = EditorGUI.IntField(right_rect, (int)conditionData.compareValue);
 			UnityEditor.EditorUtility.SetDirty(contorller);
 		}

@@ -104,7 +104,7 @@ namespace RPGCore.AI.HFSM
 		}
 
 		/// <summary>
-		/// �������е�Trigger���˷���Ӧ��״̬����һ֡��ȫ��ִ����֮��ִ��
+		/// 重置所有的Trigger；此方法应在状态机在一帧中全部执行完之后执行
 		/// </summary>
 		public void ResetTriggers()
 		{

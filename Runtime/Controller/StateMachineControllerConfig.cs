@@ -4,7 +4,7 @@ using UnityEngine;
 namespace RPGCore.AI.HFSM
 {
     /// <summary>
-    /// ×´Ì¬»úControllerÅäÖÃÊı¾İ
+    /// çŠ¶æ€æœºControlleré…ç½®æ•°æ®
     /// </summary>
     [System.Serializable]
 	public class StateMachineControllerConfig
