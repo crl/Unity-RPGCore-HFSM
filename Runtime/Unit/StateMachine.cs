@@ -15,8 +15,7 @@ namespace HFSM
     {
         public static string anyState => "Any";
         public static string entryState => "Entry";
-
-        public StateMachineScriptController ctrl { get; internal set; }
+        
 
         public Dictionary<string, StateBase> states => m_states;
         private Dictionary<string, StateBase> m_states;
@@ -49,7 +48,8 @@ namespace HFSM
         private State AddState(State state, bool defaultState = false)
         {
             m_states.Add(state.id, state);
-            state.SetParentStateMachine(this);
+            state.parent=this;
+            state.ctrl = ctrl;
             if (defaultState) m_defaultState = state;
             return state;
         }
@@ -82,7 +82,8 @@ namespace HFSM
         public StateMachine AddStateMachine(StateMachine stateMachine, bool defaultState = false)
         {
             m_states.Add(stateMachine.id, stateMachine);
-            stateMachine.SetParentStateMachine(this);
+            stateMachine.parent=this;
+            stateMachine.ctrl = ctrl;
             if (defaultState) m_defaultState = stateMachine;
             return stateMachine;
         }
@@ -92,7 +93,7 @@ namespace HFSM
             if (m_states.TryGetValue(stateMachineId, out var state) == false || state is StateMachine == false)
             {
                 var stateMachine = new StateMachine(stateMachineId);
-                stateMachine.ctrl = ctrl;
+                
                 return AddStateMachine(stateMachine, defaultState);
             }
             return (StateMachine)state;
@@ -125,6 +126,8 @@ namespace HFSM
             if (_service == null)
             {
                 _service = new T();
+                _service.parent = this;
+                _service.ctrl = ctrl;
                 _service.Init(serviceId, type, customInterval);
                 m_services.Add(_service);
             }

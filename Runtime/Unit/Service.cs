@@ -7,15 +7,30 @@ namespace HFSM
     {
         public string id { get; private set; }
 
-        public ServiceType serviceType => m_serviceType;
-        private ServiceType m_serviceType;
-        public bool pauseService => m_pauseService;
-        private bool m_pauseService = false;
-        public StateMachine serviceOwner => _serviceOwner;
-        private StateMachine _serviceOwner;
+        public ServiceType serviceType
+        {
+            get;
+            private set;
+        }
+        public bool pauseService
+        {
+            get;
+            private set;
+        }
 
-        public float customInterval => m_customInterval;
-        private float m_customInterval;
+        public StateMachine parent
+        {
+            get;
+            internal set;
+        }
+        
+        public StateMachineScriptController ctrl { get; internal set; }
+
+        public float customInterval
+        {
+            get;
+            private set;
+        }
         public Timer timer;
 
         public Service()
@@ -24,23 +39,23 @@ namespace HFSM
         }
 
         internal void Init(string serviceId,
-            ServiceType type = ServiceType.Update, float customInterval = 0f)
+            ServiceType type = ServiceType.Update, float interval = 0f)
         {
             id = serviceId;
-            m_serviceType = type;
-            m_customInterval = customInterval;
+            serviceType = type;
+            customInterval = interval;
         }
 
         public virtual void OnEnter()
         {
             timer.Reset();
-            m_pauseService = false;
+            pauseService = false;
         }
 
 
         internal void OnUpdate()
         {
-            if (m_pauseService) return;
+            if (pauseService) return;
             doUpdate();
         }
 
@@ -50,12 +65,12 @@ namespace HFSM
 
         public virtual void OnExit()
         {
-            m_pauseService = false;
+            pauseService = false;
         }
 
-        public void Pause() => m_pauseService = true;
+        public void Pause() => pauseService = true;
 
-        public void Continue() => m_pauseService = false;
+        public void Resume() => pauseService = false;
     }
 
     [Serializable]

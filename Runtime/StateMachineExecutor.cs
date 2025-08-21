@@ -122,7 +122,7 @@ namespace HFSM
 				{
 					foreach (Transition transition in bundle.transitions)
 					{
-						if (transition.ShouldTransition() && (executeStateStack.Peek().state as State).OnExitRequset())
+						if (transition.ShouldTransition() && (executeStateStack.Peek().state as State).isCanExit())
 						{
 							passedTransition = transition;
 							break;
@@ -135,7 +135,7 @@ namespace HFSM
 				{
 					foreach (Transition transition in gTrans)
 					{
-						if (transition.ShouldTransition() && (executeStateStack.Peek().state as State).OnExitRequset())
+						if (transition.ShouldTransition() && (executeStateStack.Peek().state as State).isCanExit())
 						{
 							passedTransition = transition;
 							break;
@@ -146,9 +146,9 @@ namespace HFSM
 				if (bundle.state.stateType == StateType.State && (bundle.state as State).isTemporary)
 				{
 					State state = bundle.state as State;
-					if (state.OnExitRequset())
+					if (state.isCanExit())
 					{
-						passedTransition = new Transition(null, state, m_executeStateHistory.Peek().state.parentStateMachine);
+						passedTransition = new Transition(null, state, m_executeStateHistory.Peek().state.parent);
 						break;
 					}
 				}
@@ -171,9 +171,9 @@ namespace HFSM
 				if (transState.stateType == StateType.State && (transState as State).isTemporary)
 				{
 					m_executeStateStack.Clear();
-					if (toState.parentStateMachine != null)
+					if (toState.parent != null)
 					{
-						foreach (var state in toState.parentStateMachine.executeStackSnapshot.Reverse())
+						foreach (var state in toState.parent.executeStackSnapshot.Reverse())
 						{
 							m_executeStateStack.Push(state);
 						}

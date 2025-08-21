@@ -101,7 +101,7 @@ namespace HFSM
         /// </summary>
         public void GenerateScriptController()
         {
-            if (controllerConfig.CustomFilePath && controllerConfig.FilePath != "")
+            if (controllerConfig.isCustom && controllerConfig.FilePath != "")
             {
                 generateFilePath = Application.dataPath.Replace("Assets", "") + controllerConfig.FilePath + "/";
             }
@@ -668,7 +668,7 @@ public partial class {0} : StateMachineScriptController
         public void JumpToScript(StateBaseData item)
         {
             var cls = GetClassNameBy(item.id, "State");
-            var filePath = controllerConfig.CustomFilePath
+            var filePath = controllerConfig.isCustom
                 ? controllerConfig.FilePath + "/"
                 : scriptableObjectAssetPath;
 
