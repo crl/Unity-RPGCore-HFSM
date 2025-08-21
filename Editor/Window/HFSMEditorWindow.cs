@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -28,6 +29,17 @@ namespace HFSM
 			content.text = "HFSM";
 			window.titleContent = content;
 			window.Show();
+		}
+
+		private void OnEnable()
+		{
+			Undo.undoRedoEvent -= OnUndoRedoPerformed;
+			Undo.undoRedoEvent += OnUndoRedoPerformed;
+		}
+
+		private void OnDisable()
+		{
+			Undo.undoRedoEvent -= OnUndoRedoPerformed;
 		}
 
 		public void CreateGUI()
@@ -147,6 +159,17 @@ namespace HFSM
 			graphLayerList.Add(new GraphBackgroundLayer(this));
 			graphLayerList.Add(new GraphTransitionLayer(this));
 			graphLayerList.Add(new GraphStateLayer(this));
+		}
+		
+		private void OnUndoRedoPerformed(in UndoRedoInfo info)
+		{
+			if (info.undoName.StartsWith("StateMachine-"))
+			{
+				context.selectedStates.Clear();
+				context.UpdateCurrentChildStatesData();
+				context.UpdateCurrentTransitionData();
+				Repaint();
+			}
 		}
 	}
 }

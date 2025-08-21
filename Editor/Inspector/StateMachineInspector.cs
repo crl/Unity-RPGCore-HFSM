@@ -188,6 +188,7 @@ namespace HFSM
 		{
 			this.controller = HFSMController;
 			this.stateMachineData = stateMachineData;
+			Undo.IncrementCurrentGroup();
 			Selection.activeObject = this;
 		}
 	}

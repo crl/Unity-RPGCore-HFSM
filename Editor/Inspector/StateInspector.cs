@@ -102,6 +102,7 @@ namespace HFSM
 		{
 			this.controller = controller;
 			this.stateData = stateData;
+			Undo.IncrementCurrentGroup();
 			Selection.activeObject = this;
 		}
 	}

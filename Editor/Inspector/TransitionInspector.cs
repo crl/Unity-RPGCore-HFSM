@@ -123,6 +123,7 @@ namespace HFSM
 		{
 			this.controller = controller;
 			this.transitionData = transitionData;
+			Undo.IncrementCurrentGroup();
 			Selection.activeObject = this;
 		}
 	}

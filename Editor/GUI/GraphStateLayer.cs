@@ -136,7 +136,7 @@ namespace HFSM
 				this.editorWindow.Repaint();
 			}
 
-			#endregion ɾ��
+			#endregion 删除
 		}
 
 		public override void Update()
@@ -207,6 +207,7 @@ namespace HFSM
 
 		private void DeleteNode()
 		{
+			Undo.RecordObject(context.controller,"删除转换条件");
 			foreach (StateBaseData item in this.context.selectedStates)
 			{
 				context.controller.DeleteState(context.currentStateMachine, item);
