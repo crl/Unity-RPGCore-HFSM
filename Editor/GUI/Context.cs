@@ -6,19 +6,19 @@ namespace HFSM
 {
 	public class Context
 	{
-		private StateMachineExecutorController m_HFSMController;
+		private StateMachineExecutorController _controller;
 
-		public StateMachineExecutorController HFSMController
+		public StateMachineExecutorController controller
 		{
 			get
 			{
-				var controller = GetController();
-				if (controller != null && controller != m_HFSMController)
+				var ctrl = GetController();
+				if (ctrl != null && ctrl != _controller)
 				{
-					m_HFSMController = controller;
+					_controller = ctrl;
 					Reset();
 				}
-				return m_HFSMController;
+				return _controller;
 			}
 		}
 
@@ -60,11 +60,11 @@ namespace HFSM
 		}
 
 		public StateMachineData nextStateMachine = null;
-		public List<StateMachineData> stateMachinePath = new List<StateMachineData>();
+		public List<StateMachineData> stateMachinePath = new();
 
-		public List<StateBaseData> currentChildStatesData = new List<StateBaseData>();
+		public List<StateBaseData> currentChildStatesData = new();
 
-		public List<TransitionData> currentTransitionData = new List<TransitionData>();
+		public List<TransitionData> currentTransitionData = new();
 
 		public bool isPreviewTransition;
 		public StateBaseData preFrom;
@@ -74,7 +74,7 @@ namespace HFSM
 
 		public Vector2 dragOffset { get; set; } = Vector2.zero;
 
-		public StateMachineExecutorController GetController()
+		private StateMachineExecutorController GetController()
 		{
 			if ((Selection.activeObject as StateMachineExecutorController) != null)
 			{
@@ -104,7 +104,7 @@ namespace HFSM
 
 		public void Reset()
 		{
-			currentStateMachine = HFSMController.stateMachines.Find(sm => sm.isRoot);
+			currentStateMachine = controller.stateMachines.Find(sm => sm.isRoot);
 			stateMachinePath.Clear();
 			stateMachinePath.Add(currentStateMachine);
 			this.zoomFactor = 0.3f;
@@ -120,8 +120,8 @@ namespace HFSM
 		public void UpdateCurrentChildStatesData()
 		{
 			currentChildStatesData.Clear();
-			currentChildStatesData.AddRange(m_HFSMController.states.FindAll(s => m_currentStateMachine.childStates.Contains(s.id)));
-			currentChildStatesData.AddRange(m_HFSMController.stateMachines.FindAll(s => m_currentStateMachine.childStates.Contains(s.id)));
+			currentChildStatesData.AddRange(_controller.states.FindAll(s => m_currentStateMachine.childStates.Contains(s.id)));
+			currentChildStatesData.AddRange(_controller.stateMachines.FindAll(s => m_currentStateMachine.childStates.Contains(s.id)));
 			currentChildStatesData.Add(m_currentStateMachine.any);
 			currentChildStatesData.Add(m_currentStateMachine.entry);
 		}
@@ -129,7 +129,7 @@ namespace HFSM
 		public void UpdateCurrentTransitionData()
 		{
 			currentTransitionData.Clear();
-			currentTransitionData.AddRange(m_HFSMController.transitions.FindAll(t => m_currentStateMachine.transitions.Contains(t.id)));
+			currentTransitionData.AddRange(_controller.transitions.FindAll(t => m_currentStateMachine.transitions.Contains(t.id)));
 		}
 	}
 }

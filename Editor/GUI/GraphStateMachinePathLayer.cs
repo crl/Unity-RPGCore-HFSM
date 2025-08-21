@@ -15,10 +15,14 @@ namespace HFSM
 
 		public GraphStateMachinePathLayer(EditorWindow hFSMEditorWindow) : base(hFSMEditorWindow)
 		{
-			styles["LeftBackground"] = new GUIStyle("GUIEditor.BreadcrumbLeftBackground");
-			styles["LeftBackground"].alignment = TextAnchor.MiddleCenter;
-			styles["MidBackground"] = new GUIStyle("GUIEditor.BreadcrumbMidBackground");
-			styles["MidBackground"].alignment = TextAnchor.MiddleCenter;
+			styles["LeftBackground"] = new GUIStyle("GUIEditor.BreadcrumbLeftBackground")
+			{
+				alignment = TextAnchor.MiddleCenter
+			};
+			styles["MidBackground"] = new GUIStyle("GUIEditor.BreadcrumbMidBackground")
+			{
+				alignment = TextAnchor.MiddleCenter
+			};
 		}
 
 		public override void OnGUI(Rect rect)
@@ -51,7 +55,7 @@ namespace HFSM
 				//点击Root时打开Root状态机的Inspector
 				if (context.stateMachinePath[selectedIndex].id == "Root")
 				{
-					StateMachineInspectorHelper.instance.Inspector(context.HFSMController, context.stateMachinePath[selectedIndex]);
+					StateMachineInspectorHelper.instance.Inspector(context.controller, context.stateMachinePath[selectedIndex]);
 					context.ClearAllSelectNode();
 				}
 				selectedIndex = -1;

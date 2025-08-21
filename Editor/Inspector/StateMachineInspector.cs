@@ -1,9 +1,9 @@
-using DogFramework;
 using HFSM.EditorExtension;
 using System;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HFSM
 {
@@ -43,9 +43,9 @@ namespace HFSM
 			newName = EditorGUILayout.DelayedTextField(newName);
 			if (EditorGUI.EndChangeCheck() && newName != stateName)
 			{
-				helper.HFSMController.RenameState(helper.stateMachineData, newName);
+				helper.controller.RenameState(helper.stateMachineData, newName);
 				stateName = newName;
-				EditorUtility.SetDirty(helper.HFSMController);
+				EditorUtility.SetDirty(helper.controller);
 			}
 			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.EndHorizontal();
@@ -113,7 +113,7 @@ namespace HFSM
 				tempname = EditorGUI.DelayedTextField(left_container, service.id);
 				if (EditorGUI.EndChangeCheck())
 				{
-					helper.HFSMController.RenameService(service, tempname);
+					helper.controller.RenameService(service, tempname);
 					isRenaming = false;
 				}
 			}
@@ -137,6 +137,20 @@ namespace HFSM
 				EditorGUI.LabelField(rects[0], service.serviceType.ToString());
 				service.customInterval = EditorGUI.FloatField(rects[1], service.customInterval);
 			}
+			
+			var e = Event.current;
+			if (e.type == EventType.ContextClick && rect.Contains(e.mousePosition))
+			{
+				// 阻止默认事件并显示右键菜单
+				e.Use();
+				GenericMenu menu = new GenericMenu();
+				menu.AddItem(new GUIContent("Edit Script"), false, () =>
+				{
+					//TODO:打开文件并跳转到对应行
+					helper.controller.JumpToScript(service.id,"Service");
+				});
+				menu.ShowAsContext();
+			}
 		}
 
 		private void RemoveService(ReorderableList list)
@@ -144,12 +158,12 @@ namespace HFSM
 			StateMachineInspectorHelper helper = target as StateMachineInspectorHelper;
 			if (helper == null || list.index < 0) return;
 			ServiceData service = helper.stateMachineData.services[list.index];
-			helper.HFSMController.DeleteService(helper.stateMachineData, service);
+			helper.controller.DeleteService(helper.stateMachineData, service);
 		}
 
 		private void AddService(ReorderableList list)
 		{
-			StateMachineInspectorHelper helper = target as StateMachineInspectorHelper;
+			var helper = target as StateMachineInspectorHelper;
 			if (helper == null) return;
 			GenericMenu genericMenu = new GenericMenu();
 
@@ -158,7 +172,7 @@ namespace HFSM
 				ServiceType serviceType = (ServiceType)Enum.GetValues(typeof(ServiceType)).GetValue(i);
 				genericMenu.AddItem(new GUIContent(Enum.GetNames(typeof(ServiceType))[i]), false, () =>
 				{
-					helper.HFSMController.CreateService(helper.stateMachineData, serviceType);
+					helper.controller.CreateService(helper.stateMachineData, serviceType);
 				});
 			}
 			genericMenu.ShowAsContext();
@@ -167,12 +181,12 @@ namespace HFSM
 
 	public class StateMachineInspectorHelper : ScriptableObjectSingleton<StateMachineInspectorHelper>
 	{
-		public StateMachineExecutorController HFSMController;
+		public StateMachineExecutorController controller;
 		public StateMachineData stateMachineData;
 
 		public void Inspector(StateMachineExecutorController HFSMController, StateMachineData stateMachineData)
 		{
-			this.HFSMController = HFSMController;
+			this.controller = HFSMController;
 			this.stateMachineData = stateMachineData;
 			Selection.activeObject = this;
 		}

@@ -30,7 +30,7 @@ namespace HFSM
 
 			if (reorderableList == null)
 			{
-				reorderableList = new ReorderableList(this.context.HFSMController.parameters, typeof(Parameter), true, false, true, true);
+				reorderableList = new ReorderableList(this.context.controller.parameters, typeof(Parameter), true, false, true, true);
 
 				reorderableList.onAddCallback += AddParamter;
 				reorderableList.onRemoveCallback += RemoveParamter;
@@ -44,7 +44,7 @@ namespace HFSM
 			}
 			else
 			{
-				reorderableList.list = this.context.HFSMController.parameters;
+				reorderableList.list = this.context.controller.parameters;
 			}
 
 			scrollView = GUILayout.BeginScrollView(scrollView);
@@ -63,7 +63,7 @@ namespace HFSM
 		}
 
 		/// <summary>
-		/// ���Ƶ�������
+		/// 绘制单条参数
 		/// </summary>
 		/// <param name="rect"></param>
 		/// <param name="index"></param>
@@ -71,7 +71,7 @@ namespace HFSM
 		/// <param name="isFocused"></param>
 		private void DrawOneParamter(Rect rect, int index, bool isActive, bool isFocused)
 		{
-			if (index < 0 || index > this.context.HFSMController.parameters.Count - 1)
+			if (index < 0 || index > this.context.controller.parameters.Count - 1)
 				return;
 			Parameter parameterData = null;
 			if (Application.isPlaying)
@@ -80,7 +80,7 @@ namespace HFSM
 			}
 			else
 			{
-				parameterData = this.context.HFSMController.parameters[index];
+				parameterData = this.context.controller.parameters[index];
 			}
 
 			left_container.Set(rect.x, rect.y, rect.width * 0.5f, rect.height);
@@ -91,14 +91,14 @@ namespace HFSM
 				isRenaming = true;
 			}
 
-			//������
+			//参数名
 			if (!Application.isPlaying && isRenaming && reorderableList.index == index)
 			{
 				EditorGUI.BeginChangeCheck();
 				tempname = EditorGUI.DelayedTextField(left_container, parameterData.name);
 				if (EditorGUI.EndChangeCheck())
 				{
-					this.context.HFSMController.RenameParameter(parameterData, tempname);
+					this.context.controller.RenameParameter(parameterData, tempname);
 					isRenaming = false;
 				}
 			}
@@ -136,11 +136,11 @@ namespace HFSM
 
 		private void RemoveParamter(ReorderableList list)
 		{
-			this.context.HFSMController.DeleteParameter(list.index);
+			this.context.controller.DeleteParameter(list.index);
 		}
 
 		/// <summary>
-		/// ��Ӳ���
+		/// 添加参数
 		/// </summary>
 		/// <param name="list"></param>
 		private void AddParamter(ReorderableList list)
@@ -152,7 +152,7 @@ namespace HFSM
 				ParameterType parameterType = (ParameterType)Enum.GetValues(typeof(ParameterType)).GetValue(i);
 				genericMenu.AddItem(new GUIContent(Enum.GetNames(typeof(ParameterType))[i]), false, () =>
 				{
-					this.context.HFSMController.CreateParamter(parameterType);
+					this.context.controller.CreateParamter(parameterType);
 				});
 			}
 			genericMenu.ShowAsContext();

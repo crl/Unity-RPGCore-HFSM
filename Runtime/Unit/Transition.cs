@@ -81,7 +81,7 @@ namespace HFSM
 			}
 			if (from != null && from.stateType == StateType.State)
 			{
-				fromCanExit = (from as State).OnExitRequset();
+				fromCanExit = (from as State).isCanExit();
 			}
 			return baseConditions && parameterConditions && fromCanExit;
 		}

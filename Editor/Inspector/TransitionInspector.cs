@@ -1,4 +1,3 @@
-using DogFramework;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -84,45 +83,45 @@ namespace HFSM
 				{
 					//TODO 弹出下拉菜单
 					popRect.Set(rect.x, rect.y + 2, rect.width / 2, rect.height);
-					PopupWindow.Show(popRect, new ParametersPopWindow(rect.width / 2, conditionData, helper.HFSMController));
+					PopupWindow.Show(popRect, new ParametersPopWindow(rect.width / 2, conditionData, helper.controller));
 				}
 			}
 
 			//右半边 条件的目标值(类型)
-			Parameter parameterData = helper.HFSMController.parameters.Where(x => x.name == conditionData.parameterName).FirstOrDefault();
+			var parameterData = helper.controller.parameters.FirstOrDefault(x => x.name == conditionData.parameterName);
 			if (parameterData != null)
 			{
 				//参数类型绘制Type
 				if (conditionInspectors.Keys.Contains(parameterData.type))
 				{
-					conditionInspectors[parameterData.type].OnGUI(right_container, helper.HFSMController, conditionData);
+					conditionInspectors[parameterData.type].OnGUI(right_container, helper.controller, conditionData);
 				}
 			}
 		}
 
 		private void RemoveCondition(ReorderableList list)
 		{
-			TransitionInspectorHelper helper = target as TransitionInspectorHelper;
+			var helper = target as TransitionInspectorHelper;
 			if (helper == null) return;
-			helper.HFSMController.DeleteParameterCondition(helper.transitionData, list.index);
+			helper.controller.DeleteParameterCondition(helper.transitionData, list.index);
 		}
 
 		private void AddCondition(ReorderableList list)
 		{
-			TransitionInspectorHelper helper = target as TransitionInspectorHelper;
+			var helper = target as TransitionInspectorHelper;
 			if (helper == null) return;
-			helper.HFSMController.CreateParamterCondition(helper.transitionData);
+			helper.controller.CreateParamterCondition(helper.transitionData);
 		}
 	}
 
 	public class TransitionInspectorHelper : ScriptableObjectSingleton<TransitionInspectorHelper>
 	{
-		public StateMachineExecutorController HFSMController;
+		public StateMachineExecutorController controller;
 		public TransitionData transitionData;
 
-		public void Inspector(StateMachineExecutorController HFSMController, TransitionData transitionData)
+		public void Inspector(StateMachineExecutorController controller, TransitionData transitionData)
 		{
-			this.HFSMController = HFSMController;
+			this.controller = controller;
 			this.transitionData = transitionData;
 			Selection.activeObject = this;
 		}

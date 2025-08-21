@@ -54,7 +54,7 @@ namespace HFSM
 			{
 				if (this.context.selectedTransition != null)
 				{
-					this.context.HFSMController.DeleteTransition(this.context.currentStateMachine, this.context.selectedTransition);
+					this.context.controller.DeleteTransition(this.context.currentStateMachine, this.context.selectedTransition);
 					this.context.selectedTransition = null;
 					context.UpdateCurrentTransitionData();
 					this.editorWindow.Repaint();
@@ -103,7 +103,7 @@ namespace HFSM
 		private void ShowInspactor(TransitionData translationData)
 		{
 			//FSMTranslationInspectorHelper.Instance.Inspector(this.Context.RunTimeFSMContorller, translationData);
-			TransitionInspectorHelper.instance.Inspector(context.HFSMController, translationData);
+			TransitionInspectorHelper.instance.Inspector(context.controller, translationData);
 		}
 
 		private bool GetMinDistanceToLine(Vector2 start, Vector2 end, Vector2 point)
@@ -133,8 +133,8 @@ namespace HFSM
 		{
 			if (start == null || end == null) return;
 
-			Rect startRect = GetTransfromRect(start.position);
-			Rect endRect = GetTransfromRect(end.position);
+			var startRect = GetTransfromRect(start.position);
+			var endRect = GetTransfromRect(end.position);
 
 			Vector2 offset = GetTransitionOffset(startRect.center, endRect.center);
 

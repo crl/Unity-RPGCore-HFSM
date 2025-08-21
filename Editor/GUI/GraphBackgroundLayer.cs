@@ -54,7 +54,7 @@ namespace HFSM
 				this.context.StopPriviewTransition();
 			}
 			//�Ҽ��˵�
-			if (posotion.MouseOn() && !IsMouseOverAnyState(context.currentChildStatesData) && EventExtension.IsMouseUp(1) && this.context.HFSMController != null)
+			if (posotion.MouseOn() && !IsMouseOverAnyState(context.currentChildStatesData) && EventExtension.IsMouseUp(1) && this.context.controller != null)
 			{
 				mousePosition = Event.current.mousePosition;
 				CreateMenu();
@@ -66,16 +66,8 @@ namespace HFSM
 			this.context.ClearAllSelectNode();
 
 			GenericMenu genericMenu = new GenericMenu();
-			genericMenu.AddItem(new GUIContent("Create State"), false, () =>
-			{
-				CreateState();
-				
-			});
-			genericMenu.AddItem(new GUIContent("Create StateMachine"), false, () =>
-			{
-				CreateStateMachine();
-				
-			});
+			genericMenu.AddItem(new GUIContent("Create State"), false, CreateState);
+			genericMenu.AddItem(new GUIContent("Create StateMachine"), false, CreateStateMachine);
 			genericMenu.ShowAsContext();
 		}
 
@@ -83,22 +75,22 @@ namespace HFSM
 		{
 			var rect = new Rect(0, 0, stateWidth, stateHeight);
 			rect.center = MousePosition(mousePosition);
-			StateBaseData newState = context.HFSMController.CreateState(rect, context.currentStateMachine);
+			StateBaseData newState = context.controller.CreateState(rect, context.currentStateMachine);
 			context.UpdateCurrentChildStatesData();
 			context.ClearAllSelectNode();
 			context.selectedStates.Add(newState);
-			StateInspectorHelper.instance.Inspector(context.HFSMController, newState as StateData);
+			StateInspectorHelper.instance.Inspector(context.controller, newState as StateData);
 		}
 
 		private void CreateStateMachine()
 		{
 			var rect = new Rect(0, 0, stateWidth, stateHeight);
 			rect.center = MousePosition(mousePosition);
-			StateBaseData newState = context.HFSMController.CreateStateMachine(rect, context.currentStateMachine);
+			StateBaseData newState = context.controller.CreateStateMachine(rect, context.currentStateMachine);
 			context.UpdateCurrentChildStatesData();
 			context.ClearAllSelectNode();
 			context.selectedStates.Add(newState);
-			StateMachineInspectorHelper.instance.Inspector(context.HFSMController, newState as StateMachineData);
+			StateMachineInspectorHelper.instance.Inspector(context.controller, newState as StateMachineData);
 		}
 
 		private void DrawGrid(Rect rect, float gridSpace, Color color)
@@ -147,7 +139,7 @@ namespace HFSM
 
 		public void DrawHorizontal(Rect rect, float gradSpace, Color color, int startIndex = 0)
 		{
-			Vector2 center = rect.center + this.context.dragOffset;
+			var center = rect.center + this.context.dragOffset;
 			Vector2 start;
 			Vector2 end;
 

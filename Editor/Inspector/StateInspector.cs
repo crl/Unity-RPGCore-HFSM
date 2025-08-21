@@ -1,6 +1,6 @@
-using DogFramework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HFSM
 {
@@ -11,7 +11,7 @@ namespace HFSM
 
 		public override void OnInspectorGUI()
 		{
-			StateInspectorHelper helper = target as StateInspectorHelper;
+			var helper = target as StateInspectorHelper;
 			if (helper == null) return;
 			bool disable = EditorApplication.isPlaying || helper.stateData.id == StateMachine.entryState || helper.stateData.id == StateMachine.anyState;
 			EditorGUI.BeginDisabledGroup(disable);
@@ -24,7 +24,7 @@ namespace HFSM
 			newName = EditorGUILayout.DelayedTextField(newName);
 			if (EditorGUI.EndChangeCheck() && newName != stateName)
 			{
-				helper.HFSMController.RenameState(helper.stateData, newName);
+				helper.controller.RenameState(helper.stateData, newName);
 				stateName = newName;
 			}
 			EditorGUILayout.EndHorizontal();
@@ -37,12 +37,12 @@ namespace HFSM
 			description = EditorGUILayout.DelayedTextField(description);
 			if (EditorGUI.EndChangeCheck())
 			{
-				helper.HFSMController.RenameState(helper.stateData, description, true, false);
+				helper.controller.RenameState(helper.stateData, description, true, false);
 			}
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.Space();
-			disable = helper.HFSMController.transitions.Find(t => t.to == helper.stateData.id)?.from != StateMachine.anyState;
+			disable = helper.controller.transitions.Find(t => t.to == helper.stateData.id)?.from != StateMachine.anyState;
 			EditorGUI.BeginDisabledGroup(disable);
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField("is temporary", GUILayout.Width(80));
@@ -59,7 +59,7 @@ namespace HFSM
 			string ceDescription = EditorGUILayout.DelayedTextField(helper.stateData.canExitDescription);
 			if (EditorGUI.EndChangeCheck())
 			{
-				helper.HFSMController.RenameState(helper.stateData, ceDescription, true, true);
+				helper.controller.RenameState(helper.stateData, ceDescription, true, true);
 			}
 			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.EndHorizontal();
@@ -95,12 +95,12 @@ namespace HFSM
 
 	public class StateInspectorHelper : ScriptableObjectSingleton<StateInspectorHelper>
 	{
-		public StateMachineExecutorController HFSMController;
+		public StateMachineExecutorController controller;
 		public StateData stateData;
 
 		public void Inspector(StateMachineExecutorController HFSMController, StateData stateData)
 		{
-			this.HFSMController = HFSMController;
+			this.controller = HFSMController;
 			this.stateData = stateData;
 			Selection.activeObject = this;
 		}

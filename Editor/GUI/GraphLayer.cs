@@ -42,7 +42,7 @@ namespace HFSM
 
 		public Rect GetTransfromRect(Rect rect)
 		{
-			Rect resulte = new Rect();
+			var resulte = new Rect();
 			resulte.position = transfromMatrix.MultiplyPoint(rect.position);
 			resulte.size = transfromMatrix.MultiplyVector(rect.size);
 			return resulte;
@@ -50,7 +50,7 @@ namespace HFSM
 
 		public Vector2 MousePosition(Vector2 mousePosition)
 		{
-			Vector2 center = mousePosition + (mousePosition - this.posotion.center) * (1 - this.context.zoomFactor) / this.context.zoomFactor;
+			var center = mousePosition + (mousePosition - this.posotion.center) * (1 - this.context.zoomFactor) / this.context.zoomFactor;
 			center -= this.context.dragOffset / this.context.zoomFactor;
 			return center;
 		}

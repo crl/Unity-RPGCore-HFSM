@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,32 +11,38 @@ namespace HFSM
 		/// </summary>
 		public StateMachineExecutorController executorController;
 
-		private StateMachineScriptController m_scriptController;
-		public StateMachineScriptController scriptController => m_scriptController;
+		private StateMachineScriptController _scriptController;
+		public StateMachineScriptController scriptController => _scriptController;
 
 		/// <summary>
 		/// 当前执行的Controller的根状态机
 		/// </summary>
-		public StateMachine rootStateMachine => m_rootStateMachine;
+		public StateMachine rootStateMachine
+		{
+			get;
+			private set;
+		}
 
-		private StateMachine m_rootStateMachine;
 
 		//运行时状态机执行栈
-		private Stack<StateBundle> m_executeStateStack = new Stack<StateBundle>();
-
-		public Stack<StateBundle> executeStateStack => m_executeStateStack;
+		protected internal Stack<StateBundle> executeStateStack
+		{
+			get;
+		} = new Stack<StateBundle>();
 
 		//记录当前执行的状态
-		public State currentExecuteState => m_currentExecuteState;
-
-		private State m_currentExecuteState = null;
+		protected internal State currentExecuteState
+		{
+			get;
+			private set;
+		}
 
 		//记录State执行历史 最大记录8个
-		private RingStack<StateBundle> m_executeStateHistory = new RingStack<StateBundle>(8);
+		private RingStack<StateBundle> _executeStateHistory = new(8);
 
 		private void Awake()
 		{
-			m_rootStateMachine = executorController.GetExecuteStateMachine(this, out m_scriptController);
+			rootStateMachine = executorController.GetExecuteStateMachine(this, out _scriptController);
 			//if (m_rootStateMachine != null)
 			//{
 			//	ShowStateMachineTree(0, m_rootStateMachine);
@@ -59,7 +64,7 @@ namespace HFSM
 		{
 			ExecuteStateMachineService(ServiceType.Update);
 			ExecuteStateMachineService(ServiceType.CustomInterval);
-			m_currentExecuteState.OnUpdate();
+			currentExecuteState.OnUpdate();
 		}
 
 		private void LateUpdate()
@@ -72,11 +77,11 @@ namespace HFSM
 		/// </summary>
 		public void InitStateMachineExecute()
 		{
-			m_executeStateStack.Clear();
-			m_currentExecuteState = null;
-			if (m_rootStateMachine != null)
+			executeStateStack.Clear();
+			currentExecuteState = null;
+			if (rootStateMachine != null)
 			{
-				FillExecuteStateStack(m_rootStateMachine);
+				FillExecuteStateStack(rootStateMachine);
 			}
 		}
 
@@ -85,8 +90,8 @@ namespace HFSM
 		/// </summary>
 		public void ExecuteStateMachineService(ServiceType type)
 		{
-			if (m_executeStateStack.Count == 0) return;
-			foreach (var bundle in m_executeStateStack.Reverse())
+			if (executeStateStack.Count == 0) return;
+			foreach (var bundle in executeStateStack.Reverse())
 			{
 				if (bundle.services != null)
 				{
@@ -111,18 +116,18 @@ namespace HFSM
 		/// </summary>
 		public Transition TryTransition()
 		{
-			List<StateBundle> stateBundles = m_executeStateStack.Reverse().ToList();
+			var stateBundles = executeStateStack.ToArray();
 			//当前通过的转换
 			Transition passedTransition = null;
-			for (int i = 0; i < stateBundles.Count(); i++)
+			for (int i = stateBundles.Length - 1; i >= 0; i--)
 			{
-				StateBundle bundle = stateBundles[i];
+				var bundle = stateBundles[i];
 				//尝试以当前状态为起点的Transition
 				if (bundle.transitions is not null)
 				{
 					foreach (Transition transition in bundle.transitions)
 					{
-						if (transition.ShouldTransition() && (executeStateStack.Peek().state as State).OnExitRequset())
+						if (transition.ShouldTransition() && (executeStateStack.Peek().state as State).isCanExit())
 						{
 							passedTransition = transition;
 							break;
@@ -133,9 +138,9 @@ namespace HFSM
 				var gTrans = bundle.GetGlobalTransitions();
 				if (gTrans is not null)
 				{
-					foreach (Transition transition in gTrans)
+					foreach (var transition in gTrans)
 					{
-						if (transition.ShouldTransition() && (executeStateStack.Peek().state as State).OnExitRequset())
+						if (transition.ShouldTransition() && executeStateStack.Peek().state.isCanExit())
 						{
 							passedTransition = transition;
 							break;
@@ -143,12 +148,11 @@ namespace HFSM
 					}
 				}
 				//尝试临时状态是否执行转换
-				if (bundle.state.stateType == StateType.State && (bundle.state as State).isTemporary)
+				if (bundle.state.stateType == StateType.State && (bundle.state is State { isTemporary: true } state))
 				{
-					State state = bundle.state as State;
-					if (state.OnExitRequset())
+					if (state.isCanExit())
 					{
-						passedTransition = new Transition(null, state, m_executeStateHistory.Peek().state.parentStateMachine);
+						passedTransition = new Transition(null, state, _executeStateHistory.Peek().state.parent);
 						break;
 					}
 				}
@@ -170,12 +174,12 @@ namespace HFSM
 				//当前转换的状态是不是一个临时状态
 				if (transState.stateType == StateType.State && (transState as State).isTemporary)
 				{
-					m_executeStateStack.Clear();
-					if (toState.parentStateMachine != null)
+					executeStateStack.Clear();
+					if (toState.parent != null)
 					{
-						foreach (var state in toState.parentStateMachine.executeStackSnapshot.Reverse())
+						foreach (var state in toState.parent.executeStackSnapshot.Reverse())
 						{
-							m_executeStateStack.Push(state);
+							executeStateStack.Push(state);
 						}
 					}
 					transState.OnExit();
@@ -185,12 +189,12 @@ namespace HFSM
 					//先把转换前的状态出栈
 					while (true)
 					{
-						StateBundle popState = m_executeStateStack.Pop();
+						StateBundle popState = executeStateStack.Pop();
 						if (popState.state.stateType != StateType.StateMachine) popState.state.OnExit();
 						else popState.services.ForEach(s => s.OnExit());
 						if (popState.state.id == transState.id)
 						{
-							if (passedTransition.transitionType == TransitionType.Global) m_executeStateStack.Push(popState);
+							if (passedTransition.transitionType == TransitionType.Global) executeStateStack.Push(popState);
 							break;
 						}
 					}
@@ -210,13 +214,15 @@ namespace HFSM
 		{
 			while (state.stateType == StateType.StateMachine)
 			{
-				m_executeStateStack.Push(new StateBundle(state));
+				executeStateStack.Push(new StateBundle(state));
 				if (state.executeStackSnapshot == null)
 				{
-					state.SetExecuteStackSnapshot(m_executeStateStack.ToArray());
+					state.SetExecuteStackSnapshot(executeStateStack.ToArray());
 				}
-				(state as StateMachine).services.ForEach(service => { service.OnEnter(); });
-				state = (state as StateMachine).defaultState;
+
+				var sm = state as StateMachine;
+				sm.services.ForEach(service => { service.OnEnter(); });
+				state = sm.defaultState;
 				if (state is null)
 				{
 					Debug.LogError($"Can not find the default state/state machine in [{state.id}] state machine.");
@@ -224,14 +230,14 @@ namespace HFSM
 				}
 			}
 			state.OnEnter();
-			m_executeStateStack.Push(new StateBundle(state));
+			executeStateStack.Push(new StateBundle(state));
 			if (state.executeStackSnapshot == null)
 			{
-				state.SetExecuteStackSnapshot(m_executeStateStack.ToArray());
+				state.SetExecuteStackSnapshot(executeStateStack.ToArray());
 			}
-			m_currentExecuteState = state as State;
+			currentExecuteState = state as State;
 			//仅当当前状态不是临时状态才记录进执行历史中
-			if (!(state as State).isTemporary) m_executeStateHistory.Push(m_executeStateStack.Peek());
+			if (!(state as State).isTemporary) _executeStateHistory.Push(executeStateStack.Peek());
 			//Debug.Log("current:"+m_executeStateHistory.Peek().state.id+" count:"+m_executeStateHistory.Length);
 		}
 

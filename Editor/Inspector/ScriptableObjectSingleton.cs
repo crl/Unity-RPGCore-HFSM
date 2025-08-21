@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DogFramework
+namespace HFSM
 {
 	public class ScriptableObjectSingleton<T> : ScriptableObject where T : ScriptableObjectSingleton<T>
 	{
@@ -12,7 +12,7 @@ namespace DogFramework
 			{
 				if (m_instance == null)
 				{
-					m_instance = ScriptableObject.CreateInstance<T>();
+					m_instance = CreateInstance<T>();
 				}
 				return m_instance;
 			}

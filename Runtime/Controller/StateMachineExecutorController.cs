@@ -19,13 +19,13 @@ namespace HFSM
         [HideInInspector] public string realScriptControllerName;
 
         //controller中的parameter
-        public List<Parameter> parameters = new List<Parameter>();
+        public List<Parameter> parameters = new();
 
         //controller中的state
-        public List<StateData> states = new List<StateData>();
+        public List<StateData> states = new();
 
         //controller中的StateMachine
-        public List<StateMachineData> stateMachines = new List<StateMachineData>()
+        public List<StateMachineData> stateMachines = new()
         {
             new StateMachineData()
             {
@@ -36,13 +36,14 @@ namespace HFSM
         };
 
         //controller中的Transition
-        public List<TransitionData> transitions = new List<TransitionData>();
+        public List<TransitionData> transitions = new();
 
         private string scriptableObjectAssetPath;
 
 
         //配置文件SO
-        public StateMachineControllerConfig controllerConfig = new();
+        [SerializeField]
+        internal StateMachineControllerConfig controllerConfig = new();
 
         //文件生成位置
         public string generateFilePath = "";
@@ -101,7 +102,7 @@ namespace HFSM
         /// </summary>
         public void GenerateScriptController()
         {
-            if (controllerConfig.CustomFilePath && controllerConfig.FilePath != "")
+            if (controllerConfig.isCustom && controllerConfig.FilePath != "")
             {
                 generateFilePath = Application.dataPath.Replace("Assets", "") + controllerConfig.FilePath + "/";
             }
@@ -236,11 +237,11 @@ public partial class {0} : StateMachineScriptController
 {
     public class AbsState:State
     {
-        protected {0} ctrl;
+        protected {0} ctrlT;
         public override void OnEnter()
         {
             base.OnEnter();
-            ctrl=this._parentStateMachine.ctrl as {0};
+            ctrlT=this.ctrl as {0};
         }
     }
 }";
@@ -665,10 +666,10 @@ public partial class {0} : StateMachineScriptController
         /// <summary>
         /// 跳转到对应的脚本文件
         /// </summary>
-        public void JumpToScript(StateBaseData item)
+        public void JumpToScript(string id,string postfix)
         {
-            var cls = GetClassNameBy(item.id, "State");
-            var filePath = controllerConfig.CustomFilePath
+            var cls = GetClassNameBy(id, postfix);
+            var filePath = controllerConfig.isCustom
                 ? controllerConfig.FilePath + "/"
                 : scriptableObjectAssetPath;
 

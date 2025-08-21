@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace HFSM
 {
@@ -7,9 +8,9 @@ namespace HFSM
     /// 状态机Controller配置数据
     /// </summary>
     [System.Serializable]
-	public class StateMachineControllerConfig
+    internal class StateMachineControllerConfig
     {
-        public bool CustomFilePath;
+        public bool isCustom;
         public string FilePath;
     }
 }

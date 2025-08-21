@@ -9,15 +9,15 @@ namespace HFSM
 {
 	public class GraphStateLayer : GraphLayer
 	{
-		private StateStyle m_stateStyle = new StateStyle();
+		private StateStyle m_stateStyle = new();
 		private bool isSelecting = false;
 		private Vector2 startSelectPosition;
-		private Rect selectBox = new Rect();
-		private GUIStyle selectBoxStyle = new GUIStyle("SelectionRect");
+		private Rect selectBox;
+		private GUIStyle selectBoxStyle = new("SelectionRect");
 		private float runStateProcess;
 		private Rect runStateProcessRect;
-		private GUIStyle runStateProcessBkStyle = new GUIStyle("MeLivePlayBackground");
-		private GUIStyle runStateProcessStyle = new GUIStyle("MeLivePlayBar");
+		private GUIStyle runStateProcessBkStyle = new("MeLivePlayBackground");
+		private GUIStyle runStateProcessStyle = new("MeLivePlayBar");
 		private float clickedTime = -1f;
 
 		public GraphStateLayer(EditorWindow hFSMEditorWindow) : base(hFSMEditorWindow)
@@ -27,10 +27,10 @@ namespace HFSM
 		public override void OnGUI(Rect rect)
 		{
 			base.OnGUI(rect);
-			List<StateBaseData> states = context.currentChildStatesData;
+			var states = context.currentChildStatesData;
 			if (Event.current.type == EventType.Repaint)
 			{
-				if (context.HFSMController == null)
+				if (context.controller == null)
 					return;
 				m_stateStyle.ApplyZoomFactory(this.context.zoomFactor);
 
@@ -45,12 +45,12 @@ namespace HFSM
 		{
 			base.ProcessEvent();
 
-			if (this.context.HFSMController == null)
+			if (this.context.controller == null)
 				return;
 
-			#region ѡ��
+			#region 选中
 
-			List<StateBaseData> states = context.currentChildStatesData;
+			var states = context.currentChildStatesData;
 			foreach (StateBaseData item in states)
 			{
 				StateOnMouseClick(item);
@@ -67,9 +67,9 @@ namespace HFSM
 				return;
 			}
 
-			#endregion ѡ��
+			#endregion 选中
 
-			#region ��ѡ
+			#region 框选
 
 			if (EventExtension.IsMouseDown(0) && !IsMouseOverAnyState(states))
 			{
@@ -87,14 +87,14 @@ namespace HFSM
 				}
 			}
 
-			//�Ƴ�����
+			//移除窗口
 			if (Event.current.type == EventType.MouseLeaveWindow) { isSelecting = false; }
 
 			DrawSelectBox();
 
-			#endregion ��ѡ
+			#endregion 框选
 
-			#region ��קNode
+			#region 拖拽Node
 
 			if (Event.current.type == EventType.MouseDrag && Event.current.button == 0)
 			{
@@ -103,15 +103,15 @@ namespace HFSM
 					foreach (StateBaseData item in this.context.selectedStates)
 					{
 						item.position.position += Event.current.delta / this.context.zoomFactor;
-						EditorUtility.SetDirty(this.context.HFSMController);
+						EditorUtility.SetDirty(this.context.controller);
 					}
 				}
 				Event.current.Use();
 			}
 
-			#endregion ��קNode
+			#endregion 拖拽Nod
 
-			#region �Ҽ��˵�
+			#region 右键菜单
 
 			if (EventExtension.IsMouseUp(1))
 			{
@@ -125,9 +125,9 @@ namespace HFSM
 				}
 			}
 
-			#endregion �Ҽ��˵�
+			#endregion 右键菜单
 
-			#region ɾ��
+			#region 删除
 
 			if (Event.current.keyCode == KeyCode.Delete && this.context.selectedStates != null && this.context.selectedStates.Count > 0)
 			{
@@ -149,8 +149,8 @@ namespace HFSM
 
 		private void CreateMenu(StateBaseData item)
 		{
-			bool is_any = item.id == StateMachine.anyState;
-			bool is_entry = item.id == StateMachine.entryState;
+			var is_any = item.id == StateMachine.anyState;
+			var is_entry = item.id == StateMachine.entryState;
 			var genericMenu = new GenericMenu();
 
 			if (is_entry)
@@ -174,7 +174,7 @@ namespace HFSM
 				});
 				genericMenu.AddItem(new GUIContent("Delete"), false, () =>
 				{
-					//TOOD:ɾ��״̬
+					//TOOD:删除状态
 					DeleteNode();
 				});
 				genericMenu.AddItem(new GUIContent("Set DefaltState"), false, () =>
@@ -184,8 +184,8 @@ namespace HFSM
 				genericMenu.AddSeparator(string.Empty);
 				genericMenu.AddItem(new GUIContent("Edit Script"), false, () =>
 				{
-					//TODO:���ļ�����ת����Ӧ��
-					context.HFSMController.JumpToScript(item);
+					//TODO:打开文件并跳转到对应行
+					context.controller.JumpToScript(item.id,"State");
 				});
 			}
 			genericMenu.ShowAsContext();
@@ -201,15 +201,15 @@ namespace HFSM
 			}
 			state.isDefault = true;
 			context.currentStateMachine.defaultState = state.id;
-			this.context.HFSMController.Save();
+			this.context.controller.Save();
 		}
 
 		private void DeleteNode()
 		{
 			foreach (StateBaseData item in this.context.selectedStates)
 			{
-				context.HFSMController.DeleteState(context.currentStateMachine, item);
-				context.HFSMController.DeleteTransition(context.currentStateMachine, item);
+				context.controller.DeleteState(context.currentStateMachine, item);
+				context.controller.DeleteTransition(context.currentStateMachine, item);
 			}
 			context.selectedStates.Clear();
 			context.UpdateCurrentChildStatesData();
@@ -243,14 +243,14 @@ namespace HFSM
 					this.context.selectedStates.Add(data);
 					//FSMStateInspectorHelper.Instance.Inspector(this.context.RunTimeFSMContorller, data);
 					if (data.stateType == StateType.State)
-						StateInspectorHelper.instance.Inspector(context.HFSMController, data as StateData);
+						StateInspectorHelper.instance.Inspector(context.controller, data as StateData);
 					else
-						StateMachineInspectorHelper.instance.Inspector(context.HFSMController, data as StateMachineData);
+						StateMachineInspectorHelper.instance.Inspector(context.controller, data as StateMachineData);
 					//�Ƿ���Ԥ�����ӹ���
 					if (this.context.isPreviewTransition)
 					{
 						//���ӹ���
-						this.context.HFSMController.CreateTransition(context.currentStateMachine, context.preFrom, data);
+						this.context.controller.CreateTransition(context.currentStateMachine, context.preFrom, data);
 						this.context.StopPriviewTransition();
 						this.context.UpdateCurrentTransitionData();
 					}
@@ -264,7 +264,7 @@ namespace HFSM
 		{
 			if (data != null)
 			{
-				Rect rect = GetTransfromRect(data.position);
+				var rect = GetTransfromRect(data.position);
 				if (!posotion.Overlaps(rect))
 					return;
 				GUI.Box(rect, data.id, GetStateStyle(data));

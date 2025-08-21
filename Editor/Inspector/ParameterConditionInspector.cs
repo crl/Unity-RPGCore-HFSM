@@ -42,14 +42,14 @@ namespace HFSM
 
 			//目标值
 			conditionData.compareValue = EditorGUI.FloatField(right_rect, conditionData.compareValue);
-			UnityEditor.EditorUtility.SetDirty(contorller);
+			EditorUtility.SetDirty(contorller);
 		}
 	}
 
 	public class ParameterIntConditionInspector : ParameterConditionInspector
 	{
-		private Rect left_rect = new Rect();
-		private Rect right_rect = new Rect();
+		private Rect left_rect;
+		private Rect right_rect;
 
 		public override void OnGUI(Rect rect, StateMachineExecutorController contorller, ParameterConditionData conditionData)
 		{
@@ -76,7 +76,7 @@ namespace HFSM
 
 			//目标值
 			conditionData.compareValue = EditorGUI.IntField(right_rect, (int)conditionData.compareValue);
-			UnityEditor.EditorUtility.SetDirty(contorller);
+			EditorUtility.SetDirty(contorller);
 		}
 	}
 

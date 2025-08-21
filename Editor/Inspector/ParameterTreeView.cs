@@ -20,7 +20,7 @@ namespace HFSM
 
 		protected override TreeViewItem BuildRoot()
 		{
-			TreeViewItem root = new TreeViewItem(-1, -1);
+			var root = new TreeViewItem(-1, -1);
 
 			if (controller != null)
 			{
@@ -47,7 +47,7 @@ namespace HFSM
 			base.SingleClickedItem(id);
 			string paramterName = FindItem(id, rootItem).displayName;
 
-			Parameter parameterData = controller.parameters.Where(x => x.name == paramterName).FirstOrDefault();
+			var parameterData = controller.parameters.FirstOrDefault(x => x.name == paramterName);
 			if (parameterData != null)
 			{
 				conditionData.parameterName = parameterData.name;

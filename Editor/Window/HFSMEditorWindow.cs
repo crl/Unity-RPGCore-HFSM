@@ -14,9 +14,9 @@ namespace HFSM
 		private IMGUIContainer stateMachinePathContaner;
 		private VisualElement noticeBoard;
 		private ToolbarButton generateButton;
-		private Context m_context = new Context();
+		private Context m_context = new();
 		public Context context => m_context;
-		private List<GraphLayer> graphLayerList = new List<GraphLayer>();
+		private List<GraphLayer> graphLayerList = new();
 		private GraphLayer paramterLayer = null;
 		private GraphLayer stateMachinePathLayer = null;
 
@@ -54,12 +54,12 @@ namespace HFSM
 				generateButton = Root.Q<ToolbarButton>("GenerateButton");
 				generateButton.RegisterCallback<ClickEvent>(callback => 
 				{
-					if (context.HFSMController == null)
+					if (context.controller == null)
 					{
 						ShowNotification(new  GUIContent("Can't find HFSMController"));
 						return;
 					}
-					context.HFSMController.GenerateScriptController();
+					context.controller.GenerateScriptController();
 				});
 				stateMachinePathContaner.onGUIHandler += StateMachinePathOnGUI;
 				parametersContaner.onGUIHandler += ParametersOnGUI;
@@ -83,7 +83,7 @@ namespace HFSM
 
 		private void Update()
 		{
-			noticeBoard.style.visibility = context.HFSMController == null ? Visibility.Visible : Visibility.Hidden;
+			noticeBoard.style.visibility = context.controller == null ? Visibility.Visible : Visibility.Hidden;
 			foreach (var item in graphLayerList)
 			{
 				item.Update();
@@ -118,7 +118,7 @@ namespace HFSM
 
 		private void ParametersOnGUI()
 		{
-			if (this.context.HFSMController == null)
+			if (this.context.controller == null)
 				return;
 
 			if (paramterLayer == null)
@@ -131,7 +131,7 @@ namespace HFSM
 
 		private void StateMachinePathOnGUI()
 		{
-			if (this.context.HFSMController == null)
+			if (this.context.controller == null)
 				return;
 
 			if (stateMachinePathLayer == null)
