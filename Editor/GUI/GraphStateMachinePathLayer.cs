@@ -11,7 +11,7 @@ namespace HFSM
 		private float pathWidth = 96f;
 		private int selectedIndex = -1;
 
-		private Dictionary<string, GUIStyle> styles = new Dictionary<string, GUIStyle>();
+		private Dictionary<string, GUIStyle> styles = new();
 
 		public GraphStateMachinePathLayer(EditorWindow hFSMEditorWindow) : base(hFSMEditorWindow)
 		{

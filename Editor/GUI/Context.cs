@@ -39,7 +39,7 @@ namespace HFSM
 			}
 		}
 
-		public List<StateBaseData> selectedStates = new List<StateBaseData>();
+		public List<StateBaseData> selectedStates = new();
 
 		public TransitionData selectedTransition = null;
 

@@ -102,6 +102,7 @@ namespace HFSM
 				{
 					foreach (StateBaseData item in this.context.selectedStates)
 					{
+						Undo.RecordObject(this.context.controller, "移动位置");
 						item.position.position += Event.current.delta / this.context.zoomFactor;
 						EditorUtility.SetDirty(this.context.controller);
 					}
@@ -246,10 +247,10 @@ namespace HFSM
 						StateInspectorHelper.instance.Inspector(context.controller, data as StateData);
 					else
 						StateMachineInspectorHelper.instance.Inspector(context.controller, data as StateMachineData);
-					//�Ƿ���Ԥ�����ӹ���
+					//是否在预览添加过渡
 					if (this.context.isPreviewTransition)
 					{
-						//���ӹ���
+						//添加过渡
 						this.context.controller.CreateTransition(context.currentStateMachine, context.preFrom, data);
 						this.context.StopPriviewTransition();
 						this.context.UpdateCurrentTransitionData();

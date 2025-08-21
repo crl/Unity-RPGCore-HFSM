@@ -32,28 +32,28 @@ namespace HFSM
 		public override void ProcessEvent()
 		{
 			base.ProcessEvent();
-			//��ק
+			//拖拽
 			if (Event.current.type == EventType.MouseDrag && Event.current.button == 2 && posotion.Contains(Event.current.mousePosition))
 			{
 				this.context.dragOffset += Event.current.delta;
 				Event.current.Use();
 			}
 
-			//����
+			//缩放
 			if (Event.current.type == EventType.ScrollWheel && posotion.Contains(Event.current.mousePosition))
 			{
-				//�� f = Event.current.delta.y Ϊ��������ʱ������ֵΪ 1���� f Ϊ����ʱ������ֵΪ -1��
+				//当 f = Event.current.delta.y 为正数或零时，返回值为 1，当 f 为负数时，返回值为 -1。
 				this.context.zoomFactor -= Mathf.Sign(Event.current.delta.y) / 20f;
 				this.context.zoomFactor = Mathf.Clamp(this.context.zoomFactor, 0.2f, 1f);
 				Event.current.Use();
 			}
-			//ȡ��ѡ��
+			//取消选中
 			if (posotion.MouseOn() && !IsMouseOverAnyState(context.currentChildStatesData) && EventExtension.IsMouseDown(0))
 			{
 				this.context.ClearAllSelectNode();
 				this.context.StopPriviewTransition();
 			}
-			//�Ҽ��˵�
+			//右键菜单
 			if (posotion.MouseOn() && !IsMouseOverAnyState(context.currentChildStatesData) && EventExtension.IsMouseUp(1) && this.context.controller != null)
 			{
 				mousePosition = Event.current.mousePosition;

@@ -98,9 +98,9 @@ namespace HFSM
 		public StateMachineExecutorController controller;
 		public StateData stateData;
 
-		public void Inspector(StateMachineExecutorController HFSMController, StateData stateData)
+		public void Inspector(StateMachineExecutorController controller, StateData stateData)
 		{
-			this.controller = HFSMController;
+			this.controller = controller;
 			this.stateData = stateData;
 			Selection.activeObject = this;
 		}
