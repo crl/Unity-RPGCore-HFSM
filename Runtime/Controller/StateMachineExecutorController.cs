@@ -44,8 +44,6 @@ namespace HFSM
         [SerializeField]
         internal StateMachineControllerConfig controllerConfig = new();
 
-        //文件生成位置
-        public string generateFilePath = "";
 
         /// <summary>
         /// 根据此获取运行时Controller

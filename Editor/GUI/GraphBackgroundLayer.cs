@@ -78,6 +78,7 @@ namespace HFSM
 
         private void CreateState()
         {
+            Undo.RecordObject(context.controller,"Create State");
             var rect = new Rect(0, 0, stateWidth, stateHeight);
             rect.center = MousePosition(mousePosition);
             StateBaseData newState = context.controller.CreateState(rect, context.currentStateMachine);
@@ -89,6 +90,7 @@ namespace HFSM
 
         private void CreateStateMachine()
         {
+            Undo.RecordObject(context.controller,"Create StateMachine");
             var rect = new Rect(0, 0, stateWidth, stateHeight);
             rect.center = MousePosition(mousePosition);
             StateBaseData newState = context.controller.CreateStateMachine(rect, context.currentStateMachine);

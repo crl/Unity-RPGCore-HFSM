@@ -89,8 +89,8 @@ MonoBehaviour:
     canExitDescription: 
   - position:
       serializedVersion: 2
-      x: -384.32056
-      y: -302.0471
+      x: -460.9872
+      y: -338.71375
       width: 480
       height: 90
     isExecuting: 0
@@ -359,6 +359,5 @@ MonoBehaviour:
       compareType: 2
       compareValue: 1
   controllerConfig:
-    CustomFilePath: 1
+    isCustom: 0
     FilePath: 
-  generateFilePath: E:/works/Cinema/Assets/Example/ExecutorControllers/

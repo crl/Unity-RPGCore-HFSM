@@ -28,6 +28,7 @@ namespace HFSM
         /// </summary>
         public void GenerateScriptController()
         {
+            var generateFilePath = "";
             if (controllerConfig.isCustom && controllerConfig.FilePath != "")
             {
                 generateFilePath = Application.dataPath.Replace("Assets", "") + controllerConfig.FilePath + "/";
@@ -205,9 +206,10 @@ public partial class {0} : StateMachineScriptController
             }
 
             //再添加所有的state与StateMachine
-            for (int i = 0; i < stateMachineData.childStates.Count; i++)
+            foreach(var id in stateMachineData.childStates)
             {
-                StateBaseData state = allStates.Find(s => s.id == stateMachineData.childStates[i]);
+                var state = allStates.Find(s => s.id == id);
+                
                 if (state.stateType == StateType.StateMachine)
                 {
                     sb.Add(

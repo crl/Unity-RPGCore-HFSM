@@ -47,8 +47,8 @@ MonoBehaviour:
   states:
   - position:
       serializedVersion: 2
-      x: 520.40076
-      y: -402.33347
+      x: 597.0674
+      y: -359.00012
       width: 480
       height: 90
     isExecuting: 0
@@ -230,7 +230,6 @@ MonoBehaviour:
     - normal
     - battle
     - get_hit
-    - New State 0
     defaultState: normal
     transitions:
     - c46e7e9710a5a6a41a8935f2ee2a5cac
@@ -248,8 +247,8 @@ MonoBehaviour:
     any:
       position:
         serializedVersion: 2
-        x: -239.9999
-        y: -19.999977
+        x: -203.33324
+        y: 73.33335
         width: 480
         height: 90
       isExecuting: 0
@@ -691,5 +690,4 @@ MonoBehaviour:
       compareValue: 1
   controllerConfig:
     isCustom: 1
-    FilePath: Assets/Example/Scripts/GeneratedScripts
-  generateFilePath: D:/UnityProject/CardTDProject/Assets/Scripts/Unity-RPGCore-HFSM/Example/Scripts/GeneratedScripts/
+    FilePath: Assets/Unity-RPGCore-HFSM/Example/Scripts/GeneratedScripts
