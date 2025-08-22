@@ -24,6 +24,7 @@ namespace HFSM
 			newName = EditorGUILayout.DelayedTextField(newName);
 			if (EditorGUI.EndChangeCheck() && newName != stateName)
 			{
+				Undo.RegisterCompleteObjectUndo(helper.controller,"Rename State");
 				helper.controller.RenameState(helper.stateData, newName);
 				stateName = newName;
 			}
@@ -37,6 +38,7 @@ namespace HFSM
 			description = EditorGUILayout.DelayedTextField(description);
 			if (EditorGUI.EndChangeCheck())
 			{
+				Undo.RecordObject(helper.controller,"Rename State");
 				helper.controller.RenameState(helper.stateData, description, true, false);
 			}
 			EditorGUILayout.EndHorizontal();
@@ -59,6 +61,7 @@ namespace HFSM
 			string ceDescription = EditorGUILayout.DelayedTextField(helper.stateData.canExitDescription);
 			if (EditorGUI.EndChangeCheck())
 			{
+				Undo.RecordObject(helper.controller,"Rename State");
 				helper.controller.RenameState(helper.stateData, ceDescription, true, true);
 			}
 			EditorGUI.EndDisabledGroup();

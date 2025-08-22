@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -171,7 +172,8 @@ namespace HFSM
 
 		private void OnUndoRedoPerformed()
 		{
-			//context.selectedStates.Clear();
+			context.ResetByUndo();
+			
 			context.UpdateCurrentChildStatesData();
 			context.UpdateCurrentTransitionData();
 			Repaint();

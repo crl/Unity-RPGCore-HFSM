@@ -54,6 +54,7 @@ namespace HFSM
 			{
 				if (this.context.selectedTransition != null)
 				{
+					Undo.RegisterCompleteObjectUndo(context.controller,"删除转换");
 					this.context.controller.DeleteTransition(this.context.currentStateMachine, this.context.selectedTransition);
 					this.context.selectedTransition = null;
 					context.UpdateCurrentTransitionData();
@@ -70,27 +71,29 @@ namespace HFSM
 			{
 				foreach (TransitionData item in this.context.currentTransitionData)
 				{
-					StateBaseData fromSatteData = this.context.currentChildStatesData.Where(x => x.id == item.from).FirstOrDefault();
-					StateBaseData toStateData = this.context.currentChildStatesData.Where(x => x.id == item.to).FirstOrDefault();
+					var fromSatteData = this.context.currentChildStatesData.FirstOrDefault(x => x.id == item.from);
+					var toStateData = this.context.currentChildStatesData.FirstOrDefault(x => x.id == item.to);
 					if (fromSatteData == null || toStateData == null) return;
 
-					Rect fromRect = GetTransfromRect(fromSatteData.position);
-					Rect toRect = GetTransfromRect(toStateData.position);
+					var fromRect = GetTransfromRect(fromSatteData.position);
+					var toRect = GetTransfromRect(toStateData.position);
 
-					Vector2 offset = GetTransitionOffset(fromRect.center, toRect.center);
-					Vector2 fromPos = fromRect.center + offset;
-					Vector2 toPos = toRect.center + offset;
+					var offset = GetTransitionOffset(fromRect.center, toRect.center);
+					var fromPos = fromRect.center + offset;
+					var toPos = toRect.center + offset;
 
-					float width = Mathf.Clamp(Mathf.Abs(toPos.x - fromPos.x), 10f, Mathf.Abs(toPos.x - fromPos.x));
-					float height = Mathf.Clamp(Mathf.Abs(toPos.y - fromPos.y), 10f, Mathf.Abs(toPos.y - fromPos.y));
-					Rect rect = new Rect(0, 0, width, height);
-					rect.center = fromPos + (toPos - fromPos) * 0.5f;
+					var width = Mathf.Clamp(Mathf.Abs(toPos.x - fromPos.x), 10f, Mathf.Abs(toPos.x - fromPos.x));
+					var height = Mathf.Clamp(Mathf.Abs(toPos.y - fromPos.y), 10f, Mathf.Abs(toPos.y - fromPos.y));
+					var rect = new Rect(0, 0, width, height)
+					{
+						center = fromPos + (toPos - fromPos) * 0.5f
+					};
 
 					if (rect.MouseOn() && (context.selectedStates.Count == 0 || !context.selectedStates[0].position.Contains(MousePosition(Event.current.mousePosition))))
 					{
 						if (GetMinDistanceToLine(fromPos, toPos, Event.current.mousePosition))
 						{
-							this.context.selectedTransition = item;
+							context.selectedTransition = item;
 							ShowInspactor(item);
 							Event.current.Use();
 							break;

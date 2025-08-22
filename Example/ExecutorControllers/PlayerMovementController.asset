@@ -44,6 +44,9 @@ MonoBehaviour:
   - _name: RollOrDodge
     _type: 3
     baseValue: 0
+  - _name: New Param 0
+    _type: 0
+    baseValue: 0
   states:
   - position:
       serializedVersion: 2
@@ -300,7 +303,7 @@ MonoBehaviour:
     id: normal
     stateType: 1
     isDefault: 1
-    description: 
+    description: ssss
     isRoot: 0
     childStates:
     - normal_idle
@@ -428,11 +431,7 @@ MonoBehaviour:
     - 68c155fcadfbbde438fe93a17b859563
     - 702c039924b880c41b8f74f822c2f878
     - fe51405a88ce0d246a60d1397ff50f3f
-    services:
-    - id: FaceToTarget
-      serviceType: 0
-      customInterval: 0
-      description: 
+    services: []
     any:
       position:
         serializedVersion: 2
@@ -531,7 +530,7 @@ MonoBehaviour:
     parameterConditionDatas:
     - parameterName: IsOnBattle
       compareType: 2
-      compareValue: 1
+      compareValue: 0
   - id: c2e120f1b7485664682230f92d5902ab
     from: Any
     to: get_hit

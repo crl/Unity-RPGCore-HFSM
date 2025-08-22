@@ -6,7 +6,7 @@ namespace HFSM
 {
 	public abstract class ParameterConditionInspector
 	{
-		public abstract void OnGUI(Rect rect, StateMachineExecutorController contorller, ParameterConditionData conditionData);
+		public abstract void OnGUI(Rect rect, StateMachineExecutorController controller, ParameterConditionData conditionData);
 	}
 
 	public class ParameterFloatConditionInspector : ParameterConditionInspector
@@ -14,7 +14,7 @@ namespace HFSM
 		private Rect left_rect;
 		private Rect right_rect;
 
-		public override void OnGUI(Rect rect, StateMachineExecutorController contorller, ParameterConditionData conditionData)
+		public override void OnGUI(Rect rect, StateMachineExecutorController controller, ParameterConditionData conditionData)
 		{
 			left_rect.Set(rect.x, rect.y, rect.width * 0.5f, rect.height);
 			right_rect.Set(left_rect.x + left_rect.width, rect.y, rect.width * 0.5f, rect.height);
@@ -32,8 +32,9 @@ namespace HFSM
 
 					genericMenu.AddItem(new GUIContent(compareType.ToString()), conditionData.compareType == compareType, () =>
 					{
+						Undo.RecordObject(controller,"CompareValue change");
 						conditionData.compareType = compareType;
-						contorller.Save();
+						controller.Save();
 					});
 				}
 
@@ -41,10 +42,12 @@ namespace HFSM
 			}
 			EditorGUI.BeginChangeCheck();
 			//目标值
-			conditionData.compareValue = EditorGUI.FloatField(right_rect, conditionData.compareValue);
+			var compareValue = EditorGUI.FloatField(right_rect, conditionData.compareValue);
 			if (EditorGUI.EndChangeCheck())
 			{
-				contorller.Save();
+				Undo.RecordObject(controller,"CompareValue change");
+				conditionData.compareValue = compareValue;
+				controller.Save();
 			}
 		}
 	}
@@ -54,7 +57,7 @@ namespace HFSM
 		private Rect left_rect;
 		private Rect right_rect;
 
-		public override void OnGUI(Rect rect, StateMachineExecutorController contorller, ParameterConditionData conditionData)
+		public override void OnGUI(Rect rect, StateMachineExecutorController controller, ParameterConditionData conditionData)
 		{
 			left_rect.Set(rect.x, rect.y, rect.width / 2, rect.height);
 			right_rect.Set(rect.x + rect.width / 2, rect.y, rect.width / 2, rect.height);
@@ -66,12 +69,13 @@ namespace HFSM
 
 				for (int i = 0; i < Enum.GetValues(typeof(CompareType)).Length; i++)
 				{
-					CompareType compareType = (CompareType)Enum.GetValues(typeof(CompareType)).GetValue(i);
+					var compareType = (CompareType)Enum.GetValues(typeof(CompareType)).GetValue(i);
 
 					genericMenu.AddItem(new GUIContent(compareType.ToString()), conditionData.compareType == compareType, () =>
 					{
+						Undo.RecordObject(controller,"CompareValue change");
 						conditionData.compareType = compareType;
-						contorller.Save();
+						controller.Save();
 					});
 				}
 				genericMenu.ShowAsContext();
@@ -79,10 +83,12 @@ namespace HFSM
 
 			//目标值
 			EditorGUI.BeginChangeCheck();
-			conditionData.compareValue = EditorGUI.IntField(right_rect, (int)conditionData.compareValue);
+			var compareValue = EditorGUI.IntField(right_rect, (int)conditionData.compareValue);
 			if (EditorGUI.EndChangeCheck())
 			{
-				contorller.Save();
+				Undo.RecordObject(controller,"CompareValue change");
+				conditionData.compareValue= compareValue;
+				controller.Save();
 			}
 		}
 	}
@@ -96,12 +102,14 @@ namespace HFSM
 				GenericMenu genericMenu = new GenericMenu();
 				genericMenu.AddItem(new GUIContent("True"), conditionData.compareValue == 1, () =>
 				{
+					Undo.RecordObject(controller,"CompareValue change");
 					conditionData.compareValue = 1;
 					controller.Save();
 				});
 
 				genericMenu.AddItem(new GUIContent("False"), conditionData.compareValue == 0, () =>
 				{
+					Undo.RecordObject(controller,"CompareValue change");
 					conditionData.compareValue = 0;
 					controller.Save();
 				});

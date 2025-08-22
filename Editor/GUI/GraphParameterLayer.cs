@@ -98,6 +98,7 @@ namespace HFSM
 				tempname = EditorGUI.DelayedTextField(left_container, parameterData.name);
 				if (EditorGUI.EndChangeCheck())
 				{
+					Undo.RecordObject(this.context.controller,"Rename Parameter");
 					this.context.controller.RenameParameter(parameterData, tempname);
 					isRenaming = false;
 				}
@@ -136,6 +137,7 @@ namespace HFSM
 
 		private void RemoveParamter(ReorderableList list)
 		{
+			Undo.RecordObject(this.context.controller,"Delete Parameter");
 			this.context.controller.DeleteParameter(list.index);
 		}
 
@@ -152,6 +154,7 @@ namespace HFSM
 				ParameterType parameterType = (ParameterType)Enum.GetValues(typeof(ParameterType)).GetValue(i);
 				genericMenu.AddItem(new GUIContent(Enum.GetNames(typeof(ParameterType))[i]), false, () =>
 				{
+					Undo.RecordObject(this.context.controller,"Create Paramter");
 					this.context.controller.CreateParamter(parameterType);
 				});
 			}

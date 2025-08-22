@@ -43,6 +43,7 @@ namespace HFSM
 			newName = EditorGUILayout.DelayedTextField(newName);
 			if (EditorGUI.EndChangeCheck() && newName != stateName)
 			{
+				Undo.RegisterCompleteObjectUndo(helper.controller,"Rename State");
 				helper.controller.RenameState(helper.stateMachineData, newName);
 				stateName = newName;
 			}
@@ -63,7 +64,9 @@ namespace HFSM
 			description = EditorGUILayout.DelayedTextField(description);
 			if (EditorGUI.EndChangeCheck())
 			{
+				Undo.RecordObject(helper.controller,"Rename Descript");
 				helper.stateMachineData.description = description;
+				helper.controller.Save();
 			}
 			EditorGUILayout.EndHorizontal();
 
@@ -112,6 +115,7 @@ namespace HFSM
 				tempname = EditorGUI.DelayedTextField(left_container, service.id);
 				if (EditorGUI.EndChangeCheck())
 				{
+					Undo.RecordObject(helper.controller,"Rename Service");
 					helper.controller.RenameService(service, tempname);
 					isRenaming = false;
 				}
@@ -131,10 +135,17 @@ namespace HFSM
 			}
 			else
 			{
+				EditorGUI.BeginChangeCheck();
 				Rect[] rects = right_container.SplitVertical(3, 1);
 				//GUI.Box(rects[0].Resize(2), "");
 				EditorGUI.LabelField(rects[0], service.serviceType.ToString());
-				service.customInterval = EditorGUI.FloatField(rects[1], service.customInterval);
+				var interval = EditorGUI.FloatField(rects[1], service.customInterval);
+				if (EditorGUI.EndChangeCheck())
+				{
+					Undo.RecordObject(helper.controller, "Rename Service");
+					service.customInterval = interval;
+					helper.controller.Save();
+				}
 			}
 			
 			var e = Event.current;
@@ -157,6 +168,7 @@ namespace HFSM
 			StateMachineInspectorHelper helper = target as StateMachineInspectorHelper;
 			if (helper == null || list.index < 0) return;
 			ServiceData service = helper.stateMachineData.services[list.index];
+			Undo.RecordObject(helper.controller,"Delete Service");
 			helper.controller.DeleteService(helper.stateMachineData, service);
 		}
 
@@ -171,6 +183,7 @@ namespace HFSM
 				ServiceType serviceType = (ServiceType)Enum.GetValues(typeof(ServiceType)).GetValue(i);
 				genericMenu.AddItem(new GUIContent(Enum.GetNames(typeof(ServiceType))[i]), false, () =>
 				{
+					Undo.RecordObject(helper.controller,"Create Service");
 					helper.controller.CreateService(helper.stateMachineData, serviceType);
 				});
 			}

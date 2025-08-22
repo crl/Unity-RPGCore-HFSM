@@ -100,10 +100,11 @@ namespace HFSM
 			{
 				if (!isSelecting)
 				{
-					foreach (StateBaseData item in this.context.selectedStates)
+					foreach (StateBaseData item in context.selectedStates)
 					{
+						Undo.RecordObject(context.controller,"移动");
 						item.position.position += Event.current.delta / this.context.zoomFactor;
-						this.context.controller.Save();
+						context.controller.Save();
 					}
 				}
 				Event.current.Use();
@@ -172,11 +173,7 @@ namespace HFSM
 					//TOOD:
 					this.context.StartPriviewTransition(item);
 				});
-				genericMenu.AddItem(new GUIContent("Delete"), false, () =>
-				{
-					//TOOD:删除状态
-					DeleteNode();
-				});
+				genericMenu.AddItem(new GUIContent("Delete"), false, DeleteNode);
 				genericMenu.AddItem(new GUIContent("Set DefaltState"), false, () =>
 				{
 					SetDefaultState(item);
@@ -206,8 +203,8 @@ namespace HFSM
 
 		private void DeleteNode()
 		{
-			Undo.RecordObject(context.controller,"删除转换条件");
-			foreach (StateBaseData item in this.context.selectedStates)
+			Undo.RegisterCompleteObjectUndo(context.controller,"删除节点");
+			foreach (var item in this.context.selectedStates)
 			{
 				context.controller.DeleteState(context.currentStateMachine, item);
 				context.controller.DeleteTransition(context.currentStateMachine, item);

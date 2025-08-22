@@ -297,6 +297,8 @@ public partial class {0} : StateMachineScriptController
         public void Save()
         {
             serializedObject.ApplyModifiedProperties();
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssetIfDirty(this);
         }
 
         /// <summary>
@@ -391,6 +393,7 @@ public partial class {0} : StateMachineScriptController
                 parameterCondition.compareType = CompareType.Equal;
                 parameterCondition.compareValue = 0.0f;
             }
+           
             transition.parameterConditionDatas.Add(parameterCondition);
             Save();
         }
@@ -422,8 +425,8 @@ public partial class {0} : StateMachineScriptController
                 }
                 else
                 {
-                    StateMachineData machineData = (state as StateMachineData);
-                    List<StateBaseData> allStates = new List<StateBaseData>();
+                    var machineData = (state as StateMachineData);
+                    var allStates = new List<StateBaseData>();
                     allStates.AddRange(states.FindAll(s => machineData.childStates.Contains(s.id)));
                     allStates.AddRange(stateMachines.FindAll(s => machineData.childStates.Contains(s.id)));
                     foreach (var s in allStates)
@@ -507,7 +510,6 @@ public partial class {0} : StateMachineScriptController
                 return;
             if (parameters.Select(p => p.name).Contains(newName))
                 return;
-            
             foreach (var t in transitions)
             {
                 var condition = t.parameterConditionDatas.Find(pc => pc.parameterName == parameter.name);
@@ -546,7 +548,6 @@ public partial class {0} : StateMachineScriptController
                     //todo
                 }
             }
-            
             foreach (var sm in stateMachines)
             {
                 int index = sm.childStates.FindIndex(s => s == state.id);
@@ -573,7 +574,7 @@ public partial class {0} : StateMachineScriptController
                     t.from = newName;
                 }
             }
-
+          
             state.id = newName;
             Save();
         }
@@ -584,7 +585,6 @@ public partial class {0} : StateMachineScriptController
         public void RenameService(ServiceData serviceData, string newName)
         {
             if (string.IsNullOrEmpty(newName)) return;
-
             serviceData.id = newName;
             Save();
         }

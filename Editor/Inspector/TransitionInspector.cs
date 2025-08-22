@@ -103,6 +103,8 @@ namespace HFSM
 		{
 			var helper = target as TransitionInspectorHelper;
 			if (helper == null) return;
+			
+			Undo.RecordObject(helper.controller,"Delete Condition");
 			helper.controller.DeleteParameterCondition(helper.transitionData, list.index);
 		}
 
@@ -110,6 +112,8 @@ namespace HFSM
 		{
 			var helper = target as TransitionInspectorHelper;
 			if (helper == null) return;
+			
+			Undo.RecordObject(helper.controller,"Create Condition");
 			helper.controller.CreateParamterCondition(helper.transitionData);
 		}
 	}
