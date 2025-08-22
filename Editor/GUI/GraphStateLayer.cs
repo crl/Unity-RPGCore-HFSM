@@ -75,6 +75,7 @@ namespace HFSM
 			{
 				isSelecting = true;
 				startSelectPosition = Event.current.mousePosition;
+				GUIUtility.keyboardControl = 0;
 			}
 
 			if (EventExtension.IsMouseUp(0))
@@ -133,6 +134,7 @@ namespace HFSM
 			if (Event.current.keyCode == KeyCode.Delete && this.context.selectedStates != null && this.context.selectedStates.Count > 0)
 			{
 				DeleteNode();
+				Event.current.Use();
 				this.editorWindow.Repaint();
 			}
 
