@@ -312,7 +312,6 @@ public partial class {0} : StateMachineScriptController
                 position = rect,
                 isDefault = currentStateMachine.childStates.Count == 0,
             };
-            Undo.IncrementCurrentGroup();
             states.Add(state);
             currentStateMachine.childStates.Add(state.id);
             if (state.isDefault)

@@ -39,10 +39,13 @@ namespace HFSM
 
 				genericMenu.ShowAsContext();
 			}
-
+			EditorGUI.BeginChangeCheck();
 			//目标值
 			conditionData.compareValue = EditorGUI.FloatField(right_rect, conditionData.compareValue);
-			EditorUtility.SetDirty(contorller);
+			if (EditorGUI.EndChangeCheck())
+			{
+				contorller.Save();
+			}
 		}
 	}
 
@@ -75,8 +78,12 @@ namespace HFSM
 			}
 
 			//目标值
+			EditorGUI.BeginChangeCheck();
 			conditionData.compareValue = EditorGUI.IntField(right_rect, (int)conditionData.compareValue);
-			EditorUtility.SetDirty(contorller);
+			if (EditorGUI.EndChangeCheck())
+			{
+				contorller.Save();
+			}
 		}
 	}
 

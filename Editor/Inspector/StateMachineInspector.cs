@@ -45,7 +45,6 @@ namespace HFSM
 			{
 				helper.controller.RenameState(helper.stateMachineData, newName);
 				stateName = newName;
-				EditorUtility.SetDirty(helper.controller);
 			}
 			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.EndHorizontal();

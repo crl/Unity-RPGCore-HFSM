@@ -102,9 +102,8 @@ namespace HFSM
 				{
 					foreach (StateBaseData item in this.context.selectedStates)
 					{
-						Undo.RecordObject(this.context.controller, "移动位置");
 						item.position.position += Event.current.delta / this.context.zoomFactor;
-						EditorUtility.SetDirty(this.context.controller);
+						this.context.controller.Save();
 					}
 				}
 				Event.current.Use();
