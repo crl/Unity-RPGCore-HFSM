@@ -511,7 +511,7 @@ MonoBehaviour:
     parameterConditionDatas:
     - parameterName: IsOnBattle
       compareType: 2
-      compareValue: 0
+      compareValue: 1
   - id: c2e120f1b7485664682230f92d5902ab
     from: Any
     to: get_hit

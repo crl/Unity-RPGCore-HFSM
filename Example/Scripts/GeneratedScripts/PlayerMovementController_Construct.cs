@@ -72,7 +72,7 @@ public partial class PlayerMovementController : StateMachineScriptController
 			.FinishHandle()
 			.AddTemporaryState<Get_hitState>("get_hit")
 			.SwitchHandle("normal").ToStateMachine("battle")
-			.BoolCondition("IsOnBattle",false)
+			.BoolCondition("IsOnBattle",true)
 			.SwitchHandle("Any").ToState("get_hit",true)
 			.TriggerCondition("GetHit")
 			.SwitchHandle("battle").ToStateMachine("normal")

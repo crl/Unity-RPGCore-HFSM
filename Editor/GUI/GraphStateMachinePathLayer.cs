@@ -55,6 +55,7 @@ namespace HFSM
 				//点击Root时打开Root状态机的Inspector
 				if (context.stateMachinePath[selectedIndex].id == "Root")
 				{
+					StateMachineInspectorHelper.instance.executor = context.executor;
 					StateMachineInspectorHelper.instance.Inspector(context.controller, context.stateMachinePath[selectedIndex]);
 					context.ClearAllSelectNode();
 				}

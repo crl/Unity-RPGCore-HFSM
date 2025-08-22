@@ -287,7 +287,7 @@ public partial class {0} : StateMachineScriptController
             sb.Add(".FinishHandle()");
         }
 
-        private string GetClassNameBy(string str, string postfix)
+        public string GetClassNameBy(string str, string postfix)
         {
             var name = str.Replace(" ", "");
             return StringUtil.ToTitleCase(name) + postfix;

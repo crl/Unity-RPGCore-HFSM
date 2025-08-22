@@ -12,10 +12,10 @@ namespace HFSM
             get;
             private set;
         }
-        public bool pauseService
+        public bool isPaused
         {
             get;
-            private set;
+            protected internal set;
         }
 
         public StateMachine parent
@@ -49,13 +49,13 @@ namespace HFSM
         public virtual void OnEnter()
         {
             timer.Reset();
-            pauseService = false;
+            isPaused = false;
         }
 
 
         internal void OnUpdate()
         {
-            if (pauseService) return;
+            if (isPaused) return;
             doUpdate();
         }
 
@@ -65,12 +65,12 @@ namespace HFSM
 
         public virtual void OnExit()
         {
-            pauseService = false;
+            isPaused = false;
         }
 
-        public void Pause() => pauseService = true;
+        public void Pause() => isPaused = true;
 
-        public void Resume() => pauseService = false;
+        public void Resume() => isPaused = false;
     }
 
     [Serializable]

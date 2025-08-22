@@ -106,7 +106,12 @@ namespace HFSM
         public void PauseService<T>()
         {
             var serviceName = typeof(T).Name;
+            var service = GetService(typeof(T).Name);
+            if (service != null) service.Pause();
+        }
 
+        public Service GetService(string serviceName)
+        {
             foreach (var stateBundle in executor.currentExecuteState.executeStackSnapshot)
             {
                 if (stateBundle.services != null)
@@ -115,32 +120,19 @@ namespace HFSM
                     {
                         if (service.id == serviceName)
                         {
-                            service.Pause();
-                            return;
+                            return service;
                         }
                     }
                 }
             }
+
+            return null;
         }
 
         public void ResumeService<T>()
         {
-            var serviceName = typeof(T).Name;
-
-            foreach (var stateBundle in executor.currentExecuteState.executeStackSnapshot)
-            {
-                if (stateBundle.services != null)
-                {
-                    foreach (var service in stateBundle.services)
-                    {
-                        if (service.id == serviceName)
-                        {
-                            service.Resume();
-                            return;
-                        }
-                    }
-                }
-            }
+            var service =GetService(typeof(T).Name);
+            if (service != null) service.Resume();
         }
     }
 }

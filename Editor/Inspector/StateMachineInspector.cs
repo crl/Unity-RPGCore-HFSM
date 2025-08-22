@@ -25,11 +25,16 @@ namespace HFSM
 			reorderableList.onAddCallback += AddService;
 			reorderableList.onRemoveCallback += RemoveService;
 			reorderableList.drawElementCallback += DrawElement;
+			
+			if (EditorApplication.isPlaying)
+			{
+				reorderableList.displayAdd = reorderableList.displayRemove = reorderableList.draggable = false;
+			}
 		}
 
 		public override void OnInspectorGUI()
 		{
-			StateMachineInspectorHelper helper = target as StateMachineInspectorHelper;
+			var helper = target as StateMachineInspectorHelper;
 			if (helper == null) return;
 			bool disable = EditorApplication.isPlaying;
 			EditorGUI.BeginDisabledGroup(disable);
@@ -37,8 +42,8 @@ namespace HFSM
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField("state name", GUILayout.Width(80));
 			string newName = helper.stateMachineData.id;
-			disable = newName == "Root";
-			EditorGUI.BeginDisabledGroup(disable);
+			var rootDisable = newName == "Root";
+			EditorGUI.BeginDisabledGroup(rootDisable);
 			EditorGUI.BeginChangeCheck();
 			newName = EditorGUILayout.DelayedTextField(newName);
 			if (EditorGUI.EndChangeCheck() && newName != stateName)
@@ -49,14 +54,21 @@ namespace HFSM
 			}
 			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.EndHorizontal();
+			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.Space();
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField("services", GUILayout.Width(80));
 			if (reorderableList.list != helper.stateMachineData.services)
+			{
 				reorderableList.list = helper.stateMachineData.services;
+			}
+
 			reorderableList.DoLayoutList();
 			EditorGUILayout.EndHorizontal();
+			
 			EditorGUILayout.Space();
+			
+			EditorGUI.BeginDisabledGroup(disable);
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField("description", GUILayout.Width(80));
 			string description = helper.stateMachineData.description;
@@ -69,14 +81,15 @@ namespace HFSM
 				helper.controller.Save();
 			}
 			EditorGUILayout.EndHorizontal();
+			EditorGUI.EndDisabledGroup();
 
 			EditorGUILayout.EndVertical();
-			EditorGUI.EndDisabledGroup();
+			
 		}
 
 		protected override void OnHeaderGUI()
 		{
-			StateMachineInspectorHelper helper = target as StateMachineInspectorHelper;
+			var helper = target as StateMachineInspectorHelper;
 			if (helper == null) return;
 			EditorGUILayout.Space();
 			EditorGUILayout.BeginHorizontal();
@@ -102,12 +115,32 @@ namespace HFSM
 		{
 			var helper = target as StateMachineInspectorHelper;
 			if (helper == null) return;
+			var service = helper.stateMachineData.services[index];
+			if (Application.isPlaying && helper.executor!=null)
+			{
+				var cls=helper.executor.executorController.GetClassNameBy(service.id,"Service");
+				var serviceClass = helper.executor.scriptController.GetService(cls);
+				if (serviceClass != null)
+				{
+					var size = 20;
+					var t = rect;
+					t.width = 20;
+					var v = !serviceClass.isPaused;
+					v = EditorGUI.Toggle(t, v);
+					serviceClass.isPaused = !v;
+					
+					rect.x += size;
+					rect.width -= size;
+				}
+			}
+			
+			
 			left_container = rect.SplitVertical(1, 2)[0];
 			right_container = rect.SplitVertical(1, 2)[1];
-			var service = helper.stateMachineData.services[index];
+			
 			if (isFocused && EventExtension.IsMouseDown(0))
 			{
-				isRenaming = true;
+					isRenaming = true;
 			}
 			if (isRenaming && reorderableList.index == index)
 			{
@@ -195,7 +228,7 @@ namespace HFSM
 	{
 		public StateMachineExecutorController controller;
 		public StateMachineData stateMachineData;
-
+		public StateMachineExecutor executor;
 		public void Inspector(StateMachineExecutorController HFSMController, StateMachineData stateMachineData)
 		{
 			this.controller = HFSMController;

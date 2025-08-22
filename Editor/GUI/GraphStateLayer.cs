@@ -244,7 +244,11 @@ namespace HFSM
 					if (data.stateType == StateType.State)
 						StateInspectorHelper.instance.Inspector(context.controller, data as StateData);
 					else
+					{
+						StateMachineInspectorHelper.instance.executor = context.executor;
 						StateMachineInspectorHelper.instance.Inspector(context.controller, data as StateMachineData);
+					}
+
 					//是否在预览添加过渡
 					if (this.context.isPreviewTransition)
 					{
