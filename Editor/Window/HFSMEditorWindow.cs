@@ -40,7 +40,29 @@ namespace HFSM
 		private void OnDisable()
 		{
 			Undo.undoRedoPerformed -= OnUndoRedoPerformed;
+			EditorApplication.update -= lostFocusUpdate;
 		}
+
+		private void OnFocus()
+		{
+			EditorApplication.update -= lostFocusUpdate;
+		}
+
+		void OnLostFocus()
+		{
+			if (Application.isPlaying)
+			{
+				EditorApplication.update -= lostFocusUpdate;
+				EditorApplication.update += lostFocusUpdate;
+			}
+		}
+
+		private void lostFocusUpdate()
+		{
+			Repaint();
+		}
+		
+		
 
 		public void CreateGUI()
 		{

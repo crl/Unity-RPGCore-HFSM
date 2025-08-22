@@ -103,8 +103,8 @@ MonoBehaviour:
     canExitDescription: 
   - position:
       serializedVersion: 2
-      x: 20.399654
-      y: 754.3322
+      x: -416.267
+      y: 710.99884
       width: 480
       height: 90
     isExecuting: 0
@@ -332,7 +332,7 @@ MonoBehaviour:
       canExitDescription: 
   - position:
       serializedVersion: 2
-      x: 577.06793
+      x: 580.40125
       y: 820.9989
       width: 480
       height: 90

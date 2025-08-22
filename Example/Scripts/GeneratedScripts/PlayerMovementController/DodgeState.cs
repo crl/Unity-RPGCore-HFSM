@@ -21,5 +21,10 @@ public partial class PlayerMovementController : StateMachineScriptController
             base.OnExit();
             ctrl.ResumeService<ProcessInputService>();
         }
+
+        public override bool isCanExit()
+        {
+            return animPlayer.CurrentFinishPlaying;
+        }
     }
 }
