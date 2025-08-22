@@ -33,13 +33,12 @@ namespace HFSM
 
 		private void OnEnable()
 		{
-			Undo.undoRedoEvent -= OnUndoRedoPerformed;
-			Undo.undoRedoEvent += OnUndoRedoPerformed;
+			Undo.undoRedoPerformed += OnUndoRedoPerformed;
 		}
 
 		private void OnDisable()
 		{
-			Undo.undoRedoEvent -= OnUndoRedoPerformed;
+			Undo.undoRedoPerformed -= OnUndoRedoPerformed;
 		}
 
 		public void CreateGUI()
@@ -95,7 +94,16 @@ namespace HFSM
 
 		private void Update()
 		{
-			noticeBoard.style.visibility = context.controller == null ? Visibility.Visible : Visibility.Hidden;
+			if (context.controller != null)
+			{
+				context.controller.Update();
+				noticeBoard.style.visibility = Visibility.Visible;
+			}
+			else
+			{
+				noticeBoard.style.visibility = Visibility.Hidden;
+			}
+
 			foreach (var item in graphLayerList)
 			{
 				item.Update();
@@ -160,16 +168,13 @@ namespace HFSM
 			graphLayerList.Add(new GraphTransitionLayer(this));
 			graphLayerList.Add(new GraphStateLayer(this));
 		}
-		
-		private void OnUndoRedoPerformed(in UndoRedoInfo info)
+
+		private void OnUndoRedoPerformed()
 		{
-			if (info.undoName.StartsWith("StateMachine-"))
-			{
-				context.selectedStates.Clear();
-				context.UpdateCurrentChildStatesData();
-				context.UpdateCurrentTransitionData();
-				Repaint();
-			}
+			//context.selectedStates.Clear();
+			context.UpdateCurrentChildStatesData();
+			context.UpdateCurrentTransitionData();
+			Repaint();
 		}
 	}
 }

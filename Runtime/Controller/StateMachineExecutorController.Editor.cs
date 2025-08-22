@@ -13,6 +13,16 @@ namespace HFSM
     /// </summary>
     public partial class StateMachineExecutorController:ScriptableObject
     {
+        private SerializedObject serializedObject;
+        public void Update()
+        {
+            if (serializedObject == null)
+            {
+                serializedObject = new SerializedObject(this);
+            }
+            serializedObject.Update();
+        }
+        
         /// <summary>
         /// 根据此Controller存储的信息生成实际的运行时Controller
         /// </summary>
@@ -286,8 +296,7 @@ public partial class {0} : StateMachineScriptController
         /// </summary>
         public void Save()
         {
-            EditorUtility.SetDirty(this);
-            AssetDatabase.SaveAssets();
+            serializedObject.ApplyModifiedProperties();
         }
 
         /// <summary>
@@ -303,7 +312,6 @@ public partial class {0} : StateMachineScriptController
                 position = rect,
                 isDefault = currentStateMachine.childStates.Count == 0,
             };
-            Undo.RecordObject(this,"StateMachine-CreateState");
             Undo.IncrementCurrentGroup();
             states.Add(state);
             currentStateMachine.childStates.Add(state.id);
@@ -329,7 +337,6 @@ public partial class {0} : StateMachineScriptController
                 position = rect,
                 isDefault = currentStateMachine.childStates.Count == 0,
             };
-            Undo.RecordObject(this,"StateMachine-CreateState");
             stateMachines.Add(stateMachine);
             currentStateMachine.childStates.Add(stateMachine.id);
             CreateState(new Rect(600, 400, StateBase.stateWidth, StateBase.stateHeight), stateMachine);
@@ -348,7 +355,6 @@ public partial class {0} : StateMachineScriptController
             {
                 return;
             }
-            Undo.RecordObject(this,"StateMachine-CreateTrans");
             TransitionData transition = new TransitionData()
             {
                 id = GUID.Generate().ToString(),
@@ -369,7 +375,6 @@ public partial class {0} : StateMachineScriptController
             string name = "New Param " + count;
             Parameter parameter = new Parameter(name, parameterType, 0.0f);
             
-            Undo.RecordObject(this,"StateMachine-CreatePara");
             parameters.Add(parameter);
             Save();
         }
@@ -387,7 +392,6 @@ public partial class {0} : StateMachineScriptController
                 parameterCondition.compareType = CompareType.Equal;
                 parameterCondition.compareValue = 0.0f;
             }
-            Undo.RecordObject(this,"StateMachine-CreateCondition");
             transition.parameterConditionDatas.Add(parameterCondition);
             Save();
         }
@@ -402,7 +406,6 @@ public partial class {0} : StateMachineScriptController
             int count = stateMachine.services.Count(s => s.id.Contains("NewService"));
             service.id = "NewService" + count;
             
-            Undo.RecordObject(this,"StateMachine-CreateService");
             stateMachine.services.Add(service);
             Save();
         }
@@ -435,7 +438,6 @@ public partial class {0} : StateMachineScriptController
                         transitions.Remove(transitions.Find(t => t.id == transition));
                     }
                 }
-                Undo.RecordObject(this,"StateMachine-DeleteState");
                 stateMachine.childStates.Remove(state.id);
             }
 
@@ -447,7 +449,6 @@ public partial class {0} : StateMachineScriptController
         /// </summary>
         public void DeleteTransition(StateMachineData stateMachine, TransitionData transition)
         {
-            Undo.RecordObject(this,"StateMachine-DeleteTrans");
             stateMachine.transitions.Remove(transition.id);
             transitions.Remove(transition);
             Save();
@@ -458,7 +459,6 @@ public partial class {0} : StateMachineScriptController
         /// </summary>
         public void DeleteTransition(StateMachineData stateMachine, StateBaseData state)
         {
-            Undo.RecordObject(this,"StateMachine-DeleteTransition");
             List<TransitionData> datas = transitions.FindAll(t => t.from == state.id || t.to == state.id);
             stateMachine.transitions.RemoveAll(t => datas.Select(d => d.id).Contains(t));
             transitions.RemoveAll(t => datas.Contains(t));
@@ -470,7 +470,6 @@ public partial class {0} : StateMachineScriptController
         /// </summary>
         public void DeleteParameter(int index)
         {
-            Undo.RecordObject(this,"StateMachine-DeleteParameter");
             Parameter parameter = parameters[index];
             foreach (var t in transitions)
             {
@@ -487,7 +486,6 @@ public partial class {0} : StateMachineScriptController
         /// </summary>
         public void DeleteParameterCondition(TransitionData transition, int index)
         {
-            Undo.RecordObject(this,"StateMachine-DeleteCondition");
             transition.parameterConditionDatas.RemoveAt(index);
             Save();
         }
@@ -497,7 +495,6 @@ public partial class {0} : StateMachineScriptController
         /// </summary>
         public void DeleteService(StateMachineData stateMachine, ServiceData service)
         {
-            Undo.RecordObject(this,"StateMachine-DeleteService");
             stateMachine.services.Remove(service);
             Save();
         }
@@ -512,7 +509,6 @@ public partial class {0} : StateMachineScriptController
             if (parameters.Select(p => p.name).Contains(newName))
                 return;
             
-            Undo.RecordObject(this,"StateMachine-RenamePara");
             foreach (var t in transitions)
             {
                 var condition = t.parameterConditionDatas.Find(pc => pc.parameterName == parameter.name);
@@ -535,14 +531,12 @@ public partial class {0} : StateMachineScriptController
             {
                 if (canExit)
                 {
-                    Undo.RecordObject(this,"StateMachine-RenameState");
                     (state as StateData).canExitDescription = newName;
                     Save();
                     return;
                 }
                 else if (description)
                 {
-                    Undo.RecordObject(this,"StateMachine-RenameState");
                     state.description = newName;
                     Save();
                     return;
@@ -554,7 +548,6 @@ public partial class {0} : StateMachineScriptController
                 }
             }
             
-            Undo.RecordObject(this,"StateMachine-RenameState");
             foreach (var sm in stateMachines)
             {
                 int index = sm.childStates.FindIndex(s => s == state.id);
@@ -593,7 +586,6 @@ public partial class {0} : StateMachineScriptController
         {
             if (string.IsNullOrEmpty(newName)) return;
 
-            Undo.RecordObject(this,"StateMachine-RenameService");
             serviceData.id = newName;
             Save();
         }
