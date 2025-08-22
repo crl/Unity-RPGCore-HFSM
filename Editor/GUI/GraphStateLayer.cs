@@ -225,18 +225,17 @@ namespace HFSM
 					this.context.selectedTransition = null;
 					if (this.context.selectedStates.Contains(data))
 					{
-						if (EventExtension.IsMouseDown(0) && data.stateType == StateType.StateMachine)
+						if (EventExtension.IsMouseDown(0))
 						{
-							float clickedInterval = Time.time - clickedTime;
-							if (clickedInterval <= 0.3f)
+							if (Event.current.clickCount == 2)
 							{
-								this.context.nextStateMachine = (data as StateMachineData);
-								clickedTime = -1f;
+								if (data.stateType == StateType.StateMachine)
+								{
+									this.context.nextStateMachine = (data as StateMachineData);
+								}
+								Event.current.Use();
 							}
-							else
-								clickedTime = Time.time;
 						}
-						Event.current.Use();
 						return;
 					}
 					this.context.selectedStates.Clear();

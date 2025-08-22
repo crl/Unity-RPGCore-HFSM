@@ -35,5 +35,19 @@ namespace HFSM.EditorExtension
 			}
 			return false;
 		}
+		
+		/// <summary>
+		/// 检测当前GUI元素是否被双击
+		/// </summary>
+		/// <param name="rect">GUI元素的区域（通常通过GUILayoutUtility.GetLastRect()获取）</param>
+		/// <returns>是否发生双击</returns>
+		public static bool IsDoubleClicked(Rect rect)
+		{
+			Event currentEvent = Event.current;
+			return currentEvent.type == EventType.MouseDown 
+			       && currentEvent.clickCount == 2 
+			       && currentEvent.button == 0 // 0 = 左键，1 = 右键，2 = 中键
+			       && rect.Contains(currentEvent.mousePosition);
+		}
 	}
 }

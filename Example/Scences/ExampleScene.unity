@@ -377,6 +377,24 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &945588912 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 975673379987845660, guid: 414fd8c15f4d3ae4e80e52c59eee8a74,
+    type: 3}
+  m_PrefabInstance: {fileID: 975673380669125607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &945588914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945588912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d64178b63412a143b45574431492e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &975673380669125607
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -389,7 +407,7 @@ PrefabInstance:
         type: 3}
       propertyPath: executorController
       value: 
-      objectReference: {fileID: 11400000, guid: 4f92059b191b22e4694b415f2b06f5be,
+      objectReference: {fileID: 11400000, guid: ec90e8bee26e40c4488c6203fe3dccf7,
         type: 2}
     - target: {fileID: 975673379987845660, guid: 414fd8c15f4d3ae4e80e52c59eee8a74,
         type: 3}
@@ -454,7 +472,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 975673379987845660, guid: 414fd8c15f4d3ae4e80e52c59eee8a74,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 945588914}
   m_SourcePrefab: {fileID: 100100000, guid: 414fd8c15f4d3ae4e80e52c59eee8a74, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

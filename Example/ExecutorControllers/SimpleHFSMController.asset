@@ -47,8 +47,8 @@ MonoBehaviour:
   states:
   - position:
       serializedVersion: 2
-      x: 375.20032
-      y: 264.46686
+      x: 455.20032
+      y: 321.1335
       width: 480
       height: 90
     isExecuting: 0
@@ -61,8 +61,8 @@ MonoBehaviour:
     canExitDescription: 
   - position:
       serializedVersion: 2
-      x: 818.5338
-      y: 587.80084
+      x: 1161.8672
+      y: 957.8008
       width: 480
       height: 90
     isExecuting: 0
@@ -75,8 +75,8 @@ MonoBehaviour:
     canExitDescription: 
   - position:
       serializedVersion: 2
-      x: -68.132416
-      y: 587.8014
+      x: -114.79908
+      y: 791.1347
       width: 480
       height: 90
     isExecuting: 0
@@ -103,48 +103,6 @@ MonoBehaviour:
     canExitDescription: 
   - position:
       serializedVersion: 2
-      x: 545.46765
-      y: 183.80006
-      width: 480
-      height: 90
-    isExecuting: 0
-    id: Attack
-    stateType: 0
-    isDefault: 1
-    description: 
-    isTemporary: 0
-    canExitHandle: 0
-    canExitDescription: 
-  - position:
-      serializedVersion: 2
-      x: 962.1312
-      y: 577.13416
-      width: 480
-      height: 90
-    isExecuting: 0
-    id: Roll
-    stateType: 0
-    isDefault: 0
-    description: 
-    isTemporary: 0
-    canExitHandle: 0
-    canExitDescription: 
-  - position:
-      serializedVersion: 2
-      x: 168.79984
-      y: 580.4677
-      width: 480
-      height: 90
-    isExecuting: 0
-    id: Skill
-    stateType: 0
-    isDefault: 0
-    description: 
-    isTemporary: 0
-    canExitHandle: 0
-    canExitDescription: 
-  - position:
-      serializedVersion: 2
       x: 355.46643
       y: -299.7997
       width: 480
@@ -156,6 +114,48 @@ MonoBehaviour:
     description: 
     isTemporary: 1
     canExitHandle: 1
+    canExitDescription: 
+  - position:
+      serializedVersion: 2
+      x: 600
+      y: 400
+      width: 480
+      height: 90
+    isExecuting: 0
+    id: New State 0
+    stateType: 0
+    isDefault: 1
+    description: 
+    isTemporary: 0
+    canExitHandle: 0
+    canExitDescription: 
+  - position:
+      serializedVersion: 2
+      x: 1349.8329
+      y: 113.833336
+      width: 480
+      height: 90
+    isExecuting: 0
+    id: New State 1
+    stateType: 0
+    isDefault: 0
+    description: 
+    isTemporary: 0
+    canExitHandle: 0
+    canExitDescription: 
+  - position:
+      serializedVersion: 2
+      x: 600
+      y: 400
+      width: 480
+      height: 90
+    isExecuting: 0
+    id: New State 2
+    stateType: 0
+    isDefault: 1
+    description: 
+    isTemporary: 0
+    canExitHandle: 0
     canExitDescription: 
   stateMachines:
   - position:
@@ -175,23 +175,23 @@ MonoBehaviour:
     - walk
     - run
     - GetHit
-    - SMTest
     - Pause
+    - New StateMachine 0
+    - New State 1
+    - New StateMachine 1
     defaultState: idle
     transitions:
     - b1d3d672c3f8a6c4e87909458ca8ef0c
     - 32e92c3958341a240ae393f99274c76d
     - d1251426f6f7f724cb5ed42426d2d6c9
     - 6eb52f651c2f7ef4d8c48743337db8ff
-    - 142791eb58b7c77478f9a46daa325e83
-    - 6f00ff727a8a45e4993de910535a1b71
     - 72960290082db7e4fb61aee389681de5
     services: []
     any:
       position:
         serializedVersion: 2
-        x: -392.00027
-        y: -42.66641
+        x: -362.0003
+        y: 0.6669233
         width: 480
         height: 90
       isExecuting: 0
@@ -219,39 +219,26 @@ MonoBehaviour:
       canExitDescription: 
   - position:
       serializedVersion: 2
-      x: 505.46567
-      y: 11.133442
-      width: 480
-      height: 90
+      x: 1279.8336
+      y: -191.16663
+      width: 500
+      height: 100
     isExecuting: 0
-    id: SMTest
+    id: New StateMachine 0
     stateType: 1
     isDefault: 0
     description: 
     isRoot: 0
     childStates:
-    - Attack
-    - Roll
-    - Skill
-    defaultState: Attack
-    transitions:
-    - dcb8546200345284d8372d4e5b4a2088
-    - d804815c8fb2cd246b856da5ae63ff30
-    - 24d2e8dfdc447bc45b44858a529e3d7c
-    services:
-    - id: SMService
-      serviceType: 2
-      customInterval: 1
-      description: 
-    - id: NewService0
-      serviceType: 0
-      customInterval: 0
-      description: 
+    - New State 0
+    defaultState: New State 0
+    transitions: []
+    services: []
     any:
       position:
         serializedVersion: 2
-        x: -486.6672
-        y: -199.99985
+        x: 0
+        y: 100
         width: 480
         height: 90
       isExecuting: 0
@@ -265,8 +252,55 @@ MonoBehaviour:
     entry:
       position:
         serializedVersion: 2
-        x: -493.3339
-        y: 143.33311
+        x: 0
+        y: 400
+        width: 480
+        height: 90
+      isExecuting: 0
+      id: Entry
+      stateType: 0
+      isDefault: 0
+      description: 
+      isTemporary: 0
+      canExitHandle: 0
+      canExitDescription: 
+  - position:
+      serializedVersion: 2
+      x: 1303.1666
+      y: 378.83334
+      width: 500
+      height: 100
+    isExecuting: 0
+    id: New StateMachine 1
+    stateType: 1
+    isDefault: 0
+    description: 
+    isRoot: 0
+    childStates:
+    - New State 2
+    defaultState: New State 2
+    transitions: []
+    services: []
+    any:
+      position:
+        serializedVersion: 2
+        x: 0
+        y: 100
+        width: 480
+        height: 90
+      isExecuting: 0
+      id: Any
+      stateType: 0
+      isDefault: 0
+      description: 
+      isTemporary: 0
+      canExitHandle: 0
+      canExitDescription: 
+    entry:
+      position:
+        serializedVersion: 2
+        x: 0
+        y: 400
         width: 480
         height: 90
       isExecuting: 0
@@ -308,46 +342,6 @@ MonoBehaviour:
     baseConditionsName: []
     parameterConditionDatas:
     - parameterName: IsGetHit
-      compareType: 2
-      compareValue: 0
-  - id: 142791eb58b7c77478f9a46daa325e83
-    from: Any
-    to: SMTest
-    baseConditionsName: []
-    parameterConditionDatas:
-    - parameterName: ToSM
-      compareType: 2
-      compareValue: 0
-  - id: dcb8546200345284d8372d4e5b4a2088
-    from: Attack
-    to: Roll
-    baseConditionsName: []
-    parameterConditionDatas:
-    - parameterName: IsRoll
-      compareType: 2
-      compareValue: 1
-  - id: d804815c8fb2cd246b856da5ae63ff30
-    from: Roll
-    to: Skill
-    baseConditionsName: []
-    parameterConditionDatas:
-    - parameterName: IsSkill
-      compareType: 2
-      compareValue: 1
-  - id: 24d2e8dfdc447bc45b44858a529e3d7c
-    from: Skill
-    to: Attack
-    baseConditionsName: []
-    parameterConditionDatas:
-    - parameterName: IsAttack
-      compareType: 2
-      compareValue: 1
-  - id: 6f00ff727a8a45e4993de910535a1b71
-    from: SMTest
-    to: idle
-    baseConditionsName: []
-    parameterConditionDatas:
-    - parameterName: ExitSM
       compareType: 2
       compareValue: 0
   - id: 72960290082db7e4fb61aee389681de5

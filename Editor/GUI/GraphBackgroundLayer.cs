@@ -79,25 +79,31 @@ namespace HFSM
         private void CreateState()
         {
             Undo.RecordObject(context.controller,"Create State");
-            var rect = new Rect(0, 0, stateWidth, stateHeight);
-            rect.center = MousePosition(mousePosition);
-            StateBaseData newState = context.controller.CreateState(rect, context.currentStateMachine);
+            var rect = new Rect(0, 0, stateWidth, stateHeight)
+            {
+                center = MousePosition(mousePosition)
+            };
+            var newState = context.controller.CreateState(rect, context.currentStateMachine);
             context.UpdateCurrentChildStatesData();
             context.ClearAllSelectNode();
             context.selectedStates.Add(newState);
-            StateInspectorHelper.instance.Inspector(context.controller, newState as StateData);
+            StateInspectorHelper.instance.Inspector(context.controller, newState);
         }
 
         private void CreateStateMachine()
         {
             Undo.RecordObject(context.controller,"Create StateMachine");
-            var rect = new Rect(0, 0, stateWidth, stateHeight);
-            rect.center = MousePosition(mousePosition);
-            StateBaseData newState = context.controller.CreateStateMachine(rect, context.currentStateMachine);
+
+            var gap = 10;
+            var rect = new Rect(0, 0, stateWidth+2*gap, stateHeight+gap)
+            {
+                center = MousePosition(mousePosition)
+            };
+            var newState = context.controller.CreateStateMachine(rect, context.currentStateMachine);
             context.UpdateCurrentChildStatesData();
             context.ClearAllSelectNode();
             context.selectedStates.Add(newState);
-            StateMachineInspectorHelper.instance.Inspector(context.controller, newState as StateMachineData);
+            StateMachineInspectorHelper.instance.Inspector(context.controller, newState);
         }
 
         private void DrawGrid(Rect rect, float gridSpace, Color color)
