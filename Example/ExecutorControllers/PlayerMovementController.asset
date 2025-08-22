@@ -44,9 +44,6 @@ MonoBehaviour:
   - _name: RollOrDodge
     _type: 3
     baseValue: 0
-  - _name: New Param 0
-    _type: 0
-    baseValue: 0
   states:
   - position:
       serializedVersion: 2
@@ -216,20 +213,6 @@ MonoBehaviour:
     isTemporary: 0
     canExitHandle: 0
     canExitDescription: 
-  - position:
-      serializedVersion: 2
-      x: 581
-      y: -59.499985
-      width: 480
-      height: 90
-    isExecuting: 0
-    id: New State 0
-    stateType: 0
-    isDefault: 0
-    description: 
-    isTemporary: 0
-    canExitHandle: 0
-    canExitDescription: 
   stateMachines:
   - position:
       serializedVersion: 2
@@ -247,7 +230,6 @@ MonoBehaviour:
     - normal
     - battle
     - get_hit
-    - New State 0
     - New State 0
     defaultState: normal
     transitions:
